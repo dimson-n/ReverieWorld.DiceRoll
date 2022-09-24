@@ -44,6 +44,9 @@ namespace RP.ReverieWorld
             bool HasInfinityBursts => BurstsCount < 0;
         }
 
+        /// <summary>
+        /// Strategy for "add then remove" dice mechanic.
+        /// </summary>
         public interface IDiceRemovingSelector
         {
             /// <summary>
@@ -74,6 +77,11 @@ namespace RP.ReverieWorld
             this.diceRemovingSelector = diceRemovingSelector ?? new DefaultDiceRemovingSelector();
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
+        /// <param name="diceRemovingSelector">Custom implementation of <see cref="IDiceRemovingSelector"/> interface or <see cref="DefaultDiceRemovingSelector"/> (default).</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
         public DiceRoller(IRandomProvider randomProvider, IDiceRemovingSelector? diceRemovingSelector) :
             this(randomProvider, null, diceRemovingSelector)
         {
