@@ -4,7 +4,7 @@
     {
         public sealed class DefaultDiceRemovingSelector : IDiceRemovingSelector
         {
-            public IReadOnlyList<int> Select(IReadOnlyList<int> dices, int count, IParameters parameters)
+            public IReadOnlySet<int> Select(IReadOnlyList<int> dices, int count, IParameters parameters)
             {
                 // TODO: can try boundary+=1 if there is much more rerolls then ones as if parameters.HasInfinityRerolls.
                 int nonRerollBoundary = parameters.FacesCount / 2 + (parameters.HasInfinityRerolls ? 1 : 0);
@@ -20,7 +20,7 @@
                 return sortedRolls.Where((_, i) => i < takeFirstRerollable || rerollableCount <= i)
                                   .Take(count)
                                   .Select(d => d.idx)
-                                  .ToArray();
+                                  .ToHashSet();
             }
         }
     }
