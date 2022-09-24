@@ -13,6 +13,7 @@ namespace RP.ReverieWorld
 
         private readonly IRandomProvider randomProvider;
         private readonly IParameters defaultParameters;
+        private readonly IDiceRemovingSelector diceRemovingSelector;
 
         public interface IRandom : IDisposable
         {
@@ -42,12 +43,24 @@ namespace RP.ReverieWorld
             bool HasInfinityBursts => BurstsCount < 0;
         }
 
+        public interface IDiceRemovingSelector
+        {
+            /// <summary>
+            /// </summary>
+            /// <param name="dices">List of current dices values.</param>
+            /// <param name="count">Count of dices to remove.</param>
+            /// <param name="parameters">Parameters of current roll.</param>
+            /// <returns>List of indices that must be removed with exactly <paramref name="count"/> elements.</returns>
+            IReadOnlyList<int> Select(IReadOnlyList<int> dices, int count, IParameters parameters);
+        }
+
         /// <summary>
         /// </summary>
         /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
-        /// <param name="defaultParameters"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public DiceRoller(IRandomProvider randomProvider, IParameters? defaultParameters = null)
+        /// <param name="defaultParameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
+        /// <param name="diceRemovingSelector">Custom implementation of <see cref="IDiceRemovingSelector"/> interface or <see cref="DefaultDiceRemovingSelector"/> (default).</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
+        public DiceRoller(IRandomProvider randomProvider, IParameters? defaultParameters = null, IDiceRemovingSelector? diceRemovingSelector = null)
         {
             if (randomProvider is null)
             {
@@ -57,6 +70,12 @@ namespace RP.ReverieWorld
             this.randomProvider = randomProvider;
             this.defaultParameters = defaultParameters ?? new Parameters();
             ValidateParameters(this.defaultParameters);
+            this.diceRemovingSelector = diceRemovingSelector ?? new DefaultDiceRemovingSelector();
+        }
+
+        public DiceRoller(IRandomProvider randomProvider, IDiceRemovingSelector? diceRemovingSelector) :
+            this(randomProvider, null, diceRemovingSelector)
+        {
         }
 
         internal sealed class DiceData
@@ -165,21 +184,15 @@ namespace RP.ReverieWorld
                 }
 
                 {
-                    // TODO: can try boundary+=1 if there is much more rerolls then ones as if parameters.HasInfinityRerolls.
-                    int nonRerollBoundary = parameters.FacesCount / 2 + (parameters.HasInfinityRerolls ? 1 : 0);
-
-                    var sortedRolls = data.OrderBy(d => d.Value);
-                    int mayBeRemoved = Math.Max(parameters.AdditionalDicesCount, sortedRolls.TakeWhile(d => d.Value < nonRerollBoundary).Count());
-                    int rerollableCount = sortedRolls.TakeWhile(d => d.Value == 1).Count();
-                    int skipToReroll = Math.Min(mayBeRemoved - parameters.AdditionalDicesCount,
-                                                Math.Min(rerollableCount,
-                                                         parameters.HasInfinityRerolls ? int.MaxValue : parameters.RerollsCount));
-                    int takeFirstRerollable = rerollableCount - skipToReroll;
-
-                    foreach (var d in sortedRolls.Where((_, i) => i < takeFirstRerollable || rerollableCount <= i)
-                                                 .Take(parameters.AdditionalDicesCount))
+                    var indicesToRemove = diceRemovingSelector.Select(data.Select(d => d.Value).ToArray(), parameters.AdditionalDicesCount, parameters);
+                    if (indicesToRemove.Count != parameters.AdditionalDicesCount)
                     {
-                        d.removed = true;
+                        throw new InvalidOperationException("Count of elements from diceRemovingSelector.Select() must be equal to count of additional dices in roll");
+                    }
+
+                    foreach (var i in indicesToRemove)
+                    {
+                        data[i].removed = true;
                     }
                 }
 
