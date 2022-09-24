@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics;
 
 namespace RP.ReverieWorld
 {
@@ -78,6 +79,7 @@ namespace RP.ReverieWorld
         {
         }
 
+        [DebuggerDisplay("{Value}")]
         internal sealed class DiceData
         {
             public List<int> values;
@@ -159,6 +161,11 @@ namespace RP.ReverieWorld
             public IEnumerator<Dice> GetEnumerator() => rolls.GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)rolls).GetEnumerator();
+
+            public override string ToString()
+            {
+                return Total.ToString();
+            }
         }
 
         public Result Roll(IParameters? parameters = null)
