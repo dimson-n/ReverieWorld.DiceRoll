@@ -26,6 +26,13 @@
             }
         }
 
+        /// <summary>
+        /// Validates <paramref name="parameters"/> correctness.
+        /// </summary>
+        /// <param name="parameters">Instance of <see cref="IParameters"/> implementation to validation.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="parameters"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentException"></exception>
         public static void ValidateParameters(IParameters parameters)
         {
             ArgumentNullException.ThrowIfNull(parameters);
