@@ -66,10 +66,7 @@ namespace RP.ReverieWorld
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
         public DiceRoller(IRandomProvider randomProvider, IParameters? defaultParameters = null, IDiceRemovingSelector? diceRemovingSelector = null)
         {
-            if (randomProvider is null)
-            {
-                throw new ArgumentNullException(nameof(randomProvider));
-            }
+            ArgumentNullException.ThrowIfNull(randomProvider);
 
             this.randomProvider = randomProvider;
             this.defaultParameters = defaultParameters ?? new Parameters();

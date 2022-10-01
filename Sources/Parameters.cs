@@ -28,10 +28,7 @@
 
         public static void ValidateParameters(IParameters parameters)
         {
-            if (parameters is null)
-            {
-                throw new ArgumentNullException(nameof(parameters));
-            }
+            ArgumentNullException.ThrowIfNull(parameters);
 
             if (parameters.FacesCount < 2)
             {
