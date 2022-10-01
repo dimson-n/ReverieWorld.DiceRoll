@@ -1,6 +1,6 @@
-﻿namespace RP.ReverieWorld
+﻿namespace RP.ReverieWorld.DiceRoll
 {
-    public sealed partial class DiceRoller
+    public sealed partial class AutoRoller
     {
         public sealed class DefaultDiceRemovingSelector : IDiceRemovingSelector
         {

@@ -1,48 +1,13 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 
-namespace RP.ReverieWorld
+namespace RP.ReverieWorld.DiceRoll
 {
-    public sealed partial class DiceRoller
+    public sealed partial class AutoRoller
     {
-        public const int DefaultDiceFacesCount = 6;
-
-        /// <summary>
-        /// Usable for rerolls & bursts.
-        /// </summary>
-        public const int Infinite = -1;
-
         private readonly IRandomProvider randomProvider;
         private readonly IParameters defaultParameters;
         private readonly IDiceRemovingSelector diceRemovingSelector;
-
-        public interface IRandom : IDisposable
-        {
-            /// <summary>
-            /// Same behavior as <see cref="System.Random.Next(int)"/> expected.
-            /// </summary>
-            /// <param name="maxValue">The exclusive upper bound of the random number to be generated. <paramref name="maxValue"/> must be greater than or equal to 0.</param>
-            /// <returns></returns>
-            int Next(int maxValue);
-        }
-
-        public interface IRandomProvider
-        {
-            IRandom Lock();
-        }
-
-        public interface IParameters
-        {
-            int FacesCount { get; }
-            int DicesCount { get; }
-            int AdditionalDicesCount { get; }
-            int RerollsCount { get; }
-            int BurstsCount { get; }
-            int Bonus { get; }
-
-            bool HasInfinityRerolls => RerollsCount < 0;
-            bool HasInfinityBursts => BurstsCount < 0;
-        }
 
         /// <summary>
         /// Strategy for "add then remove" dice mechanic.
@@ -64,13 +29,13 @@ namespace RP.ReverieWorld
         /// <param name="defaultParameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
         /// <param name="diceRemovingSelector">Custom implementation of <see cref="IDiceRemovingSelector"/> interface or <see cref="DefaultDiceRemovingSelector"/> (default).</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
-        public DiceRoller(IRandomProvider randomProvider, IParameters? defaultParameters = null, IDiceRemovingSelector? diceRemovingSelector = null)
+        public AutoRoller(IRandomProvider randomProvider, IParameters? defaultParameters = null, IDiceRemovingSelector? diceRemovingSelector = null)
         {
             ArgumentNullException.ThrowIfNull(randomProvider);
 
             this.randomProvider = randomProvider;
             this.defaultParameters = defaultParameters ?? new Parameters();
-            ValidateParameters(this.defaultParameters);
+            Parameters.Validate(this.defaultParameters);
             this.diceRemovingSelector = diceRemovingSelector ?? new DefaultDiceRemovingSelector();
         }
 
@@ -79,7 +44,7 @@ namespace RP.ReverieWorld
         /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
         /// <param name="diceRemovingSelector">Custom implementation of <see cref="IDiceRemovingSelector"/> interface or <see cref="DefaultDiceRemovingSelector"/> (default).</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
-        public DiceRoller(IRandomProvider randomProvider, IDiceRemovingSelector? diceRemovingSelector) :
+        public AutoRoller(IRandomProvider randomProvider, IDiceRemovingSelector? diceRemovingSelector) :
             this(randomProvider, null, diceRemovingSelector)
         {
         }
@@ -176,7 +141,7 @@ namespace RP.ReverieWorld
         public Result Roll(IParameters? parameters = null)
         {
             parameters ??= defaultParameters;
-            ValidateParameters(parameters);
+            Parameters.Validate(parameters);
 
             List<DiceData> data = new(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
 

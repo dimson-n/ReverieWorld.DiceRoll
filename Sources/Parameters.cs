@@ -1,29 +1,45 @@
-﻿namespace RP.ReverieWorld
+﻿namespace RP.ReverieWorld.DiceRoll
 {
-    public sealed partial class DiceRoller
+    public interface IParameters
     {
-        /// <summary>
-        /// Default implementation of <see cref="IParameters"/> interface.
-        /// </summary>
-        public class Parameters : IParameters
-        {
-            public int FacesCount { get; init; }
-            public int DicesCount { get; init; }
-            public int AdditionalDicesCount { get; init; }
-            public int RerollsCount { get; init; }
-            public int BurstsCount { get; init; }
-            public int Bonus { get; init; }
+        int FacesCount { get; }
+        int DicesCount { get; }
+        int AdditionalDicesCount { get; }
+        int RerollsCount { get; }
+        int BurstsCount { get; }
+        int Bonus { get; }
 
-            public Parameters(int facesCount = DefaultDiceFacesCount, int dicesCount = 1, int additionalDicesCount = 0,
-                              int rerollsCount = 0, int burstsCount = 0, int bonus = 0)
-            {
-                FacesCount = facesCount;
-                DicesCount = dicesCount;
-                AdditionalDicesCount = additionalDicesCount;
-                RerollsCount = rerollsCount;
-                BurstsCount = burstsCount;
-                Bonus = bonus;
-            }
+        bool HasInfinityRerolls => RerollsCount < 0;
+        bool HasInfinityBursts => BurstsCount < 0;
+    }
+
+    /// <summary>
+    /// Default implementation of <see cref="IParameters"/> interface.
+    /// </summary>
+    public class Parameters : IParameters
+    {
+        public const int DefaultDiceFacesCount = 6;
+        /// <summary>
+        /// Usable for rerolls & bursts.
+        /// </summary>
+        public const int Infinite = -1;
+
+        public int FacesCount { get; init; }
+        public int DicesCount { get; init; }
+        public int AdditionalDicesCount { get; init; }
+        public int RerollsCount { get; init; }
+        public int BurstsCount { get; init; }
+        public int Bonus { get; init; }
+
+        public Parameters(int facesCount = DefaultDiceFacesCount, int dicesCount = 1, int additionalDicesCount = 0,
+                            int rerollsCount = 0, int burstsCount = 0, int bonus = 0)
+        {
+            FacesCount = facesCount;
+            DicesCount = dicesCount;
+            AdditionalDicesCount = additionalDicesCount;
+            RerollsCount = rerollsCount;
+            BurstsCount = burstsCount;
+            Bonus = bonus;
         }
 
         /// <summary>
@@ -33,7 +49,7 @@
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="parameters"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public static void ValidateParameters(IParameters parameters)
+        public static void Validate(IParameters parameters)
         {
             ArgumentNullException.ThrowIfNull(parameters);
 
