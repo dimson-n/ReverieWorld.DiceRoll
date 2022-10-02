@@ -1,6 +1,3 @@
-﻿using System.Collections;
-using System.Diagnostics;
-
 namespace RP.ReverieWorld.DiceRoll
 {
     public sealed partial class AutoRoller
@@ -47,95 +44,6 @@ namespace RP.ReverieWorld.DiceRoll
         public AutoRoller(IRandomProvider randomProvider, IDiceRemovingSelector? diceRemovingSelector) :
             this(randomProvider, null, diceRemovingSelector)
         {
-        }
-
-        [DebuggerDisplay("{Value}")]
-        internal sealed class DiceData
-        {
-            public List<int> values;
-            public bool removed;
-            public bool burstMade;
-            public bool isBurst;
-
-            public int Value => values.Last();
-
-            public DiceData(int value, bool removed = false, bool burstMade = false, bool isBurst = false)
-            {
-                this.values = new List<int>(1) { value };
-                this.removed = removed;
-                this.burstMade = burstMade;
-                this.isBurst = isBurst;
-            }
-        }
-
-        public sealed class Dice : IReadOnlyList<int>
-        {
-            private readonly DiceData data;
-
-            public int Value { get; }
-            public int RollsCount => data.values.Count;
-            public bool WasRemoved => data.removed;
-            public bool IsBurst => data.isBurst;
-
-            internal Dice(DiceData data)
-            {
-                this.data = data;
-
-                Value = data.Value;
-            }
-
-            public int this[int index] => data.values[index];
-
-            public int Count => data.values.Count;
-
-            public IEnumerator<int> GetEnumerator() => data.values.GetEnumerator();
-
-            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)data.values).GetEnumerator();
-
-            public override string ToString()
-            {
-                return $"{(WasRemoved ? "-" : string.Empty)}{(IsBurst ? "*" : string.Empty)}{Value}";
-            }
-        }
-
-        public sealed class Result : IReadOnlyList<Dice>
-        {
-            private readonly IReadOnlyList<Dice> rolls;
-
-            private readonly IParameters parameters;
-
-            public int Total { get; }
-            public int Bonus => parameters.Bonus;
-
-            public int DiceFacesCount => parameters.FacesCount;
-            public int BaseDicesCount => parameters.DicesCount;
-            public int RemovedDicesCount => parameters.AdditionalDicesCount;
-            public int InitialRerollsCount => parameters.RerollsCount;
-            public int InitialBurstsCount => parameters.BurstsCount;
-
-            public bool HasInfinityRerolls => parameters.HasInfinityRerolls;
-            public bool HasInfinityBursts => parameters.HasInfinityBursts;
-
-            internal Result(List<DiceData> data, IParameters parameters)
-            {
-                this.rolls = data.Select(d => new Dice(d)).ToArray();
-                this.parameters = parameters;
-
-                Total = rolls.Where(d => !d.WasRemoved).Sum(d => d.Value) + Bonus;
-            }
-
-            public Dice this[int index] => rolls[index];
-
-            public int Count => rolls.Count;
-
-            public IEnumerator<Dice> GetEnumerator() => rolls.GetEnumerator();
-
-            IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)rolls).GetEnumerator();
-
-            public override string ToString()
-            {
-                return Total.ToString();
-            }
         }
 
         public Result Roll(IParameters? parameters = null)
