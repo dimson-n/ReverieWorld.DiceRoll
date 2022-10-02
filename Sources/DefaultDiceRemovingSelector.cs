@@ -1,4 +1,6 @@
-﻿namespace RP.ReverieWorld.DiceRoll
+﻿using System.Collections.Immutable;
+
+namespace RP.ReverieWorld.DiceRoll
 {
     public sealed partial class AutoRoller
     {
@@ -20,7 +22,7 @@
                 return sortedRolls.Where((_, i) => i < takeFirstRerollable || rerollableCount <= i)
                                   .Take(count)
                                   .Select(d => d.idx)
-                                  .ToHashSet();
+                                  .ToImmutableHashSet();
             }
         }
     }
