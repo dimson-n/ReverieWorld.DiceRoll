@@ -51,7 +51,7 @@ namespace RP.ReverieWorld.DiceRoll
             parameters ??= defaultParameters;
             Parameters.Validate(parameters);
 
-            List<DiceData> data = new(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
+            List<Dice> data = new(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
 
             using (var random = randomProvider.Lock())
             {
@@ -64,7 +64,7 @@ namespace RP.ReverieWorld.DiceRoll
                     int initialRollsCount = parameters.DicesCount + parameters.AdditionalDicesCount;
                     for (int i = 0; i != initialRollsCount; ++i)
                     {
-                        data.Add(new DiceData(makeRoll()));
+                        data.Add(new Dice(makeRoll()));
                     }
                 }
 
@@ -77,7 +77,7 @@ namespace RP.ReverieWorld.DiceRoll
 
                     foreach (var i in indicesToRemove)
                     {
-                        data[i].removed = true;
+                        data[i].Removed = true;
                     }
                 }
 
@@ -92,7 +92,7 @@ namespace RP.ReverieWorld.DiceRoll
                         if (availableRerolls != 0)
                         {
                             var rerollsCount = parameters.HasInfinityRerolls ? int.MaxValue : availableRerolls;
-                            foreach (var d in data.Where(d => !d.removed && d.Value == 1).Take(rerollsCount))
+                            foreach (var d in data.Where(d => !d.Removed && d.Value == 1).Take(rerollsCount))
                             {
                                 if (!parameters.HasInfinityRerolls)
                                 {
@@ -107,8 +107,8 @@ namespace RP.ReverieWorld.DiceRoll
                         if (availableBursts != 0)
                         {
                             var burstsCount = parameters.HasInfinityBursts ? int.MaxValue : availableBursts;
-                            var toBurst = data.Where(d => !d.removed && !d.burstMade && d.Value == parameters.FacesCount).Take(burstsCount);
-                            var newRolls = new List<DiceData>(toBurst.Count());
+                            var toBurst = data.Where(d => !d.Removed && !d.burstMade && d.Value == parameters.FacesCount).Take(burstsCount);
+                            List<Dice> newRolls = new(toBurst.Count());
 
                             foreach (var d in toBurst)
                             {
@@ -119,7 +119,7 @@ namespace RP.ReverieWorld.DiceRoll
 
                                 d.burstMade = true;
 
-                                newRolls.Add(new DiceData(makeRoll(), isBurst: true));
+                                newRolls.Add(new Dice(makeRoll(), isBurst: true));
                                 somethingChanged = true;
                             }
 

@@ -23,12 +23,12 @@ namespace RP.ReverieWorld.DiceRoll
         public bool HasInfinityRerolls => parameters.HasInfinityRerolls;
         public bool HasInfinityBursts => parameters.HasInfinityBursts;
 
-        internal Result(List<DiceData> data, IParameters parameters)
+        internal Result(IReadOnlyList<Dice> data, IParameters parameters)
         {
-            this.rolls = data.Select(d => new Dice(d)).ToArray();
+            this.rolls = data;
             this.parameters = parameters;
 
-            Total = rolls.Where(d => !d.WasRemoved).Sum(d => d.Value) + Bonus;
+            Total = rolls.Where(d => !d.Removed).Sum(d => d.Value) + Bonus;
         }
 
         public Dice this[int index] => rolls[index];

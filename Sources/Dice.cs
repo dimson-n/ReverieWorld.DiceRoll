@@ -3,35 +3,37 @@
 namespace RP.ReverieWorld.DiceRoll
 {
     /// <summary>
-    /// Represents one dice in roll result.
+    /// Represents one dice in roll.
     /// </summary>
     public sealed class Dice : IReadOnlyList<int>
     {
-        private readonly DiceData data;
+        internal readonly List<int> values;
+        internal bool burstMade;
 
-        public int Value { get; }
-        public int RollsCount => data.values.Count;
-        public bool WasRemoved => data.removed;
-        public bool IsBurst => data.isBurst;
+        public int Value => values.Last();
+        public int RollsCount => values.Count;
+        public bool Removed { get; internal set; }
+        public bool IsBurst { get; internal set; }
 
-        internal Dice(DiceData data)
+        internal Dice(int value, bool removed = false, bool burstMade = false, bool isBurst = false)
         {
-            this.data = data;
-
-            Value = data.Value;
+            this.values = new List<int>(1) { value };
+            this.Removed = removed;
+            this.burstMade = burstMade;
+            this.IsBurst = isBurst;
         }
 
-        public int this[int index] => data.values[index];
+        public int this[int index] => values[index];
 
-        public int Count => data.values.Count;
+        public int Count => values.Count;
 
-        public IEnumerator<int> GetEnumerator() => data.values.GetEnumerator();
+        public IEnumerator<int> GetEnumerator() => values.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)data.values).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)values).GetEnumerator();
 
         public override string ToString()
         {
-            return $"{(WasRemoved ? '-' : string.Empty)}{(IsBurst ? '*' : string.Empty)}{Value}";
+            return $"{(Removed ? '-' : string.Empty)}{(IsBurst ? '*' : string.Empty)}{Value}";
         }
     }
 }
