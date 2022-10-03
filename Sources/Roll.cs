@@ -5,7 +5,7 @@ namespace RP.ReverieWorld.DiceRoll
     /// <summary>
     /// Represents result of dices roll.
     /// </summary>
-    public sealed class Result : IReadOnlyList<Dice>
+    public sealed class Roll : IReadOnlyList<Dice>
     {
         private readonly IReadOnlyList<Dice> rolls;
 
@@ -23,9 +23,9 @@ namespace RP.ReverieWorld.DiceRoll
         public bool HasInfinityRerolls => parameters.HasInfinityRerolls;
         public bool HasInfinityBursts => parameters.HasInfinityBursts;
 
-        internal Result(IReadOnlyList<Dice> data, IParameters parameters)
+        internal Roll(IReadOnlyList<Dice> rolls, IParameters parameters)
         {
-            this.rolls = data;
+            this.rolls = rolls;
             this.parameters = parameters;
 
             Total = rolls.Where(d => !d.Removed).Sum(d => d.Value) + Bonus;

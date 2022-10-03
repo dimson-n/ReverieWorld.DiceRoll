@@ -46,7 +46,7 @@ namespace RP.ReverieWorld.DiceRoll
         {
         }
 
-        public Result Roll(IParameters? parameters = null)
+        public Roll Roll(IParameters? parameters = null)
         {
             parameters ??= defaultParameters;
             Parameters.Validate(parameters);
@@ -129,7 +129,7 @@ namespace RP.ReverieWorld.DiceRoll
                 }
             }
 
-            return new Result(data, parameters);
+            return new Roll(data, parameters);
         }
     }
 }
