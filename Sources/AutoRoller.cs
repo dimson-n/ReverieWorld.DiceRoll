@@ -1,4 +1,4 @@
-namespace RP.ReverieWorld.DiceRoll
+﻿namespace RP.ReverieWorld.DiceRoll
 {
     public sealed partial class AutoRoller
     {
@@ -30,9 +30,11 @@ namespace RP.ReverieWorld.DiceRoll
         {
             ArgumentNullException.ThrowIfNull(randomProvider);
 
+            defaultParameters ??= new Parameters();
+            Parameters.Validate(defaultParameters);
+
             this.randomProvider = randomProvider;
-            this.defaultParameters = defaultParameters ?? new Parameters();
-            Parameters.Validate(this.defaultParameters);
+            this.defaultParameters = defaultParameters;
             this.diceRemovingSelector = diceRemovingSelector ?? new DefaultDiceRemovingSelector();
         }
 
