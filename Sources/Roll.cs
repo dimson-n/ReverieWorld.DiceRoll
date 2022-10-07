@@ -3,9 +3,9 @@
 namespace RP.ReverieWorld.DiceRoll
 {
     /// <summary>
-    /// Represents result of dices roll.
+    /// Represents current state of dices roll.
     /// </summary>
-    public sealed class Roll : IReadOnlyList<Dice>
+    public class Roll : IReadOnlyList<Dice>
     {
         private readonly IReadOnlyList<Dice> rolls;
 
@@ -22,6 +22,12 @@ namespace RP.ReverieWorld.DiceRoll
 
         public bool HasInfinityRerolls => parameters.HasInfinityRerolls;
         public bool HasInfinityBursts => parameters.HasInfinityBursts;
+
+        /// <summary>
+        /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
+        /// </summary>
+        /// <returns><see langword="true"/> if <see cref="Roll"/> was fully performed; otherwise, <see langword="false"/>.</returns>
+        public virtual bool Completed => false;
 
         internal Roll(IReadOnlyList<Dice> rolls, IParameters parameters)
         {

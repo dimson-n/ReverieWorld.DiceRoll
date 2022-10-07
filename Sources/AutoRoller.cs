@@ -48,7 +48,7 @@
         {
         }
 
-        public Roll Roll(IParameters? parameters = null)
+        public Result Roll(IParameters? parameters = null)
         {
             parameters ??= defaultParameters;
             Parameters.Validate(parameters);
@@ -131,7 +131,7 @@
                 }
             }
 
-            return new Roll(data, parameters);
+            return new Result(data, parameters);
         }
     }
 }
