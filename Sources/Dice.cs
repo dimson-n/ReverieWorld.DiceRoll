@@ -10,9 +10,18 @@ namespace RP.ReverieWorld.DiceRoll
         internal readonly List<int> values;
         internal bool burstMade;
 
+        /// <summary>
+        /// Actual value of dice.
+        /// </summary>
         public int Value => values.Last();
+
         public int RollsCount => values.Count;
+
+        /// <summary>
+        /// <see langword="true"/> if dice was excluded from roll result; otherwise, <see langword="false"/>.
+        /// </summary>
         public bool Removed { get; internal set; }
+
         public bool IsBurst { get; internal set; }
 
         internal Dice(int value, bool removed = false, bool burstMade = false, bool isBurst = false)
