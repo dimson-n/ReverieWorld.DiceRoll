@@ -25,7 +25,7 @@ namespace RP.ReverieWorld.DiceRoll
 
         public int this[int index] => values[index];
 
-        public int Count => values.Count;
+        int IReadOnlyCollection<int>.Count => values.Count;
 
         public IEnumerator<int> GetEnumerator() => values.GetEnumerator();
 
