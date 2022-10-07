@@ -1,4 +1,6 @@
-﻿namespace RP.ReverieWorld.DiceRoll
+﻿using System.Collections.Immutable;
+
+namespace RP.ReverieWorld.DiceRoll
 {
     public sealed partial class AutoRoller
     {
@@ -48,90 +50,23 @@
         {
         }
 
-        public Result Roll(IParameters? parameters = null)
+        public Result Roll(IParameters? parameters = null, IDiceRemovingSelector? diceRemovingSelector = null)
         {
             parameters ??= defaultParameters;
             Parameters.Validate(parameters);
 
-            List<Dice> data = new(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
+            diceRemovingSelector ??= this.diceRemovingSelector;
 
-            using (var random = randomProvider.Lock())
-            {
-                int makeRoll()
-                {
-                    return random.Next(parameters.FacesCount) + 1;
-                }
+            var current = new InteractiveRoller(randomProvider, parameters).Begin();
 
-                {
-                    int initialRollsCount = parameters.DicesCount + parameters.AdditionalDicesCount;
-                    for (int i = 0; i != initialRollsCount; ++i)
-                    {
-                        data.Add(new Dice(makeRoll()));
-                    }
-                }
+            current.RemoveDices(diceRemovingSelector.Select(current.Values.Select(d => d.Value).ToImmutableList(), parameters.AdditionalDicesCount, parameters));
 
-                {
-                    var indicesToRemove = diceRemovingSelector.Select(data.Select(d => d.Value).ToArray(), parameters.AdditionalDicesCount, parameters);
-                    if (indicesToRemove.Count != parameters.AdditionalDicesCount)
-                    {
-                        throw new InvalidOperationException("Count of elements from diceRemovingSelector.Select() must be equal to count of additional dices in roll");
-                    }
+            return current.Result();
+        }
 
-                    foreach (var i in indicesToRemove)
-                    {
-                        data[i].Removed = true;
-                    }
-                }
-
-                {
-                    bool somethingChanged = false;
-                    int availableRerolls = parameters.RerollsCount;
-                    int availableBursts = parameters.BurstsCount;
-                    do
-                    {
-                        somethingChanged = false;
-
-                        if (availableRerolls != 0)
-                        {
-                            var rerollsCount = parameters.HasInfinityRerolls ? int.MaxValue : availableRerolls;
-                            foreach (var d in data.Where(d => !d.Removed && d.Value == 1).Take(rerollsCount))
-                            {
-                                if (!parameters.HasInfinityRerolls)
-                                {
-                                    --availableRerolls;
-                                }
-
-                                d.values.Add(makeRoll());
-                                somethingChanged = true;
-                            }
-                        }
-
-                        if (availableBursts != 0)
-                        {
-                            var burstsCount = parameters.HasInfinityBursts ? int.MaxValue : availableBursts;
-                            var toBurst = data.Where(d => !d.Removed && !d.burstMade && d.Value == parameters.FacesCount).Take(burstsCount);
-                            List<Dice> newRolls = new(toBurst.Count());
-
-                            foreach (var d in toBurst)
-                            {
-                                if (!parameters.HasInfinityBursts)
-                                {
-                                    --availableBursts;
-                                }
-
-                                d.burstMade = true;
-
-                                newRolls.Add(new Dice(makeRoll(), isBurst: true));
-                                somethingChanged = true;
-                            }
-
-                            data.AddRange(newRolls);
-                        }
-                    } while (somethingChanged);
-                }
-            }
-
-            return new Result(data, parameters);
+        public Result Roll(IDiceRemovingSelector? diceRemovingSelector)
+        {
+            return Roll(null, diceRemovingSelector);
         }
     }
 }
