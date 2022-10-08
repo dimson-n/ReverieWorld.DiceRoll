@@ -7,6 +7,7 @@ namespace RP.ReverieWorld.DiceRoll
     /// </summary>
     public sealed class DefaultDiceRemovingSelector : IDiceRemovingSelector
     {
+        /// <inheritdoc/>
         public IReadOnlySet<int> Select(IReadOnlyList<Dice> dices, int count, IParameters parameters)
         {
             // TODO: can try boundary+=1 if there is much more rerolls then ones as if parameters.HasInfinityRerolls.
