@@ -41,7 +41,7 @@ namespace RP.ReverieWorld.DiceRoll
             this.data = new List<Dice>(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
         }
 
-        public InteractiveRollerDiceRemover Begin()
+        public DiceRemoveStage Begin()
         {
             if (state != State.Init)
             {
@@ -60,7 +60,7 @@ namespace RP.ReverieWorld.DiceRoll
 
             state = State.RemovingDices;
 
-            return new InteractiveRollerDiceRemover(this);
+            return new DiceRemoveStage(this);
         }
 
         public void RemoveDice(int index)
@@ -124,7 +124,7 @@ namespace RP.ReverieWorld.DiceRoll
             return result!;
         }
 
-        public class InteractiveRollerDiceRemover
+        public class DiceRemoveStage
         {
             private readonly InteractiveRoller source;
 
@@ -152,7 +152,7 @@ namespace RP.ReverieWorld.DiceRoll
                 return source.Result();
             }
 
-            internal InteractiveRollerDiceRemover(InteractiveRoller source)
+            internal DiceRemoveStage(InteractiveRoller source)
             {
                 this.source = source;
             }
