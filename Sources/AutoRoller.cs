@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace RP.ReverieWorld.DiceRoll
+﻿namespace RP.ReverieWorld.DiceRoll
 {
     public sealed partial class AutoRoller
     {
@@ -45,7 +43,7 @@ namespace RP.ReverieWorld.DiceRoll
 
             var current = new InteractiveRoller(randomProvider, parameters).Begin();
 
-            current.RemoveDices(diceRemovingSelector.Select(current.Values.Select(d => d.Value).ToImmutableList(), parameters.AdditionalDicesCount, parameters));
+            current.RemoveDices(diceRemovingSelector.Select(current.Values, parameters.AdditionalDicesCount, parameters));
 
             return current.Result();
         }
