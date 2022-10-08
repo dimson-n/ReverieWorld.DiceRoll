@@ -22,8 +22,6 @@ namespace RP.ReverieWorld.DiceRoll
 
         public int DicesToRemove => parameters.AdditionalDicesCount - data.Where(d => d.Removed).Count();
 
-        public int Count => data.Count;
-
         /// <summary>
         /// </summary>
         /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
