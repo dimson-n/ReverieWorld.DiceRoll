@@ -130,7 +130,7 @@ namespace RP.ReverieWorld.DiceRoll
 
             public IReadOnlyList<Dice> Values => source.Values;
 
-            public Roll Current => new(source.Values, source.parameters);
+            public Roll Current => source.result ?? new Roll(source.Values, source.parameters);
 
             public bool StageConditionsMet => source.DicesToRemove == 0;
 
