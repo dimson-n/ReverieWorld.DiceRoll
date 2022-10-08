@@ -2,7 +2,7 @@
 
 namespace RP.ReverieWorld.DiceRoll
 {
-    public class InteractiveRoller
+    public sealed class InteractiveRoller
     {
         enum State
         {
@@ -124,7 +124,7 @@ namespace RP.ReverieWorld.DiceRoll
             return result!;
         }
 
-        public class DiceRemoveStage
+        public sealed class DiceRemoveStage
         {
             private readonly InteractiveRoller source;
 
