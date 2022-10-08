@@ -1,6 +1,6 @@
 ﻿namespace RP.ReverieWorld.DiceRoll
 {
-    public sealed partial class AutoRoller
+    public sealed class AutoRoller
     {
         private readonly IRandomProvider randomProvider;
         private readonly IParameters defaultParameters;
