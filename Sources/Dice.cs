@@ -17,9 +17,7 @@ namespace RP.ReverieWorld.DiceRoll
 
         public int RollsCount => values.Count;
 
-        /// <summary>
-        /// <see langword="true"/> if dice was excluded from roll result; otherwise, <see langword="false"/>.
-        /// </summary>
+        /// <returns><see langword="true"/> if dice was excluded from roll result; otherwise, <see langword="false"/>.</returns>
         public bool Removed { get; internal set; }
 
         public bool IsBurst { get; internal set; }

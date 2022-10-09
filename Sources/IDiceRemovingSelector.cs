@@ -1,7 +1,7 @@
 ﻿namespace RP.ReverieWorld.DiceRoll
 {
     /// <summary>
-    /// Strategy for "add then remove" dice mechanic for <see cref="AutoRoller"/>.
+    /// Provides an abstraction for an "add then remove" dice mechanic strategy for <see cref="AutoRoller"/>.
     /// </summary>
     public interface IDiceRemovingSelector
     {

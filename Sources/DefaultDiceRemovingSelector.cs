@@ -3,7 +3,7 @@
 namespace RP.ReverieWorld.DiceRoll
 {
     /// <summary>
-    /// Implements default strategy for <see cref="IDiceRemovingSelector"/> interface.
+    /// Implements default strategy of <see cref="IDiceRemovingSelector"/> interface for <see cref="AutoRoller"/>.
     /// </summary>
     public sealed class DefaultDiceRemovingSelector : IDiceRemovingSelector
     {
