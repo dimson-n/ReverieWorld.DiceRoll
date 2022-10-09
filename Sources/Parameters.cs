@@ -13,22 +13,22 @@
         public const int Infinite = -1;
 
         /// <inheritdoc/>
-        public int FacesCount { get; init; }
+        public virtual int FacesCount { get; init; }
 
         /// <inheritdoc/>
-        public int DicesCount { get; init; }
+        public virtual int DicesCount { get; init; }
 
         /// <inheritdoc/>
-        public int AdditionalDicesCount { get; init; }
+        public virtual int AdditionalDicesCount { get; init; }
 
         /// <inheritdoc/>
-        public int RerollsCount { get; init; }
+        public virtual int RerollsCount { get; init; }
 
         /// <inheritdoc/>
-        public int BurstsCount { get; init; }
+        public virtual int BurstsCount { get; init; }
 
         /// <inheritdoc/>
-        public int Bonus { get; init; }
+        public virtual int Bonus { get; init; }
 
         public Parameters(int facesCount = DefaultDiceFacesCount, int dicesCount = 1, int additionalDicesCount = 0,
                           int rerollsCount = 0, int burstsCount = 0, int bonus = 0)
