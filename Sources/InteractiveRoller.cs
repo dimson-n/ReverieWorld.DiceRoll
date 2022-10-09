@@ -70,6 +70,11 @@ namespace RP.ReverieWorld.DiceRoll
                 throw new InvalidOperationException();
             }
 
+            if (DicesToRemove <= 0)
+            {
+                throw new InvalidOperationException("No more dices to remove");
+            }
+
             if (index < 0 || data.Count <= index)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, "Index out of range");
@@ -86,6 +91,11 @@ namespace RP.ReverieWorld.DiceRoll
             }
 
             ArgumentNullException.ThrowIfNull(indices);
+
+            if (DicesToRemove < indices.Count)
+            {
+                throw new InvalidOperationException("Too many indices to remove provided");
+            }
 
             foreach (int index in indices)
             {
