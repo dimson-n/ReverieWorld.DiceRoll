@@ -145,6 +145,11 @@ namespace RP.ReverieWorld.DiceRoll
             /// <returns>Current state of the <see cref="Roll"/>.</returns>
             public Roll Current => source.result ?? new Roll(source.Values, source.parameters);
 
+            /// <summary>
+            /// Count of dices to remove at this stage.
+            /// </summary>
+            public int DicesToRemove => source.DicesToRemove;
+
             public bool StageConditionsMet => source.DicesToRemove == 0;
 
             public void RemoveDice(int index)
