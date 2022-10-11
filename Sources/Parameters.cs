@@ -1,10 +1,13 @@
 ﻿namespace RP.ReverieWorld.DiceRoll
 {
     /// <summary>
-    /// Default implementation of <see cref="IParameters"/> interface.
+    /// Default implementation of the <see cref="IParameters"/> interface.
     /// </summary>
     public class Parameters : IParameters
     {
+        /// <summary>
+        /// Default value for <see cref="FacesCount"/> property unless otherwise specified.
+        /// </summary>
         public const int DefaultDiceFacesCount = 6;
 
         /// <summary>
@@ -30,6 +33,15 @@
         /// <inheritdoc/>
         public virtual int Bonus { get; init; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Parameters"/> class with designated parameters for roll.
+        /// </summary>
+        /// <param name="facesCount">Dice faces count.</param>
+        /// <param name="dicesCount">Count of dices to roll</param>
+        /// <param name="additionalDicesCount"> Count of dices for "add then remove" dice mechanic.</param>
+        /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
+        /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
+        /// <param name="bonus">Bonus or penalty value for a roll.</param>
         public Parameters(int facesCount = DefaultDiceFacesCount, int dicesCount = 1, int additionalDicesCount = 0,
                           int rerollsCount = 0, int burstsCount = 0, int bonus = 0)
         {
@@ -44,7 +56,7 @@
         /// <summary>
         /// Validates <paramref name="parameters"/> correctness.
         /// </summary>
-        /// <param name="parameters">Instance of <see cref="IParameters"/> implementation to validation.</param>
+        /// <param name="parameters">A roll parameters to validate.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="parameters"/> is <see langword="null"/>.</exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="ArgumentException"></exception>
