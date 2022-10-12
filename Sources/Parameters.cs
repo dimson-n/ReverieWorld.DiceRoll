@@ -38,7 +38,7 @@
         /// </summary>
         /// <param name="facesCount">Dice faces count.</param>
         /// <param name="dicesCount">Count of dices to roll</param>
-        /// <param name="additionalDicesCount"> Count of dices for "add then remove" dice mechanic.</param>
+        /// <param name="additionalDicesCount">Count of dices for "add then remove" dice mechanic.</param>
         /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
         /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
         /// <param name="bonus">Bonus or penalty value for a roll.</param>

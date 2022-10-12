@@ -32,10 +32,9 @@ namespace RP.ReverieWorld.DiceRoll
         public int BaseDicesCount => parameters.DicesCount;
 
         /// <summary>
-        /// Count of additional dices that added to initial roll.
-        /// Than same count of dices removed (not necessary the same dices).
+        /// Count of dices for "add then remove" dice mechanic.
         /// </summary>
-        public int RemovedDicesCount => parameters.AdditionalDicesCount;
+        public int AdditionalDicesCount => parameters.AdditionalDicesCount;
 
         /// <summary>
         /// Count of possible rerolls for dices with value 1.
