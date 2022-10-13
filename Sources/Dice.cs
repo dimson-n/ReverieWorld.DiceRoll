@@ -32,7 +32,7 @@ namespace RP.ReverieWorld.DiceRoll
         /// Gets a value indicating whether the <see cref="Dice"/> made as burst.
         /// </summary>
         /// <returns><see langword="true"/> if the <see cref="Dice"/> was made as burst; otherwise, <see langword="false"/>.</returns>
-        public bool IsBurst { get; internal set; }
+        public bool IsBurst { get; }
 
         internal Dice(int value, bool removed = false, bool burstMade = false, bool isBurst = false)
         {
