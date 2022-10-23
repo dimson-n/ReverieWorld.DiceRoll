@@ -5,6 +5,8 @@
     /// </summary>
     public class Parameters : IParameters
     {
+        internal static readonly Parameters Default = new();
+
         /// <summary>
         /// Default value for <see cref="FacesCount"/> property unless otherwise specified.
         /// </summary>

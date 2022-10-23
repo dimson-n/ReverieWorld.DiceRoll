@@ -33,7 +33,7 @@ namespace RP.ReverieWorld.DiceRoll
         {
             ArgumentNullException.ThrowIfNull(randomProvider);
 
-            parameters ??= new Parameters();
+            parameters ??= Parameters.Default;
             Parameters.Validate(parameters);
 
             this.randomProvider = randomProvider;

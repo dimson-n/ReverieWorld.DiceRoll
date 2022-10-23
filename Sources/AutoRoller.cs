@@ -16,7 +16,7 @@
         {
             ArgumentNullException.ThrowIfNull(randomProvider);
 
-            defaultParameters ??= new Parameters();
+            defaultParameters ??= Parameters.Default;
             Parameters.Validate(defaultParameters);
 
             this.randomProvider = randomProvider;
