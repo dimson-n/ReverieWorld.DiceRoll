@@ -4,15 +4,15 @@
     {
         private readonly IRandomProvider randomProvider;
         private readonly IParameters defaultParameters;
-        private readonly IDiceRemovingSelector diceRemovingSelector;
+        private readonly IDiceRemoveStrategy diceRemoveStrategy;
 
         /// <summary>
         /// </summary>
         /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
         /// <param name="defaultParameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
-        /// <param name="diceRemovingSelector">Custom implementation of <see cref="IDiceRemovingSelector"/> interface or <see cref="DefaultDiceRemovingSelector"/> (default).</param>
+        /// <param name="diceRemoveStrategy">Custom implementation of <see cref="IDiceRemoveStrategy"/> interface or <see cref="DefaultDiceRemoveStrategy"/> (default).</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
-        public AutoRoller(IRandomProvider randomProvider, IParameters? defaultParameters = null, IDiceRemovingSelector? diceRemovingSelector = null)
+        public AutoRoller(IRandomProvider randomProvider, IParameters? defaultParameters = null, IDiceRemoveStrategy? diceRemoveStrategy = null)
         {
             ArgumentNullException.ThrowIfNull(randomProvider);
 
@@ -21,36 +21,36 @@
 
             this.randomProvider = randomProvider;
             this.defaultParameters = defaultParameters;
-            this.diceRemovingSelector = diceRemovingSelector ?? new DefaultDiceRemovingSelector();
+            this.diceRemoveStrategy = diceRemoveStrategy ?? new DefaultDiceRemoveStrategy();
         }
 
         /// <summary>
         /// </summary>
         /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
-        /// <param name="diceRemovingSelector">Custom implementation of <see cref="IDiceRemovingSelector"/> interface or <see cref="DefaultDiceRemovingSelector"/> (default).</param>
+        /// <param name="diceRemoveStrategy">Custom implementation of <see cref="IDiceRemoveStrategy"/> interface or <see cref="DefaultDiceRemoveStrategy"/> (default).</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
-        public AutoRoller(IRandomProvider randomProvider, IDiceRemovingSelector? diceRemovingSelector) :
-            this(randomProvider, null, diceRemovingSelector)
+        public AutoRoller(IRandomProvider randomProvider, IDiceRemoveStrategy? diceRemoveStrategy) :
+            this(randomProvider, null, diceRemoveStrategy)
         {
         }
 
-        public Result Roll(IParameters? parameters = null, IDiceRemovingSelector? diceRemovingSelector = null)
+        public Result Roll(IParameters? parameters = null, IDiceRemoveStrategy? diceRemoveStrategy = null)
         {
             parameters ??= defaultParameters;
             Parameters.Validate(parameters);
 
-            diceRemovingSelector ??= this.diceRemovingSelector;
+            diceRemoveStrategy ??= this.diceRemoveStrategy;
 
             var current = new InteractiveRoller(randomProvider, parameters).Begin();
 
-            current.RemoveDices(diceRemovingSelector.Select(current.Values, parameters.AdditionalDicesCount, parameters));
+            current.RemoveDices(diceRemoveStrategy.Select(current.Values, parameters.AdditionalDicesCount, parameters));
 
             return current.Result();
         }
 
-        public Result Roll(IDiceRemovingSelector? diceRemovingSelector)
+        public Result Roll(IDiceRemoveStrategy? diceRemoveStrategy)
         {
-            return Roll(null, diceRemovingSelector);
+            return Roll(null, diceRemoveStrategy);
         }
     }
 }

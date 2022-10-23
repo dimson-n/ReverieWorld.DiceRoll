@@ -3,7 +3,7 @@
     /// <summary>
     /// Provides an abstraction for an "add then remove" dice mechanic strategy for <see cref="AutoRoller"/>.
     /// </summary>
-    public interface IDiceRemovingSelector
+    public interface IDiceRemoveStrategy
     {
         /// <summary>
         /// </summary>

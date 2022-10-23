@@ -3,9 +3,9 @@
 namespace RP.ReverieWorld.DiceRoll
 {
     /// <summary>
-    /// Implements default strategy of <see cref="IDiceRemovingSelector"/> interface for <see cref="AutoRoller"/>.
+    /// Implements default strategy of <see cref="IDiceRemoveStrategy"/> interface for <see cref="AutoRoller"/>.
     /// </summary>
-    public sealed class DefaultDiceRemovingSelector : IDiceRemovingSelector
+    public sealed class DefaultDiceRemoveStrategy : IDiceRemoveStrategy
     {
         /// <inheritdoc/>
         public IReadOnlySet<int> Select(IReadOnlyList<Dice> dices, int count, IParameters parameters)
