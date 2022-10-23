@@ -43,7 +43,10 @@
 
             var current = new InteractiveRoller(randomProvider, parameters).Begin();
 
-            current.RemoveDices(diceRemoveStrategy.Select(current.Values, parameters.AdditionalDicesCount, parameters));
+            if (parameters.AdditionalDicesCount != 0)
+            {
+                current.RemoveDices(diceRemoveStrategy.Select(current.Values, parameters.AdditionalDicesCount, parameters));
+            }
 
             return current.Result();
         }
