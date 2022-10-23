@@ -223,7 +223,7 @@ namespace RP.ReverieWorld.DiceRoll
             } while (somethingChanged);
         }
 
-        private struct RollMaker : IDisposable
+        private readonly struct RollMaker : IDisposable
         {
             private readonly int facesCount;
             private readonly IRandom random;
