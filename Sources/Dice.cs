@@ -34,12 +34,12 @@ namespace RP.ReverieWorld.DiceRoll
         /// <returns><see langword="true"/> if the <see cref="Dice"/> was made as burst; otherwise, <see langword="false"/>.</returns>
         public bool IsBurst { get; }
 
-        internal Dice(int value, bool removed = false, bool burstMade = false, bool isBurst = false)
+        internal Dice(int value, bool isBurst = false)
         {
-            this.values = new List<int>(1) { value };
-            this.Removed = removed;
-            this.burstMade = burstMade;
-            this.IsBurst = isBurst;
+            this.values    = new List<int>(1) { value };
+            this.burstMade = false;
+            this.Removed   = false;
+            this.IsBurst   = isBurst;
         }
 
         /// <summary>
