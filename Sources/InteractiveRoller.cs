@@ -50,7 +50,7 @@ namespace RP.ReverieWorld.DiceRoll
 
             int initialRollsCount = parameters.DicesCount + parameters.AdditionalDicesCount;
 
-            using (var random = new RollMaker(this))
+            using (RollMaker random = new(this))
             {
                 for (int i = 0; i != initialRollsCount; ++i)
                 {
@@ -175,11 +175,11 @@ namespace RP.ReverieWorld.DiceRoll
 
         private void CompleteRerrolsAndBursts()
         {
-            using var random = new RollMaker(this);
-
             bool somethingChanged = false;
             int availableRerolls = parameters.RerollsCount;
             int availableBursts = parameters.BurstsCount;
+
+            using RollMaker random = new(this);
             do
             {
                 somethingChanged = false;
@@ -234,7 +234,7 @@ namespace RP.ReverieWorld.DiceRoll
                 random = roller.randomProvider.Lock();
             }
 
-            public int Next()
+            public readonly int Next()
             {
                 return random.Next(facesCount) + 1;
             }
