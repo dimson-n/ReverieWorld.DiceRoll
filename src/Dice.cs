@@ -8,7 +8,7 @@ namespace RP.ReverieWorld.DiceRoll
     public sealed class Dice : IReadOnlyList<int>
     {
         internal readonly List<int> values;
-        internal bool burstMade;
+        internal bool burstMade = false;
 
         /// <summary>
         /// Gets actual value of the <see cref="Dice"/>.
@@ -32,7 +32,7 @@ namespace RP.ReverieWorld.DiceRoll
         /// Gets a value indicating whether the <see cref="Dice"/> excluded from roll result.
         /// </summary>
         /// <returns><see langword="true"/> if the <see cref="Dice"/> was excluded from roll result; otherwise, <see langword="false"/>.</returns>
-        public bool Removed { get; internal set; }
+        public bool Removed { get; internal set; } = false;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="Dice"/> made as burst.
@@ -44,8 +44,6 @@ namespace RP.ReverieWorld.DiceRoll
         {
             this.values    = new List<int>(1) { value };
             this.Offset    = offset;
-            this.burstMade = false;
-            this.Removed   = false;
             this.IsBurst   = isBurst;
         }
 
