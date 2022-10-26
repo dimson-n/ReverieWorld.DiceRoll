@@ -252,7 +252,7 @@ namespace RP.ReverieWorld.DiceRoll
             private int count;
             private readonly bool infinity;
 
-            internal ParamCounter(int count, bool infinity = false)
+            internal ParamCounter(int count, bool infinity)
             {
                 this.count = count;
                 this.infinity = infinity;
