@@ -176,49 +176,51 @@ namespace RP.ReverieWorld.DiceRoll
         private void CompleteRerrolsAndBursts()
         {
             bool somethingChanged = false;
-            int availableRerolls = parameters.RerollsCount;
-            int availableBursts = parameters.BurstsCount;
+
+            ParamCounter availableRerolls = new(parameters.RerollsCount, parameters.HasInfinityRerolls);
+            ParamCounter availableBursts  = new(parameters.BurstsCount,  parameters.HasInfinityBursts);
+
+            int currentRound = 0;
 
             using RollMaker random = new(this);
             do
             {
                 somethingChanged = false;
 
-                if (availableRerolls != 0)
+                if (availableRerolls.Exists)
                 {
-                    var rerollsCount = parameters.HasInfinityRerolls ? int.MaxValue : availableRerolls;
-                    foreach (var d in data.Where(d => !d.Removed && d.Value == 1).Take(rerollsCount))
+                    var toReroll = data.Where(d => !d.Removed && d.Value == 1);
+                    while (toReroll.Any() && availableRerolls.Exists)
                     {
-                        if (!parameters.HasInfinityRerolls)
+                        foreach (var d in toReroll.Take(availableRerolls.MaxCount))
                         {
                             --availableRerolls;
+                            d.values.Add(random.Next());
                         }
 
-                        d.values.Add(random.Next());
                         somethingChanged = true;
+                        ++currentRound;
                     }
                 }
 
-                if (availableBursts != 0)
+                if (availableBursts.Exists)
                 {
-                    var burstsCount = parameters.HasInfinityBursts ? int.MaxValue : availableBursts;
-                    var toBurst = data.Where(d => !d.Removed && !d.burstMade && d.Value == parameters.FacesCount).Take(burstsCount);
+                    var toBurst = data.Where(d => !d.Removed && !d.burstMade && d.Value == parameters.FacesCount);
                     List<Dice> newRolls = new(toBurst.Count());
 
-                    foreach (var d in toBurst)
+                    while (toBurst.Any() && availableBursts.Exists)
                     {
-                        if (!parameters.HasInfinityBursts)
+                        newRolls.Clear();
+                        foreach (var d in toBurst.Take(availableBursts.MaxCount))
                         {
+                            newRolls.Add(new Dice(random.Next(), offset: currentRound, isBurst: true));
+                            d.burstMade = true;
                             --availableBursts;
                         }
+                        data.AddRange(newRolls);
 
-                        d.burstMade = true;
-
-                        newRolls.Add(new Dice(random.Next(), isBurst: true));
                         somethingChanged = true;
                     }
-
-                    data.AddRange(newRolls);
                 }
             } while (somethingChanged);
         }
@@ -242,6 +244,31 @@ namespace RP.ReverieWorld.DiceRoll
             public void Dispose()
             {
                 random.Dispose();
+            }
+        }
+
+        private class ParamCounter
+        {
+            private int count;
+            private readonly bool infinity;
+
+            internal ParamCounter(int count, bool infinity = false)
+            {
+                this.count = count;
+                this.infinity = infinity;
+            }
+
+            public bool Exists => infinity || count != 0;
+
+            public int MaxCount => infinity ? int.MaxValue : count;
+
+            public static ParamCounter operator --(ParamCounter counter)
+            {
+                if (!counter.infinity)
+                {
+                    --counter.count;
+                }
+                return counter;
             }
         }
     }
