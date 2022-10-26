@@ -11,10 +11,16 @@ namespace RP.ReverieWorld.DiceRoll
         internal bool burstMade;
 
         /// <summary>
-        /// Gets actual value of the dice.
+        /// Gets actual value of the <see cref="Dice"/>.
         /// </summary>
-        /// <returns>Actual value of the dice.</returns>
+        /// <returns>Actual value of the <see cref="Dice"/>.</returns>
         public int Value => values.Last();
+
+        /// <summary>
+        /// Gets <see cref="Dice"/> generation offset (<see cref="Roll"/> round).
+        /// </summary>
+        /// <returns><see cref="Dice"/> generation offset (<see cref="Roll"/> round).</returns>
+        public int Offset { get; }
 
         /// <summary>
         /// Gets the number of rolls of the <see cref="Dice"/>.
@@ -34,9 +40,10 @@ namespace RP.ReverieWorld.DiceRoll
         /// <returns><see langword="true"/> if the <see cref="Dice"/> was made as burst; otherwise, <see langword="false"/>.</returns>
         public bool IsBurst { get; }
 
-        internal Dice(int value, bool isBurst = false)
+        internal Dice(int value, int offset = 0, bool isBurst = false)
         {
             this.values    = new List<int>(1) { value };
+            this.Offset    = offset;
             this.burstMade = false;
             this.Removed   = false;
             this.IsBurst   = isBurst;
