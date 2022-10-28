@@ -93,9 +93,9 @@ public class Roll : IReadOnlyList<Dice>
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)rolls).GetEnumerator();
 
     /// <summary>
-    /// Returns a string that represents the <see cref="Roll"/> result.
+    /// Returns a string that represents the <see cref="Roll"/> value.
     /// </summary>
-    /// <returns>A string that represents the <see cref="Roll"/> result.</returns>
+    /// <returns>A string that represents the <see cref="Roll"/> value.</returns>
     public override string ToString()
     {
         return Total.ToString();

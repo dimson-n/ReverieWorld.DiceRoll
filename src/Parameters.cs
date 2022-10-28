@@ -36,7 +36,7 @@ public class Parameters : IParameters
     public virtual int Bonus { get; init; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Parameters"/> class with designated parameters for roll.
+    /// Initializes a new instance of the <see cref="Parameters"/> class with designated parameters for a dice roller.
     /// </summary>
     /// <param name="facesCount">Dice faces count.</param>
     /// <param name="dicesCount">Count of dices to roll</param>

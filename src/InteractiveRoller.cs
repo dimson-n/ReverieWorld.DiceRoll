@@ -2,6 +2,9 @@
 
 namespace RP.ReverieWorld.DiceRoll;
 
+/// <summary>
+/// Represents an interactive dice roller.
+/// </summary>
 public sealed class InteractiveRoller
 {
     enum State
@@ -18,11 +21,20 @@ public sealed class InteractiveRoller
     private readonly List<Dice> data;
     private Result? result;
 
+    /// <summary>
+    /// Gets a readonly list of dices of current state.
+    /// </summary>
+    /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</returns>
     public IReadOnlyList<Dice> Values => data.ToImmutableList();
 
+    /// <summary>
+    /// Gets count of <see cref="Dice"/>s that need to be removed from roll.
+    /// </summary>
+    /// <returns>Count of <see cref="Dice"/>s that need to be removed from roll.</returns>
     public int DicesToRemove => parameters.AdditionalDicesCount - data.Where(d => d.Removed).Count();
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="InteractiveRoller"/> with specified <paramref name="randomProvider"/> and optional <paramref name="parameters"/>.
     /// </summary>
     /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
     /// <param name="parameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
@@ -41,6 +53,11 @@ public sealed class InteractiveRoller
         this.data = new List<Dice>(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
     }
 
+    /// <summary>
+    /// Makes initial dice roll.
+    /// </summary>
+    /// <returns>Next stage wrapper.</returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public DiceRemoveStage Begin()
     {
         if (state != State.Init)
@@ -63,6 +80,12 @@ public sealed class InteractiveRoller
         return new DiceRemoveStage(this);
     }
 
+    /// <summary>
+    /// Removes a <see cref="Dice"/> at the given <paramref name="index"/> from roll.
+    /// </summary>
+    /// <param name="index">Index of a <see cref="Dice"/> to remove.</param>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void RemoveDice(int index)
     {
         if (state != State.RemovingDices)
@@ -83,6 +106,13 @@ public sealed class InteractiveRoller
         data[index].Removed = true;
     }
 
+    /// <summary>
+    /// Removes a set of <see cref="Dice"/>s at the given <paramref name="indices"/> from roll.
+    /// </summary>
+    /// <param name="indices">Set of <see cref="Dice"/> indices to remove.</param>
+    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void RemoveDices(IReadOnlySet<int> indices)
     {
         if (state != State.RemovingDices)
@@ -111,6 +141,11 @@ public sealed class InteractiveRoller
         }
     }
 
+    /// <summary>
+    /// Completes the dice roll interaction.
+    /// </summary>
+    /// <returns><see cref="DiceRoll.Result"/> of the dice roll.</returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public Result Result()
     {
         if (state == State.RemovingDices)
@@ -134,34 +169,65 @@ public sealed class InteractiveRoller
         return result!;
     }
 
+    /// <summary>
+    /// Represents a dice remove stage of interactive roll.
+    /// </summary>
     public sealed class DiceRemoveStage
     {
         private readonly InteractiveRoller source;
 
+        /// <summary>
+        /// Gets a readonly list of dices of current state.
+        /// </summary>
+        /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</returns>
         public IReadOnlyList<Dice> Values => source.Values;
 
         /// <summary>
+        /// Gets current state of the <see cref="Roll"/>.
         /// </summary>
         /// <returns>Current state of the <see cref="Roll"/>.</returns>
         public Roll Current => source.result ?? new Roll(source.Values, source.parameters);
 
         /// <summary>
-        /// Count of dices to remove at this stage.
+        /// Gets count of dices to remove at this stage.
         /// </summary>
+        /// <returns>Count of dices that needs to be removed from the <see cref="Roll"/>.</returns>
         public int DicesToRemove => source.DicesToRemove;
 
+        /// <summary>
+        /// Indicates that proper count of <see cref="Dice"/>s already removed from the <see cref="Roll"/>.
+        /// </summary>
+        /// <returns><see langword="true"/> if there is no <see cref="Dice"/>s to remove; otherwise <see langword="false"/>.</returns>
         public bool StageConditionsMet => source.DicesToRemove == 0;
 
+        /// <summary>
+        /// Removes a <see cref="Dice"/> at the given <paramref name="index"/> from roll.
+        /// </summary>
+        /// <param name="index">Index of a <see cref="Dice"/> to remove.</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void RemoveDice(int index)
         {
             source.RemoveDice(index);
         }
 
+        /// <summary>
+        /// Removes a set of <see cref="Dice"/>s at the given <paramref name="indices"/> from roll.
+        /// </summary>
+        /// <param name="indices">Set of <see cref="Dice"/> indices to remove.</param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public void RemoveDices(IReadOnlySet<int> indices)
         {
             source.RemoveDices(indices);
         }
 
+        /// <summary>
+        /// Completes the dice roll interaction.
+        /// </summary>
+        /// <returns><see cref="DiceRoll.Result"/> of the dice roll.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public Result Result()
         {
             return source.Result();

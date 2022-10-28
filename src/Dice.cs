@@ -3,7 +3,7 @@
 namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
-/// Represents one dice in the <see cref="Roll"/>.
+/// Represents one dice in a <see cref="Roll"/>.
 /// </summary>
 public sealed class Dice : IReadOnlyList<int>
 {
