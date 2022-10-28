@@ -96,8 +96,5 @@ public class Roll : IReadOnlyList<Dice>
     /// Returns a string that represents the <see cref="Roll"/> value.
     /// </summary>
     /// <returns>A string that represents the <see cref="Roll"/> value.</returns>
-    public override string ToString()
-    {
-        return Total.ToString();
-    }
+    public override string ToString() => Total.ToString();
 }
