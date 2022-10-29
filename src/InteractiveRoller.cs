@@ -54,7 +54,7 @@ public sealed class InteractiveRoller
     }
 
     /// <summary>
-    /// Makes initial dice roll.
+    /// Performs initial dice roll.
     /// </summary>
     /// <returns>Next stage wrapper.</returns>
     /// <exception cref="InvalidOperationException"></exception>
