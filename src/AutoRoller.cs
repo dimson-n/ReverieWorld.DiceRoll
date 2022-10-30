@@ -73,7 +73,7 @@ public sealed class AutoRoller
     /// Performs the dice roll with default parameters and optional <paramref name="diceRemoveStrategy"/>.
     /// </summary>
     /// <remarks>If <paramref name="diceRemoveStrategy"/> not provided the default will be used.</remarks>
-    /// <param name="diceRemoveStrategy"></param>
+    /// <param name="diceRemoveStrategy">Dice selection strategy for an "add then remove" dice mechanic.</param>
     /// <returns>The <see cref="Result"/> of the dice roll.</returns>
     public Result Roll(IDiceRemoveStrategy? diceRemoveStrategy)
     {

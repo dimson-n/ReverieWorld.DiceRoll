@@ -6,7 +6,7 @@
 public sealed class Result : Roll
 {
     /// <summary>
-    /// Gets a value indicating whether the roll <see cref="Result"/> was fully performed.
+    /// Gets a value indicating whether the <see cref="Roll"/> was fully performed.
     /// </summary>
     /// <returns>Always <see langword="true"/>.</returns>
     public override bool Completed => true;
