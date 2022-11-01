@@ -40,11 +40,11 @@ public interface IParameters
     /// <see langword="true"/> indicates that <see cref="RerollsCount"/> must be ignored
     /// and rerolls must be performed for all dices with value 1; otherwise <see langword="false"/>.
     /// </summary>
-    bool HasInfinityRerolls => RerollsCount < 0;
+    bool HasInfinityRerolls { get; }
 
     /// <summary>
     /// <see langword="true"/> indicates that <see cref="BurstsCount"/> must be ignored
     /// and burtst must be performed for all dices with max possible value; otherwise <see langword="false"/>.
     /// </summary>
-    bool HasInfinityBursts => BurstsCount < 0;
+    bool HasInfinityBursts { get; }
 }
