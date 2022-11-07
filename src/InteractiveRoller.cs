@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace RP.ReverieWorld.DiceRoll;
+﻿namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Represents an interactive dice roller.
@@ -25,7 +23,7 @@ public sealed class InteractiveRoller
     /// Gets a readonly list of dices of current state.
     /// </summary>
     /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</returns>
-    public IReadOnlyList<Dice> Values => data.ToImmutableList();
+    public IReadOnlyList<Dice> Values => data.AsReadOnly();
 
     /// <summary>
     /// Gets count of <see cref="Dice"/>s that need to be removed from roll.
