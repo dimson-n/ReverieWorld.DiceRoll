@@ -46,7 +46,7 @@ public class Parameters : IParameters
     /// Gets value for indication that <see cref="BurstsCount"/> must be ignored and burtst must be performed for all dices with max possible value.
     /// </summary>
     /// <returns><see langword="true"/> if <see cref="BurstsCount"/> must be ignored
-    /// and burtst must be performed for all dices with max possible value; otherwise <see langword="false"/>.</returns>
+    /// and burst must be performed for all dices with max possible value; otherwise <see langword="false"/>.</returns>
     public virtual bool HasInfinityBursts => BurstsCount < 0;
 
     /// <summary>
