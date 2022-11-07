@@ -26,6 +26,12 @@ public sealed class InteractiveRoller
     public IReadOnlyList<Dice> Values => data.AsReadOnly();
 
     /// <summary>
+    /// Gets current state of the <see cref="Roll"/>.
+    /// </summary>
+    /// <returns>Current state of the <see cref="Roll"/>.</returns>
+    public Roll Current => result ?? new Roll(data, parameters);
+
+    /// <summary>
     /// Gets count of <see cref="Dice"/>s that need to be removed from roll.
     /// </summary>
     /// <returns>Count of <see cref="Dice"/>s that need to be removed from roll.</returns>
@@ -184,7 +190,7 @@ public sealed class InteractiveRoller
         /// Gets current state of the <see cref="Roll"/>.
         /// </summary>
         /// <returns>Current state of the <see cref="Roll"/>.</returns>
-        public Roll Current => source.result ?? new Roll(source.Values, source.parameters);
+        public Roll Current => source.Current;
 
         /// <summary>
         /// Gets count of dices to remove at this stage.
