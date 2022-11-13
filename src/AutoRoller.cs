@@ -57,12 +57,11 @@ public sealed class AutoRoller
         parameters ??= defaultParameters;
         Parameters.Validate(parameters);
 
-        diceRemoveStrategy ??= this.diceRemoveStrategy;
-
         var current = new InteractiveRoller(randomProvider, parameters).Begin();
 
         if (parameters.AdditionalDicesCount != 0)
         {
+            diceRemoveStrategy ??= this.diceRemoveStrategy;
             current.RemoveDices(diceRemoveStrategy.Select(current.Values, parameters.AdditionalDicesCount, parameters));
         }
 
