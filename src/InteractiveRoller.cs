@@ -66,7 +66,7 @@ public sealed class InteractiveRoller
     {
         if (state != State.Init)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Begin can be called once after initialization only");
         }
 
         int initialRollsCount = parameters.DicesCount + parameters.AdditionalDicesCount;
@@ -94,7 +94,7 @@ public sealed class InteractiveRoller
     {
         if (state != State.RemovingDices)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Can't remove dices at current stage");
         }
 
         if (DicesToRemove <= 0)
@@ -121,7 +121,7 @@ public sealed class InteractiveRoller
     {
         if (state != State.RemovingDices)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Can't remove dices at current stage");
         }
 
         ArgumentNullException.ThrowIfNull(indices);
@@ -156,7 +156,7 @@ public sealed class InteractiveRoller
         {
             if (DicesToRemove != 0)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("More dices need to be removed");
             }
 
             CompleteRerrolsAndBursts();
@@ -167,7 +167,7 @@ public sealed class InteractiveRoller
 
         if (state != State.Ready)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Can't get result at current stage");
         }
 
         return result!;
