@@ -21,7 +21,7 @@ public sealed class ParametersTest
     [Fact]
     public void InfinityFields()
     {
-        Parameters p = new(rerollsCount: Parameters.Infinite, burstsCount: Parameters.Infinite);
+        Parameters p = new(rerollsCount: GenericParameters.Infinite, burstsCount: GenericParameters.Infinite);
 
         Assert.True(p.HasInfinityRerolls);
         Assert.True(p.HasInfinityBursts);
@@ -30,13 +30,14 @@ public sealed class ParametersTest
     [Fact]
     public void Validation()
     {
-        Assert.Throws<ArgumentNullException>("parameters", () => Parameters.Validate(null!));
+        Assert.Throws<ArgumentNullException>("parameters", () => GenericParameters.Validate(null!));
 
-        Assert.Throws<ArgumentOutOfRangeException>("FacesCount",           () => Parameters.Validate(new Parameters(facesCount: 1)));
-        Assert.Throws<ArgumentOutOfRangeException>("DicesCount",           () => Parameters.Validate(new Parameters(dicesCount: 0)));
-        Assert.Throws<ArgumentOutOfRangeException>("AdditionalDicesCount", () => Parameters.Validate(new Parameters(additionalDicesCount: -1)));
+        Assert.Throws<ArgumentOutOfRangeException>("FacesCount", () => GenericParameters.Validate(new GenericParameters(facesCount: 1)));
 
-        Assert.Throws<ArgumentException>("RerollsCount", () => Parameters.Validate(new NonInfinityParameters(rerollsCount: Parameters.Infinite)));
-        Assert.Throws<ArgumentException>("BurstsCount",  () => Parameters.Validate(new NonInfinityParameters(burstsCount:  Parameters.Infinite)));
+        Assert.Throws<ArgumentOutOfRangeException>("DicesCount",           () => GenericParameters.Validate(new Parameters(dicesCount: 0)));
+        Assert.Throws<ArgumentOutOfRangeException>("AdditionalDicesCount", () => GenericParameters.Validate(new Parameters(additionalDicesCount: -1)));
+
+        Assert.Throws<ArgumentException>("RerollsCount", () => GenericParameters.Validate(new NonInfinityParameters(rerollsCount: GenericParameters.Infinite)));
+        Assert.Throws<ArgumentException>("BurstsCount",  () => GenericParameters.Validate(new NonInfinityParameters(burstsCount:  GenericParameters.Infinite)));
     }
 }
