@@ -1,9 +1,11 @@
+﻿using System.Collections;
+
 namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Internal roller implementation.
 /// </summary>
-internal sealed class RollState
+internal sealed class RollState : IReadOnlyList<Dice>
 {
     internal readonly IParameters parameters;
     internal readonly List<Dice> rolls;
@@ -20,4 +22,12 @@ internal sealed class RollState
     {
         rolls.Add(new Dice(value, offset, asBurst, fromModifier));
     }
+
+    public Dice this[int index] => rolls[index];
+
+    public int Count => rolls.Count;
+
+    public IEnumerator<Dice> GetEnumerator() => rolls.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)rolls).GetEnumerator();
 }

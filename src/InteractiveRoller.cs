@@ -105,12 +105,12 @@ public sealed class InteractiveRoller
             throw new InvalidOperationException("No more dices to remove");
         }
 
-        if (index < 0 || state.rolls.Count <= index)
+        if (index < 0 || state.Count <= index)
         {
             throw new ArgumentOutOfRangeException(nameof(index), index, "Index out of range");
         }
 
-        state.rolls[index].Removed = true;
+        state[index].Removed = true;
     }
 
     /// <summary>
@@ -144,7 +144,7 @@ public sealed class InteractiveRoller
 
         foreach (int index in indices)
         {
-            state.rolls[index].Removed = true;
+            state[index].Removed = true;
         }
     }
 
@@ -262,7 +262,7 @@ public sealed class InteractiveRoller
 
             if (availableRerolls.Exists)
             {
-                var toReroll = state.rolls.Where(d => !d.Removed && d.Value == 1);
+                var toReroll = state.Where(d => !d.Removed && d.Value == 1);
                 while (toReroll.Any() && availableRerolls.Exists)
                 {
                     foreach (var d in toReroll.Take(availableRerolls.MaxCount))
@@ -278,7 +278,7 @@ public sealed class InteractiveRoller
 
             if (availableBursts.Exists)
             {
-                var toBurst = state.rolls.Where(d => !d.Removed && !d.burstMade && d.Value == state.parameters.FacesCount);
+                var toBurst = state.Where(d => !d.Removed && !d.burstMade && d.Value == state.parameters.FacesCount);
                 List<Dice> newRolls = new(toBurst.Count());
 
                 while (toBurst.Any() && availableBursts.Exists)
