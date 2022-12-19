@@ -64,7 +64,7 @@ public class Roll : IReadOnlyList<Dice>
 
     internal Roll(RollState state)
     {
-        rolls = state.rolls.AsReadOnly();
+        rolls = state.Values;
         parameters = state.parameters;
 
         Total = rolls.Where(d => !d.Removed).Sum(d => d.Value) + Bonus;

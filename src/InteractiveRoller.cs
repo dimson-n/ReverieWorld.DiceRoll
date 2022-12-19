@@ -26,7 +26,7 @@ public sealed class InteractiveRoller
     /// Gets a readonly list of dices of current state.
     /// </summary>
     /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</returns>
-    public IReadOnlyList<Dice> Values => state.rolls.AsReadOnly();
+    public IReadOnlyList<Dice> Values => state.Values;
 
     /// <summary>
     /// Gets current state of the <see cref="Roll"/>.
@@ -38,7 +38,7 @@ public sealed class InteractiveRoller
     /// Gets count of <see cref="Dice"/>s that need to be removed from roll.
     /// </summary>
     /// <returns>Count of <see cref="Dice"/>s that need to be removed from roll.</returns>
-    public int DicesToRemove => state.parameters.AdditionalDicesCount - state.rolls.Where(d => d.Removed).Count();
+    public int DicesToRemove => state.DicesToRemove;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InteractiveRoller"/> with specified <paramref name="randomProvider"/> and optional <paramref name="parameters"/>.
@@ -72,14 +72,9 @@ public sealed class InteractiveRoller
             throw new InvalidOperationException("Begin can be called once after initialization only");
         }
 
-        int initialRollsCount = state.parameters.DicesCount + state.parameters.AdditionalDicesCount;
-
         using (RollMaker random = new(state, randomProvider))
         {
-            for (int i = 0; i != initialRollsCount; ++i)
-            {
-                state.AddDice(random.Next());
-            }
+            state.FillInitial(random);
         }
 
         stage = Stage.RemovingDices;
@@ -117,8 +112,8 @@ public sealed class InteractiveRoller
     /// Removes a set of <see cref="Dice"/>s at the given <paramref name="indices"/> from roll.
     /// </summary>
     /// <param name="indices">Set of <see cref="Dice"/> indices to remove.</param>
-    /// <exception cref="InvalidOperationException"></exception>
     /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="InvalidOperationException"></exception>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void RemoveDices(IReadOnlySet<int> indices)
     {
@@ -129,23 +124,7 @@ public sealed class InteractiveRoller
             throw new InvalidOperationException("Can't remove dices at current stage");
         }
 
-        if (DicesToRemove < indices.Count)
-        {
-            throw new InvalidOperationException("Too many indices to remove provided");
-        }
-
-        foreach (int index in indices)
-        {
-            if (index < 0 || state.rolls.Count <= index)
-            {
-                throw new ArgumentOutOfRangeException(nameof(indices), indices, "One of indices out of range");
-            }
-        }
-
-        foreach (int index in indices)
-        {
-            state[index].Removed = true;
-        }
+        state.RemoveDices(indices);
     }
 
     /// <summary>
@@ -162,7 +141,10 @@ public sealed class InteractiveRoller
                 throw new InvalidOperationException("More dices need to be removed");
             }
 
-            CompleteRerrolsAndBursts();
+            using (RollMaker random = new(state, randomProvider))
+            {
+                state.CompleteRerrolsAndBursts(random);
+            }
 
             result = new Result(state);
             stage = Stage.Ready;
@@ -244,58 +226,5 @@ public sealed class InteractiveRoller
         {
             this.source = source;
         }
-    }
-
-    private void CompleteRerrolsAndBursts()
-    {
-        bool somethingChanged = false;
-
-        ParamCounter availableRerolls = new(state.parameters.RerollsCount, state.parameters.HasInfinityRerolls);
-        ParamCounter availableBursts  = new(state.parameters.BurstsCount,  state.parameters.HasInfinityBursts);
-
-        int currentRound = 0;
-
-        using RollMaker random = new(state, randomProvider);
-        do
-        {
-            somethingChanged = false;
-
-            if (availableRerolls.Exists)
-            {
-                var toReroll = state.Where(d => !d.Removed && d.Value == 1);
-                while (toReroll.Any() && availableRerolls.Exists)
-                {
-                    foreach (var d in toReroll.Take(availableRerolls.MaxCount))
-                    {
-                        --availableRerolls;
-                        d.values.Add(random.Next());
-                    }
-
-                    somethingChanged = true;
-                    ++currentRound;
-                }
-            }
-
-            if (availableBursts.Exists)
-            {
-                var toBurst = state.Where(d => !d.Removed && !d.burstMade && d.Value == state.parameters.FacesCount);
-                List<Dice> newRolls = new(toBurst.Count());
-
-                while (toBurst.Any() && availableBursts.Exists)
-                {
-                    newRolls.Clear();
-                    foreach (var d in toBurst.Take(availableBursts.MaxCount))
-                    {
-                        // todo: state.AddDice()?
-                        newRolls.Add(new Dice(random.Next(), offset: currentRound, isBurst: true));
-                        d.burstMade = true;
-                        --availableBursts;
-                    }
-                    state.rolls.AddRange(newRolls);
-
-                    somethingChanged = true;
-                }
-            }
-        } while (somethingChanged);
     }
 }

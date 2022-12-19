@@ -1,4 +1,6 @@
-﻿namespace RP.ReverieWorld.DiceRoll;
+﻿using RP.ReverieWorld.DiceRoll.Utils;
+
+namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Represents an automatic dice roller.
@@ -57,15 +59,22 @@ public sealed class AutoRoller
         parameters ??= defaultParameters;
         GenericParameters.Validate(parameters);
 
-        var current = new InteractiveRoller(randomProvider, parameters).Begin();
+        RollState roll = new(parameters);
 
-        if (parameters.AdditionalDicesCount != 0)
+        using (RollMaker rollMaker = new(roll, randomProvider))
         {
-            diceRemoveStrategy ??= this.diceRemoveStrategy;
-            current.RemoveDices(diceRemoveStrategy.Select(current.Values, parameters.AdditionalDicesCount, parameters));
+            roll.FillInitial(rollMaker);
+
+            if (parameters.AdditionalDicesCount != 0)
+            {
+                diceRemoveStrategy ??= this.diceRemoveStrategy;
+                roll.RemoveDices(diceRemoveStrategy.Select(roll.Values, parameters.AdditionalDicesCount, parameters));
+            }
+
+            roll.CompleteRerrolsAndBursts(rollMaker);
         }
 
-        return current.Result();
+        return new Result(roll);
     }
 
     /// <summary>
@@ -74,8 +83,5 @@ public sealed class AutoRoller
     /// <remarks>If <paramref name="diceRemoveStrategy"/> not provided the default will be used.</remarks>
     /// <param name="diceRemoveStrategy">Dice selection strategy for an "add then remove" dice mechanic.</param>
     /// <returns>The <see cref="Result"/> of the dice roll.</returns>
-    public Result Roll(IDiceRemoveStrategy? diceRemoveStrategy)
-    {
-        return Roll(null, diceRemoveStrategy);
-    }
+    public Result Roll(IDiceRemoveStrategy? diceRemoveStrategy) => Roll(null, diceRemoveStrategy);
 }
