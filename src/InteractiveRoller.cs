@@ -1,41 +1,44 @@
-﻿namespace RP.ReverieWorld.DiceRoll;
+﻿using RP.ReverieWorld.DiceRoll.Utils;
+
+namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Represents an interactive dice roller.
 /// </summary>
 public sealed class InteractiveRoller
 {
-    enum State
+    enum Stage
     {
         Init,
         RemovingDices,
         Ready,
     }
 
-    private State state = State.Init;
+    private Stage stage = Stage.Init;
 
     private readonly IRandomProvider randomProvider;
-    private readonly IParameters parameters;
-    private readonly List<Dice> data;
+
+    private readonly RollState state;
+
     private Result? result;
 
     /// <summary>
     /// Gets a readonly list of dices of current state.
     /// </summary>
     /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</returns>
-    public IReadOnlyList<Dice> Values => data.AsReadOnly();
+    public IReadOnlyList<Dice> Values => state.rolls.AsReadOnly();
 
     /// <summary>
     /// Gets current state of the <see cref="Roll"/>.
     /// </summary>
     /// <returns>Current state of the <see cref="Roll"/>.</returns>
-    public Roll Current => result ?? new Roll(data, parameters);
+    public Roll Current => result ?? new Roll(state);
 
     /// <summary>
     /// Gets count of <see cref="Dice"/>s that need to be removed from roll.
     /// </summary>
     /// <returns>Count of <see cref="Dice"/>s that need to be removed from roll.</returns>
-    public int DicesToRemove => parameters.AdditionalDicesCount - data.Where(d => d.Removed).Count();
+    public int DicesToRemove => state.parameters.AdditionalDicesCount - state.rolls.Where(d => d.Removed).Count();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InteractiveRoller"/> with specified <paramref name="randomProvider"/> and optional <paramref name="parameters"/>.
@@ -53,8 +56,8 @@ public sealed class InteractiveRoller
         GenericParameters.Validate(parameters);
 
         this.randomProvider = randomProvider;
-        this.parameters = parameters;
-        this.data = new List<Dice>(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
+
+        this.state = new(parameters);
     }
 
     /// <summary>
@@ -64,22 +67,22 @@ public sealed class InteractiveRoller
     /// <exception cref="InvalidOperationException"></exception>
     public DiceRemoveStage Begin()
     {
-        if (state != State.Init)
+        if (stage != Stage.Init)
         {
             throw new InvalidOperationException("Begin can be called once after initialization only");
         }
 
-        int initialRollsCount = parameters.DicesCount + parameters.AdditionalDicesCount;
+        int initialRollsCount = state.parameters.DicesCount + state.parameters.AdditionalDicesCount;
 
-        using (RollMaker random = new(this))
+        using (RollMaker random = new(state, randomProvider))
         {
             for (int i = 0; i != initialRollsCount; ++i)
             {
-                data.Add(new Dice(random.Next()));
+                state.AddDice(random.Next());
             }
         }
 
-        state = State.RemovingDices;
+        stage = Stage.RemovingDices;
 
         return new DiceRemoveStage(this);
     }
@@ -92,7 +95,7 @@ public sealed class InteractiveRoller
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void RemoveDice(int index)
     {
-        if (state != State.RemovingDices)
+        if (stage != Stage.RemovingDices)
         {
             throw new InvalidOperationException("Can't remove dices at current stage");
         }
@@ -102,12 +105,12 @@ public sealed class InteractiveRoller
             throw new InvalidOperationException("No more dices to remove");
         }
 
-        if (index < 0 || data.Count <= index)
+        if (index < 0 || state.rolls.Count <= index)
         {
             throw new ArgumentOutOfRangeException(nameof(index), index, "Index out of range");
         }
 
-        data[index].Removed = true;
+        state.rolls[index].Removed = true;
     }
 
     /// <summary>
@@ -119,7 +122,7 @@ public sealed class InteractiveRoller
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void RemoveDices(IReadOnlySet<int> indices)
     {
-        if (state != State.RemovingDices)
+        if (stage != Stage.RemovingDices)
         {
             throw new InvalidOperationException("Can't remove dices at current stage");
         }
@@ -133,7 +136,7 @@ public sealed class InteractiveRoller
 
         foreach (int index in indices)
         {
-            if (index < 0 || data.Count <= index)
+            if (index < 0 || state.rolls.Count <= index)
             {
                 throw new ArgumentOutOfRangeException(nameof(indices), indices, "One of indices out of range");
             }
@@ -141,7 +144,7 @@ public sealed class InteractiveRoller
 
         foreach (int index in indices)
         {
-            data[index].Removed = true;
+            state.rolls[index].Removed = true;
         }
     }
 
@@ -152,7 +155,7 @@ public sealed class InteractiveRoller
     /// <exception cref="InvalidOperationException"></exception>
     public Result Result()
     {
-        if (state == State.RemovingDices)
+        if (stage == Stage.RemovingDices)
         {
             if (DicesToRemove != 0)
             {
@@ -161,11 +164,11 @@ public sealed class InteractiveRoller
 
             CompleteRerrolsAndBursts();
 
-            result = new Result(data, parameters);
-            state = State.Ready;
+            result = new Result(state);
+            stage = Stage.Ready;
         }
 
-        if (state != State.Ready)
+        if (stage != Stage.Ready)
         {
             throw new InvalidOperationException("Can't get result at current stage");
         }
@@ -247,19 +250,19 @@ public sealed class InteractiveRoller
     {
         bool somethingChanged = false;
 
-        ParamCounter availableRerolls = new(parameters.RerollsCount, parameters.HasInfinityRerolls);
-        ParamCounter availableBursts  = new(parameters.BurstsCount,  parameters.HasInfinityBursts);
+        ParamCounter availableRerolls = new(state.parameters.RerollsCount, state.parameters.HasInfinityRerolls);
+        ParamCounter availableBursts  = new(state.parameters.BurstsCount,  state.parameters.HasInfinityBursts);
 
         int currentRound = 0;
 
-        using RollMaker random = new(this);
+        using RollMaker random = new(state, randomProvider);
         do
         {
             somethingChanged = false;
 
             if (availableRerolls.Exists)
             {
-                var toReroll = data.Where(d => !d.Removed && d.Value == 1);
+                var toReroll = state.rolls.Where(d => !d.Removed && d.Value == 1);
                 while (toReroll.Any() && availableRerolls.Exists)
                 {
                     foreach (var d in toReroll.Take(availableRerolls.MaxCount))
@@ -275,7 +278,7 @@ public sealed class InteractiveRoller
 
             if (availableBursts.Exists)
             {
-                var toBurst = data.Where(d => !d.Removed && !d.burstMade && d.Value == parameters.FacesCount);
+                var toBurst = state.rolls.Where(d => !d.Removed && !d.burstMade && d.Value == state.parameters.FacesCount);
                 List<Dice> newRolls = new(toBurst.Count());
 
                 while (toBurst.Any() && availableBursts.Exists)
@@ -283,62 +286,16 @@ public sealed class InteractiveRoller
                     newRolls.Clear();
                     foreach (var d in toBurst.Take(availableBursts.MaxCount))
                     {
+                        // todo: state.AddDice()?
                         newRolls.Add(new Dice(random.Next(), offset: currentRound, isBurst: true));
                         d.burstMade = true;
                         --availableBursts;
                     }
-                    data.AddRange(newRolls);
+                    state.rolls.AddRange(newRolls);
 
                     somethingChanged = true;
                 }
             }
         } while (somethingChanged);
-    }
-
-    private readonly struct RollMaker : IDisposable
-    {
-        private readonly int facesCount;
-        private readonly IRandom random;
-
-        internal RollMaker(InteractiveRoller roller)
-        {
-            facesCount = roller.parameters.FacesCount;
-            random = roller.randomProvider.Lock();
-        }
-
-        public readonly int Next()
-        {
-            return random.Next(facesCount) + 1;
-        }
-
-        public void Dispose()
-        {
-            random.Dispose();
-        }
-    }
-
-    private class ParamCounter
-    {
-        private int count;
-        private readonly bool infinity;
-
-        internal ParamCounter(int count, bool infinity)
-        {
-            this.count = count;
-            this.infinity = infinity;
-        }
-
-        public bool Exists => infinity || count != 0;
-
-        public int MaxCount => infinity ? int.MaxValue : count;
-
-        public static ParamCounter operator --(ParamCounter counter)
-        {
-            if (!counter.infinity)
-            {
-                --counter.count;
-            }
-            return counter;
-        }
     }
 }

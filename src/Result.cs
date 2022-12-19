@@ -11,8 +11,8 @@ public sealed class Result : Roll
     /// <returns>Always <see langword="true"/>.</returns>
     public override bool Completed => true;
 
-    internal Result(IReadOnlyList<Dice> rolls, IParameters parameters) :
-        base(rolls, parameters)
+    internal Result(RollState state) :
+        base(state)
     {
     }
 }

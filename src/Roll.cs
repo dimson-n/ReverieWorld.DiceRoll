@@ -62,10 +62,10 @@ public class Roll : IReadOnlyList<Dice>
     /// <returns><see langword="true"/> if <see cref="Roll"/> was fully performed; otherwise, <see langword="false"/>.</returns>
     public virtual bool Completed => false;
 
-    internal Roll(IReadOnlyList<Dice> rolls, IParameters parameters)
+    internal Roll(RollState state)
     {
-        this.rolls = rolls;
-        this.parameters = parameters;
+        rolls = state.rolls.AsReadOnly();
+        parameters = state.parameters;
 
         Total = rolls.Where(d => !d.Removed).Sum(d => d.Value) + Bonus;
     }
