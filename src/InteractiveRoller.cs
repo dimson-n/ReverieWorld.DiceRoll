@@ -122,12 +122,12 @@ public sealed class InteractiveRoller
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void RemoveDices(IReadOnlySet<int> indices)
     {
+        ArgumentNullException.ThrowIfNull(indices);
+
         if (stage != Stage.RemovingDices)
         {
             throw new InvalidOperationException("Can't remove dices at current stage");
         }
-
-        ArgumentNullException.ThrowIfNull(indices);
 
         if (DicesToRemove < indices.Count)
         {
