@@ -59,9 +59,9 @@ public sealed class AutoRoller
         parameters ??= defaultParameters;
         GenericParameters.Validate(parameters);
 
-        RollState roll = new(parameters);
+        RollState roll = new(parameters, randomProvider);
 
-        using (RollMaker rollMaker = new(roll, randomProvider))
+        using (RollMaker rollMaker = new(roll))
         {
             roll.FillInitial(rollMaker);
 

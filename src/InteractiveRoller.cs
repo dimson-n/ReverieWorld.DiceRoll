@@ -16,8 +16,6 @@ public sealed class InteractiveRoller
 
     private Stage stage = Stage.Init;
 
-    private readonly IRandomProvider randomProvider;
-
     private readonly RollState state;
 
     private Result? result;
@@ -55,9 +53,7 @@ public sealed class InteractiveRoller
         parameters ??= Parameters.Default;
         GenericParameters.Validate(parameters);
 
-        this.randomProvider = randomProvider;
-
-        this.state = new(parameters);
+        this.state = new(parameters, randomProvider);
     }
 
     /// <summary>
@@ -72,10 +68,7 @@ public sealed class InteractiveRoller
             throw new InvalidOperationException("Begin can be called once after initialization only");
         }
 
-        using (RollMaker random = new(state, randomProvider))
-        {
-            state.FillInitial(random);
-        }
+        state.FillInitial();
 
         stage = Stage.RemovingDices;
 
@@ -141,10 +134,7 @@ public sealed class InteractiveRoller
                 throw new InvalidOperationException("More dices need to be removed");
             }
 
-            using (RollMaker random = new(state, randomProvider))
-            {
-                state.CompleteRerrolsAndBursts(random);
-            }
+            state.CompleteRerrolsAndBursts();
 
             result = new Result(state);
             stage = Stage.Ready;

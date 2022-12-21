@@ -10,16 +10,24 @@ namespace RP.ReverieWorld.DiceRoll;
 internal sealed class RollState : IReadOnlyList<Dice>
 {
     internal readonly IParameters parameters;
+    internal readonly IRandomProvider randomProvider;
     internal readonly List<Dice> rolls;
 
     internal int offset = 0;
 
     internal int DicesToRemove => parameters.AdditionalDicesCount - rolls.Where(d => d.Removed).Count();
 
-    internal RollState(IParameters parameters)
+    internal RollState(IParameters parameters, IRandomProvider randomProvider)
     {
         this.parameters = parameters;
+        this.randomProvider = randomProvider;
         this.rolls = new List<Dice>(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
+    }
+
+    internal void FillInitial()
+    {
+        using RollMaker rollMaker = new(this);
+        FillInitial(rollMaker);
     }
 
     internal void FillInitial(RollMaker rollMaker)
@@ -56,6 +64,12 @@ internal sealed class RollState : IReadOnlyList<Dice>
         {
             rolls[index].Removed = true;
         }
+    }
+
+    internal void CompleteRerrolsAndBursts()
+    {
+        using RollMaker rollMaker = new(this);
+        CompleteRerrolsAndBursts(rollMaker);
     }
 
     internal void CompleteRerrolsAndBursts(RollMaker rollMaker)
