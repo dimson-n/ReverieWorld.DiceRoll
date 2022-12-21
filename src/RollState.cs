@@ -76,7 +76,7 @@ internal sealed class RollState : IReadOnlyList<Dice>
                     foreach (var d in toReroll.Take(availableRerolls.MaxCount))
                     {
                         --availableRerolls;
-                        d.values.Add(rollMaker.Next());
+                        d.Value = rollMaker.Next();
                     }
 
                     somethingChanged = true;

@@ -14,7 +14,11 @@ public sealed class Dice : IReadOnlyList<int>
     /// Gets actual value of the <see cref="Dice"/>.
     /// </summary>
     /// <returns>Actual value of the <see cref="Dice"/>.</returns>
-    public int Value => values.Last();
+    public int Value
+    {
+        get => values.Last();
+        internal set => values.Add(value);
+    }
 
     /// <summary>
     /// Gets <see cref="Dice"/> generation offset (<see cref="Roll"/> round).
