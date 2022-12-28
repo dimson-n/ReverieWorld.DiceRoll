@@ -1,4 +1,6 @@
-﻿namespace RP.ReverieWorld.DiceRoll;
+﻿using RP.ReverieWorld.DiceRoll.Modifiers;
+
+namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Generic implementation of the <see cref="IParameters"/> interface.
@@ -47,6 +49,9 @@ public class GenericParameters : IParameters
     /// and burst must be performed for all dices with max possible value; otherwise <see langword="false"/>.</returns>
     public virtual bool HasInfinityBursts => BurstsCount < 0;
 
+    /// <inheritdoc/>
+    public virtual IReadOnlyList<IRollModifier>? Modifiers { get; init; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="GenericParameters"/> class with designated parameters for a dice roller.
     /// </summary>
@@ -56,8 +61,9 @@ public class GenericParameters : IParameters
     /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
     /// <param name="bonus">Bonus or penalty value for a roll.</param>
+    /// <param name="modifiers">Modifiers for a roll.</param>
     public GenericParameters(int facesCount = DefaultDiceFacesCount, int dicesCount = 1, int additionalDicesCount = 0,
-                             int rerollsCount = 0, int burstsCount = 0, int bonus = 0)
+                             int rerollsCount = 0, int burstsCount = 0, int bonus = 0, IReadOnlyList<IRollModifier>? modifiers = null)
     {
         FacesCount = facesCount;
         DicesCount = dicesCount;
@@ -65,6 +71,7 @@ public class GenericParameters : IParameters
         RerollsCount = rerollsCount;
         BurstsCount = burstsCount;
         Bonus = bonus;
+        Modifiers = modifiers;
     }
 
     /// <summary>

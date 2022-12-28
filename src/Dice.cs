@@ -44,11 +44,18 @@ public sealed class Dice : IReadOnlyList<int>
     /// <returns><see langword="true"/> if the <see cref="Dice"/> was made as burst; otherwise, <see langword="false"/>.</returns>
     public bool IsBurst { get; }
 
-    internal Dice(int value, int offset = 0, bool isBurst = false)
+    /// <summary>
+    /// Gets a value indicating whether the <see cref="Dice"/> was modified by some <see cref="Modifiers.IRollModifier"/>.
+    /// </summary>
+    /// <returns><see langword="true"/> if the <see cref="Dice"/> was modified by some <see cref="Modifiers.IRollModifier"/>; otherwise, <see langword="false"/>.</returns>
+    public bool Modified { get; internal set; }
+
+    internal Dice(int value, int offset = 0, bool isBurst = false, bool fromModifier = false)
     {
-        this.values  = new List<int>(1) { value };
-        this.Offset  = offset;
-        this.IsBurst = isBurst;
+        this.values   = new List<int>(1) { value };
+        this.Offset   = offset;
+        this.IsBurst  = isBurst;
+        this.Modified = fromModifier;
     }
 
     /// <summary>
@@ -75,6 +82,6 @@ public sealed class Dice : IReadOnlyList<int>
     /// <returns>A string that represents the <see cref="Dice"/>.</returns>
     public override string ToString()
     {
-        return $"{(Removed ? '-' : string.Empty)}{(IsBurst ? '*' : string.Empty)}{Value}";
+        return $"{(Removed ? '-' : string.Empty)}{(IsBurst ? '*' : string.Empty)}{Value}{(Modified ? '\'' : string.Empty)}";
     }
 }

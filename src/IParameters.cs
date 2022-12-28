@@ -1,4 +1,6 @@
-﻿namespace RP.ReverieWorld.DiceRoll;
+﻿using RP.ReverieWorld.DiceRoll.Modifiers;
+
+namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Provides an abstraction of a parameters group for dice rollers.
@@ -47,4 +49,9 @@ public interface IParameters
     /// and burtst must be performed for all dices with max possible value; otherwise <see langword="false"/>.
     /// </summary>
     bool HasInfinityBursts { get; }
+
+    /// <summary>
+    /// Optional list of roll modifiers.
+    /// </summary>
+    IReadOnlyList<IRollModifier>? Modifiers { get; }
 }
