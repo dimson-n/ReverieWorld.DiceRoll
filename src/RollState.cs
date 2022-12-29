@@ -9,7 +9,7 @@ namespace RP.ReverieWorld.DiceRoll;
 /// <summary>
 /// Internal roller implementation.
 /// </summary>
-internal sealed class RollState : IReadOnlyList<Dice>, IRollState
+internal sealed class RollState : IRollState
 {
     private delegate void ModifierDelegate(IRollState rollState);
 

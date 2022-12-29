@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides interface for dice roll manipulation for roll modifiers.
 /// </summary>
-public interface IRollState
+public interface IRollState : IReadOnlyList<Dice>
 {
     /// <summary>
     /// Gets a readonly list of dices of the current roll state.

@@ -12,8 +12,7 @@ public abstract class OnesToMaxDiceFlipper : IAtDicesAddedModifier
     /// <returns>Collection of dice indices with value 1.</returns>
     protected static IEnumerable<int> GetOnesIndices(IRollState rollState)
     {
-        return rollState.Values
-                        .Select((dice, idx) => (dice.Value, idx))
+        return rollState.Select((dice, idx) => (dice.Value, idx))
                         .Where(d => d.Value == 1)
                         .Select(d => d.idx);
     }
