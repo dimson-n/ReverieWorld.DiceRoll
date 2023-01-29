@@ -134,7 +134,7 @@ public sealed class InteractiveRoller
                 throw new InvalidOperationException("More dices need to be removed");
             }
 
-            state.CompleteRerrolsAndBursts();
+            state.CompleteRerollsAndBursts();
 
             result = new Result(state);
             stage = Stage.Ready;

@@ -20,7 +20,7 @@ public sealed partial class Weber
         }
 
         [Fact]
-        public void OneWithotModification()
+        public void OneWithoutModification()
         {
             AutoRoller roller = new(new NonRandomMaxProvider(),
                                     new Parameters(modifier: new DiceRoll.Modifiers.Weber.SorcererTrick()));

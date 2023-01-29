@@ -71,7 +71,7 @@ public sealed class AutoRoller
                 roll.RemoveDices(diceRemoveStrategy.Select(roll.Values, parameters.AdditionalDicesCount, parameters));
             }
 
-            roll.CompleteRerrolsAndBursts(rollMaker);
+            roll.CompleteRerollsAndBursts(rollMaker);
         }
 
         return new Result(roll);

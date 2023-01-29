@@ -104,13 +104,13 @@ internal sealed class RollState : IRollState
         }
     }
 
-    internal void CompleteRerrolsAndBursts()
+    internal void CompleteRerollsAndBursts()
     {
         using RollMaker rollMaker = new(this);
-        CompleteRerrolsAndBursts(rollMaker);
+        CompleteRerollsAndBursts(rollMaker);
     }
 
-    internal void CompleteRerrolsAndBursts(RollMaker rollMaker)
+    internal void CompleteRerollsAndBursts(RollMaker rollMaker)
     {
         ParamCounter availableRerolls = new(parameters.RerollsCount, parameters.HasInfinityRerolls);
         ParamCounter availableBursts  = new(parameters.BurstsCount,  parameters.HasInfinityBursts);
