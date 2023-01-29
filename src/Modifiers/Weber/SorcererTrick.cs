@@ -11,12 +11,12 @@ public static partial class Weber
     public class SorcererTrick : OnesToMaxDiceFlipper
     {
         /// <summary>
-        /// Maximum count of dices to change.
+        /// Maximum count of dices to change in one roll.
         /// </summary>
         public int MaxCount { get; init; } = 1;
 
         /// <summary>
-        /// Available count of <see cref="Dice"/>s to change.
+        /// Available count of <see cref="Dice"/>s to change in current roll.
         /// </summary>
         protected int currentCount = 0;
 

@@ -52,7 +52,7 @@ public class Roll : IReadOnlyList<Dice>
     public bool HasInfinityRerolls => parameters.HasInfinityRerolls;
 
     /// <summary>
-    /// Value that indicates that <see cref="InitialBurstsCount"/> ignored and burtst must be performed for all dices with max possible value.
+    /// Value that indicates that <see cref="InitialBurstsCount"/> ignored and bursts must be performed for all dices with max possible value.
     /// </summary>
     public bool HasInfinityBursts => parameters.HasInfinityBursts;
 

@@ -43,7 +43,7 @@ public class GenericParameters : IParameters
     public virtual bool HasInfinityRerolls => RerollsCount < 0;
 
     /// <summary>
-    /// Gets value for indication that <see cref="BurstsCount"/> must be ignored and burtst must be performed for all dices with max possible value.
+    /// Gets value for indication that <see cref="BurstsCount"/> must be ignored and bursts must be performed for all dices with max possible value.
     /// </summary>
     /// <returns><see langword="true"/> if <see cref="BurstsCount"/> must be ignored
     /// and burst must be performed for all dices with max possible value; otherwise <see langword="false"/>.</returns>

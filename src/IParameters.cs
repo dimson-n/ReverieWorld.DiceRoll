@@ -46,7 +46,7 @@ public interface IParameters
 
     /// <summary>
     /// <see langword="true"/> indicates that <see cref="BurstsCount"/> must be ignored
-    /// and burtst must be performed for all dices with max possible value; otherwise <see langword="false"/>.
+    /// and bursts must be performed for all dices with max possible value; otherwise <see langword="false"/>.
     /// </summary>
     bool HasInfinityBursts { get; }
 

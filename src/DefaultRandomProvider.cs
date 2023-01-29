@@ -3,7 +3,7 @@
 /// <summary>
 /// Default thread-safe implementation of PRNG for dice rollers.
 /// </summary>
-/// <remarks>Recomended to implement it in you own way.</remarks>
+/// <remarks>Recommended to implement it in you own way.</remarks>
 public sealed class DefaultRandomProvider : IRandomProvider
 {
     /// <summary>
