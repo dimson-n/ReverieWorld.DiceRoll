@@ -13,15 +13,3 @@ public interface IRandom : IDisposable
     /// <returns>A 32-bit signed integer that is greater than or equal to 0, and less than <paramref name="maxValue"/>.</returns>
     int Next(int maxValue);
 }
-
-/// <summary>
-/// Provides an abstraction for (pseudo)random number generator provider for dice rollers.
-/// </summary>
-public interface IRandomProvider
-{
-    /// <summary>
-    /// Gets an instance of (pseudo)random number generator for dice rollers.
-    /// </summary>
-    /// <returns>An instance of (pseudo)random number generator for dice rollers.</returns>
-    IRandom Lock();
-}
