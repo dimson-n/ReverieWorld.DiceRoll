@@ -14,6 +14,7 @@ public sealed partial class Prime
             var result = roller.Roll();
 
             Assert.Equal(3, modifier.ApplicationsCount);
+            Assert.DoesNotContain(result, d => !d.Modified);
 
             Assert.Equal(3,  result.Count);
             Assert.Equal(18, result.Total);
@@ -29,6 +30,7 @@ public sealed partial class Prime
             var result = roller.Roll();
 
             Assert.Equal(0, modifier.ApplicationsCount);
+            Assert.DoesNotContain(result, d => d.Modified);
 
             Assert.Equal(3, result.Count);
             Assert.InRange(result.Total, 6, 18);
