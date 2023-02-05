@@ -13,6 +13,7 @@ public sealed class ParametersTest
         Assert.Equal(0, p.RerollsCount);
         Assert.Equal(0, p.BurstsCount);
         Assert.Equal(0, p.Bonus);
+        Assert.Null(p.Modifiers);
 
         Assert.False(p.HasInfinityRerolls);
         Assert.False(p.HasInfinityBursts);
