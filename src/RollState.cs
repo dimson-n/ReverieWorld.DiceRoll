@@ -181,9 +181,10 @@ internal sealed class RollState : IRollState
     /// <exception cref="ArgumentOutOfRangeException"/>
     private void ThrowIfDiceValueOutOfRange(int value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
     {
-        if (value <= 0 || parameters.FacesCount < value)
+        int facesCount = parameters.FacesCount;
+        if (value < 1 || facesCount < value)
         {
-            throw new ArgumentOutOfRangeException(paramName, value, $"value out of range [{1}..{parameters.FacesCount}]");
+            throw new ArgumentOutOfRangeException(paramName, value, $"value out of range [{1}..{facesCount}]");
         }
     }
 
