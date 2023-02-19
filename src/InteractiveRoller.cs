@@ -21,7 +21,7 @@ public sealed class InteractiveRoller
     private Result? result;
 
     /// <summary>
-    /// Gets a readonly list of dices of current state.
+    /// Gets a read-only list of dices of current state.
     /// </summary>
     /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</returns>
     public IReadOnlyList<Dice> Values => state.Values;
@@ -156,7 +156,7 @@ public sealed class InteractiveRoller
         private readonly InteractiveRoller source;
 
         /// <summary>
-        /// Gets a readonly list of dices of current state.
+        /// Gets a read-only list of dices of current state.
         /// </summary>
         /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</returns>
         public IReadOnlyList<Dice> Values => source.Values;

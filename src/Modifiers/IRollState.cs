@@ -1,14 +1,14 @@
 ﻿namespace RP.ReverieWorld.DiceRoll.Modifiers;
 
 /// <summary>
-/// Provides interface for dice roll manipulation for roll modifiers.
+/// Provides an interface for dice roll manipulation for roll modifiers.
 /// </summary>
 public interface IRollState : IReadOnlyList<Dice>
 {
     /// <summary>
-    /// Gets a readonly list of dices of the current roll state.
+    /// Gets a read-only list of dices of the current roll state.
     /// </summary>
-    /// <returns>A readonly list of dices of the current roll state.</returns>
+    /// <returns>A read-only list of dices of the current roll state.</returns>
     IReadOnlyList<Dice> Values { get; }
 
     /// <summary>
@@ -21,7 +21,7 @@ public interface IRollState : IReadOnlyList<Dice>
     /// Appends a <paramref name="newValue"/> with designated <paramref name="index"/> to <see cref="Dice"/> list of rolls.
     /// </summary>
     /// <param name="index">The zero-based index of the <see cref="Dice"/> to change.</param>
-    /// <param name="newValue">The new value to apply to the <see cref="Dice"/></param>
+    /// <param name="newValue">The new value to apply to the <see cref="Dice"/>.</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     void ChangeValue(int index, int newValue);
 
