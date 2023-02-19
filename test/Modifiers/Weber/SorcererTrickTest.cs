@@ -17,6 +17,7 @@ public sealed partial class Weber
             Assert.Equal(2, result.Count);
             Assert.DoesNotContain(result, d => !d.Modified);
             Assert.Equal(7, result.Total);
+            Assert.True(result.HasModifiers);
         }
 
         [Fact]
@@ -30,6 +31,7 @@ public sealed partial class Weber
             Assert.Single(result);
             Assert.DoesNotContain(result, d => d.Modified);
             Assert.Equal(6, result.Total);
+            Assert.True(result.HasModifiers);
         }
 
         [Fact]
@@ -43,6 +45,7 @@ public sealed partial class Weber
 
             Assert.InRange(result.Count, 3, 4);
             Assert.InRange(result.Total, 6, 24);
+            Assert.True(result.HasModifiers);
         }
 
         [Fact]
@@ -62,6 +65,7 @@ public sealed partial class Weber
             Assert.Contains(result, d => d.Modified);
             Assert.Contains(result, d => !d.Modified);
             Assert.Equal(17, result.Total);
+            Assert.True(result.HasModifiers);
         }
     }
 }

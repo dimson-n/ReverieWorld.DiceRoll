@@ -18,6 +18,7 @@ public sealed partial class Prime
 
             Assert.Equal(3,  result.Count);
             Assert.Equal(18, result.Total);
+            Assert.True(result.HasModifiers);
         }
 
         [Fact]
@@ -34,6 +35,7 @@ public sealed partial class Prime
 
             Assert.Equal(3, result.Count);
             Assert.InRange(result.Total, 6, 18);
+            Assert.True(result.HasModifiers);
         }
     }
 }
