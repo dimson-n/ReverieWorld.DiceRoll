@@ -19,7 +19,7 @@ public class Parameters : GenericParameters
     /// <param name="bonus">Bonus or penalty value for a roll.</param>
     /// <param name="modifiers">Optional modifiers for a roll.</param>
     public Parameters(int dicesCount = 1, int additionalDicesCount = 0, int rerollsCount = 0,
-                      int burstsCount = 0, int bonus = 0, IReadOnlyList<IRollModifier>? modifiers = null) :
+                      int burstsCount = 0, int bonus = 0, IReadOnlyCollection<IRollModifier>? modifiers = null) :
         base(DefaultDiceFacesCount, dicesCount, additionalDicesCount, rerollsCount, burstsCount, bonus, modifiers)
     {
     }

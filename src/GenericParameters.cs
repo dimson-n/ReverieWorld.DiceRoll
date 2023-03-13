@@ -50,7 +50,7 @@ public class GenericParameters : IParameters
     public virtual bool HasInfinityBursts => BurstsCount < 0;
 
     /// <inheritdoc/>
-    public virtual IReadOnlyList<IRollModifier>? Modifiers { get; init; }
+    public virtual IReadOnlyCollection<IRollModifier>? Modifiers { get; init; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="GenericParameters"/> class with designated parameters for a dice roller.
@@ -63,7 +63,7 @@ public class GenericParameters : IParameters
     /// <param name="bonus">Bonus or penalty value for a roll.</param>
     /// <param name="modifiers">Modifiers for a roll.</param>
     public GenericParameters(int facesCount = DefaultDiceFacesCount, int dicesCount = 1, int additionalDicesCount = 0,
-                             int rerollsCount = 0, int burstsCount = 0, int bonus = 0, IReadOnlyList<IRollModifier>? modifiers = null)
+                             int rerollsCount = 0, int burstsCount = 0, int bonus = 0, IReadOnlyCollection<IRollModifier>? modifiers = null)
     {
         FacesCount = facesCount;
         DicesCount = dicesCount;
