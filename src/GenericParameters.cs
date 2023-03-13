@@ -13,7 +13,7 @@ public class GenericParameters : IParameters
     public const int DefaultDiceFacesCount = 6;
 
     /// <summary>
-    /// Usable for rerolls and bursts.
+    /// Named value to indicate infinity count of rerolls or bursts.
     /// </summary>
     public const int Infinite = -1;
 
@@ -56,7 +56,7 @@ public class GenericParameters : IParameters
     /// Initializes a new instance of the <see cref="GenericParameters"/> class with designated parameters for a dice roller.
     /// </summary>
     /// <param name="facesCount">Dice faces count.</param>
-    /// <param name="dicesCount">Count of dices to roll</param>
+    /// <param name="dicesCount">Count of dices to roll.</param>
     /// <param name="additionalDicesCount">Count of dices for "add then remove" dice mechanic.</param>
     /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>

@@ -12,7 +12,7 @@ public class Parameters : GenericParameters
     /// <summary>
     /// Initializes a new instance of the <see cref="Parameters"/> class with designated parameters for a dice roller.
     /// </summary>
-    /// <param name="dicesCount">Count of dices to roll</param>
+    /// <param name="dicesCount">Count of dices to roll.</param>
     /// <param name="additionalDicesCount">Count of dices for "add then remove" dice mechanic.</param>
     /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
@@ -28,7 +28,7 @@ public class Parameters : GenericParameters
     /// Initializes a new instance of the <see cref="Parameters"/> class with designated parameters for a dice roller.
     /// </summary>
     /// <param name="modifier">Optional modifier for a roll.</param>
-    /// <param name="dicesCount">Count of dices to roll</param>
+    /// <param name="dicesCount">Count of dices to roll.</param>
     /// <param name="additionalDicesCount">Count of dices for "add then remove" dice mechanic.</param>
     /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
