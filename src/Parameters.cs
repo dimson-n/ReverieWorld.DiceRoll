@@ -35,8 +35,8 @@ public class Parameters : GenericParameters
     /// <param name="bonus">Bonus or penalty value for a roll.</param>
     public Parameters(IRollModifier? modifier, int dicesCount = 1, int additionalDicesCount = 0,
                       int rerollsCount = 0, int burstsCount = 0, int bonus = 0) :
-        base(DefaultDiceFacesCount, dicesCount, additionalDicesCount, rerollsCount,
-             burstsCount, bonus, modifier is null ? null : new List<IRollModifier> { modifier })
+        this(dicesCount, additionalDicesCount, rerollsCount, burstsCount, bonus,
+             modifier is null ? null : new[] { modifier })
     {
     }
 }

@@ -59,7 +59,7 @@ public class Roll : IReadOnlyList<Dice>
     /// <summary>
     /// Value that indicates that any <see cref="Modifiers.IRollModifier"/> added by <see cref="IParameters"/>.
     /// </summary>
-    public bool HasModifiers => (parameters.Modifiers?.Count ?? 0) > 0;
+    public bool HasModifiers => parameters.Modifiers is not null && parameters.Modifiers.Count != 0;
 
     /// <summary>
     /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
