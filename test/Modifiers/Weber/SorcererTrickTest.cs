@@ -67,5 +67,26 @@ public sealed partial class Weber
             Assert.Equal(17, result.Total);
             Assert.True(result.HasModifiers);
         }
+
+        [Fact]
+        public void Sequential()
+        {
+            AutoRoller roller = new(new NonRandomZeroProvider(),
+                                    new Parameters(modifier: new DiceRoll.Modifiers.Weber.SorcererTrick()));
+
+            var firstResult = roller.Roll();
+
+            Assert.True(firstResult.HasModifiers);
+            Assert.Equal(2, firstResult.Count);
+            Assert.DoesNotContain(firstResult, d => !d.Modified);
+            Assert.Equal(7, firstResult.Total);
+
+            var secondResult = roller.Roll();
+
+            Assert.True(secondResult.HasModifiers);
+            Assert.Single(secondResult);
+            Assert.DoesNotContain(secondResult, d => d.Modified);
+            Assert.Equal(1, secondResult.Total);
+        }
     }
 }

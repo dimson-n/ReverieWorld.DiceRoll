@@ -10,35 +10,50 @@ public static partial class Weber
     /// </summary>
     public class SorcererTrick : OnesToMaxDiceFlipper
     {
-        /// <summary>
-        /// Maximum count of dices to change in one roll.
-        /// </summary>
-        public int MaxCount { get; init; } = 1;
+        private readonly int maxCount;
 
         /// <summary>
         /// Available count of <see cref="Dice"/>s to change in current roll.
         /// </summary>
-        protected int currentCount = 0;
+        protected int currentCount;
 
-        /// <inheritdoc/>
-        public override void AtDicesAdded(IRollState rollState)
+        /// <summary>
+        /// Maximum count of dices to change in one roll.
+        /// </summary>
+        public int MaxCount
         {
-            if (currentCount > 0)
+            get => maxCount;
+            init
             {
-                var newValue = rollState.Parameters.FacesCount;
-                foreach (var index in GetOnesIndices(rollState).Take(currentCount))
-                {
-                    rollState.ChangeValue(index, newValue);
-                    rollState.AddDice();
-                    --currentCount;
-                }
+                maxCount = value;
+                currentCount = value;
             }
         }
 
         /// <summary>
-        /// Resets available count of replaces.
+        /// Initializes a new instance of the <see cref="SorcererTrick"/> modifier with specified count of applications.
         /// </summary>
+        /// <param name="maxCount">Maximal count of modifier applications.</param>
+        public SorcererTrick(int maxCount = 1)
+        {
+            MaxCount = maxCount;
+        }
+
         /// <inheritdoc/>
-        public override void AtRollBegin(IRollState rollState) => currentCount = MaxCount;
+        public override void AtDicesAdded(IRollState rollState)
+        {
+            if (currentCount <= 0)
+            {
+                return;
+            }
+
+            var newValue = rollState.Parameters.FacesCount;
+            foreach (var index in GetOnesIndices(rollState).Take(currentCount))
+            {
+                rollState.ChangeValue(index, newValue);
+                rollState.AddDice();
+                --currentCount;
+            }
+        }
     }
 }
