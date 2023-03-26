@@ -1,6 +1,6 @@
 ﻿namespace RP.ReverieWorld.DiceRoll.Utils;
 
-internal class RollMaker : IDisposable
+internal sealed class RollMaker : IDisposable
 {
     private readonly int facesCount;
     private readonly IRandom random;

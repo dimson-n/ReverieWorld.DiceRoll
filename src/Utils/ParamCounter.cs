@@ -1,6 +1,6 @@
 ﻿namespace RP.ReverieWorld.DiceRoll.Utils;
 
-internal class ParamCounter
+internal sealed class ParamCounter
 {
     private int count;
     private readonly bool infinity;
