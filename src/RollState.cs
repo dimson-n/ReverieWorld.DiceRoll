@@ -11,8 +11,6 @@ namespace RP.ReverieWorld.DiceRoll;
 /// </summary>
 internal sealed class RollState : IRollState
 {
-    private delegate void ModifierDelegate(IRollState rollState);
-
     private enum RollStage
     {
         BeforeStart,
@@ -26,7 +24,7 @@ internal sealed class RollState : IRollState
 
     internal int offset = 0;
 
-    private readonly Dictionary<RollStage, ModifierDelegate> modifiersActions;
+    private readonly Dictionary<RollStage, Action<IRollState>> modifiersActions;
 
     private RollMaker? currentRollMaker;
 
@@ -37,7 +35,7 @@ internal sealed class RollState : IRollState
         this.parameters = parameters;
         this.randomProvider = randomProvider;
         this.rolls = new List<Dice>(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
-        this.modifiersActions = new Dictionary<RollStage, ModifierDelegate>();
+        this.modifiersActions = new Dictionary<RollStage, Action<IRollState>>();
 
         if (parameters.Modifiers is not null)
         {
@@ -188,7 +186,7 @@ internal sealed class RollState : IRollState
         }
     }
 
-    private void RegisterActionFor(RollStage rollStage, ModifierDelegate modifierAction)
+    private void RegisterActionFor(RollStage rollStage, Action<IRollState> modifierAction)
     {
         if (modifiersActions.TryGetValue(rollStage, out var actions))
         {
