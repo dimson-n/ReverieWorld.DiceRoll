@@ -1,0 +1,26 @@
+name: Test
+
+on: [pull_request, push]
+
+jobs:
+  build-and-test:
+
+    strategy:
+      matrix:
+        os: [ windows-latest ]
+        dotnet-version: [ '6.0.x' ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+    - name: Test
+      run: dotnet test --no-build --verbosity normal --configuration Release
