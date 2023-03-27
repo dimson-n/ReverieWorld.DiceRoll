@@ -1,9 +1,9 @@
-﻿namespace RP.ReverieWorld.DiceRoll.Modifiers;
+namespace RP.ReverieWorld.DiceRoll.Modifiers;
 
 /// <summary>
 /// Represents base class for roll modifiers that change new dices value.
 /// </summary>
-public abstract class OnesToMaxDiceFlipper : IAtDicesAddedModifier
+public abstract class OnesDiceFlipper : IAtDicesAddedModifier
 {
     /// <summary>
     /// Selects collection of dice indices with value 1.

@@ -1,4 +1,4 @@
-﻿namespace RP.ReverieWorld.DiceRoll.Modifiers;
+namespace RP.ReverieWorld.DiceRoll.Modifiers;
 
 /// <summary>
 /// Contains roll modifiers for Weber fate.
@@ -8,7 +8,7 @@ public static partial class Weber
     /// <summary>
     /// Roll modifier for 'sorcerer trick' feature.
     /// </summary>
-    public class SorcererTrick : OnesToMaxDiceFlipper
+    public class SorcererTrick : OnesDiceFlipper
     {
         private readonly int maxCount;
 

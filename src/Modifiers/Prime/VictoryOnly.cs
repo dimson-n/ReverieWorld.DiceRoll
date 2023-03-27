@@ -1,4 +1,4 @@
-﻿namespace RP.ReverieWorld.DiceRoll.Modifiers;
+namespace RP.ReverieWorld.DiceRoll.Modifiers;
 
 /// <summary>
 /// Contains roll modifiers for Prime fate.
@@ -8,7 +8,7 @@ public static partial class Prime
     /// <summary>
     /// Roll modifier for 'victory only' feature.
     /// </summary>
-    public class VictoryOnly : OnesToMaxDiceFlipper
+    public class VictoryOnly : OnesDiceFlipper
     {
         /// <summary>
         /// Count of changed <see cref="Dice"/>s at current roll.
