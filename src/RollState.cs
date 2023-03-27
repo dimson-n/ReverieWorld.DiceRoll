@@ -18,15 +18,13 @@ internal sealed class RollState : IRollState
         AfterEnd,
     }
 
+    private readonly Dictionary<RollStage, Action<IRollState>> modifiersActions;
+    private readonly List<Dice> rolls;
+    private int offset = 0;
+    private RollMaker? currentRollMaker;
+
     internal readonly IParameters parameters;
     internal readonly IRandomProvider randomProvider;
-    internal readonly List<Dice> rolls;
-
-    internal int offset = 0;
-
-    private readonly Dictionary<RollStage, Action<IRollState>> modifiersActions;
-
-    private RollMaker? currentRollMaker;
 
     internal int DicesToRemove => parameters.AdditionalDicesCount - rolls.Where(d => d.Removed).Count();
 
@@ -169,7 +167,7 @@ internal sealed class RollState : IRollState
         currentRollMaker = null;
     }
 
-    internal void AddDice(int value, bool asBurst = false, bool fromModifier = false)
+    private void AddDice(int value, bool asBurst = false, bool fromModifier = false)
     {
         ThrowIfDiceValueOutOfRange(value);
 
