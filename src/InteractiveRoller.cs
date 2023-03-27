@@ -5,6 +5,7 @@ namespace RP.ReverieWorld.DiceRoll;
 /// <summary>
 /// Represents an interactive dice roller.
 /// </summary>
+/// <seealso cref="AutoRoller"/>
 public sealed class InteractiveRoller
 {
     enum Stage

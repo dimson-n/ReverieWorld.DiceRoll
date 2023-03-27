@@ -51,7 +51,7 @@ public interface IParameters
     bool HasInfinityBursts { get; }
 
     /// <summary>
-    /// An optional collection of roll <see cref="IRollModifier"/>s.
+    /// An optional collection of <see cref="IRollModifier"/>s.
     /// </summary>
     IReadOnlyCollection<IRollModifier>? Modifiers { get; }
 }

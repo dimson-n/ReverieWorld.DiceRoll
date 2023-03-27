@@ -5,6 +5,7 @@ namespace RP.ReverieWorld.DiceRoll;
 /// <summary>
 /// Represents an automatic dice roller.
 /// </summary>
+/// <seealso cref="InteractiveRoller"/>
 public sealed class AutoRoller
 {
     private readonly IRandomProvider randomProvider;
