@@ -10,6 +10,11 @@ public class Parameters : GenericParameters
     internal static readonly Parameters Default = new();
 
     /// <summary>
+    /// Default value for <see cref="GenericParameters.FacesCount"/> property unless otherwise specified.
+    /// </summary>
+    public const int DefaultDiceFacesCount = 6;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Parameters"/> class with designated parameters for a dice roller.
     /// </summary>
     /// <param name="dicesCount">Count of dices to roll.</param>
