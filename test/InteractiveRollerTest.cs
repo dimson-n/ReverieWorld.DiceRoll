@@ -1,4 +1,4 @@
-﻿namespace RP.ReverieWorld.DiceRoll.Tests;
+namespace RP.ReverieWorld.DiceRoll.Tests;
 
 public sealed class InteractiveRollerTest
 {

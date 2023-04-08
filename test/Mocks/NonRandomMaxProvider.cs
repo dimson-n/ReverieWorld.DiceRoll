@@ -1,4 +1,4 @@
-﻿namespace RP.ReverieWorld.DiceRoll.Tests;
+namespace RP.ReverieWorld.DiceRoll.Tests;
 
 internal sealed class NonRandomMaxProvider : IRandomProvider
 {

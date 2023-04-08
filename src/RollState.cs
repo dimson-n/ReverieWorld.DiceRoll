@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Runtime.CompilerServices;
 
 using RP.ReverieWorld.DiceRoll.Modifiers;

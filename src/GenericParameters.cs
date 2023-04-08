@@ -1,4 +1,4 @@
-﻿using RP.ReverieWorld.DiceRoll.Modifiers;
+using RP.ReverieWorld.DiceRoll.Modifiers;
 
 namespace RP.ReverieWorld.DiceRoll;
 

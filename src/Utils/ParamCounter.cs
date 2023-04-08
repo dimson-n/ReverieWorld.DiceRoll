@@ -1,4 +1,4 @@
-﻿namespace RP.ReverieWorld.DiceRoll.Utils;
+namespace RP.ReverieWorld.DiceRoll.Utils;
 
 internal sealed class ParamCounter
 {

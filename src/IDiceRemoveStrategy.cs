@@ -1,4 +1,4 @@
-﻿namespace RP.ReverieWorld.DiceRoll;
+namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Provides an abstraction for an "add then remove" dice mechanic strategy for <see cref="AutoRoller"/>.

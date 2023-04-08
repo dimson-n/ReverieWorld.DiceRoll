@@ -39,6 +39,6 @@ public sealed class ParametersTest
         Assert.Throws<ArgumentOutOfRangeException>("AdditionalDicesCount", () => GenericParameters.Validate(new Parameters(additionalDicesCount: -1)));
 
         Assert.Throws<ArgumentException>("RerollsCount", () => GenericParameters.Validate(new NonInfinityParameters(rerollsCount: GenericParameters.Infinite)));
-        Assert.Throws<ArgumentException>("BurstsCount",  () => GenericParameters.Validate(new NonInfinityParameters(burstsCount:  GenericParameters.Infinite)));
+        Assert.Throws<ArgumentException>("BurstsCount",  () => GenericParameters.Validate(new NonInfinityParameters(burstsCount: GenericParameters.Infinite)));
     }
 }

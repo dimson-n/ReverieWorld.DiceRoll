@@ -1,4 +1,4 @@
-﻿namespace RP.ReverieWorld.DiceRoll;
+namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Provides an abstraction for (pseudo)random number generator for dice rollers.

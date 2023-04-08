@@ -1,4 +1,4 @@
-﻿namespace RP.ReverieWorld.DiceRoll;
+namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Represents completed result of the dice <see cref="Roll"/>.

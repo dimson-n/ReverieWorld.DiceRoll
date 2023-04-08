@@ -1,6 +1,4 @@
-﻿using RP.ReverieWorld.DiceRoll.Utils;
-
-namespace RP.ReverieWorld.DiceRoll;
+﻿namespace RP.ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Represents an interactive dice roller.
