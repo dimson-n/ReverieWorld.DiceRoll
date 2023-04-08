@@ -1,4 +1,4 @@
-namespace RP.ReverieWorld.DiceRoll.Modifiers;
+namespace ReverieWorld.DiceRoll.Modifiers;
 
 /// <summary>
 /// Represents interface for modifier, that applies after every bunch of <see cref="Dice"/>s addition.

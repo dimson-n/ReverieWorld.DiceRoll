@@ -1,4 +1,4 @@
-namespace RP.ReverieWorld.DiceRoll.Modifiers;
+namespace ReverieWorld.DiceRoll.Modifiers;
 
 /// <summary>
 /// Provides an interface for dice roll manipulation for roll modifiers.

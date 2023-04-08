@@ -1,6 +1,6 @@
-using RP.ReverieWorld.DiceRoll.Utils;
+using ReverieWorld.DiceRoll.Utils;
 
-namespace RP.ReverieWorld.DiceRoll;
+namespace ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Represents an automatic dice roller.

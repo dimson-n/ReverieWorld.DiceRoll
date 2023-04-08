@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace RP.ReverieWorld.DiceRoll;
+namespace ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Represents one dice in a <see cref="Roll"/>.

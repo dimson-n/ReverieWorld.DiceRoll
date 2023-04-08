@@ -1,6 +1,6 @@
-using RP.ReverieWorld.DiceRoll.Modifiers;
+using ReverieWorld.DiceRoll.Modifiers;
 
-namespace RP.ReverieWorld.DiceRoll;
+namespace ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Generic implementation of the <see cref="IParameters"/> interface.

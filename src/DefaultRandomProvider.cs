@@ -1,4 +1,4 @@
-namespace RP.ReverieWorld.DiceRoll;
+namespace ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Default thread-safe implementation of PRNG for dice rollers.

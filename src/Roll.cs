@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace RP.ReverieWorld.DiceRoll;
+namespace ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Represents current state of the dice roll.

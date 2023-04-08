@@ -1,4 +1,4 @@
-namespace RP.ReverieWorld.DiceRoll.Tests;
+namespace ReverieWorld.DiceRoll.Tests;
 
 internal sealed class NonRandomZeroProvider : IRandomProvider
 {

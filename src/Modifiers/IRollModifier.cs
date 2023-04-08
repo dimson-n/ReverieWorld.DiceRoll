@@ -1,4 +1,4 @@
-namespace RP.ReverieWorld.DiceRoll.Modifiers;
+namespace ReverieWorld.DiceRoll.Modifiers;
 
 /// <summary>
 /// Represents base interface for roll modifiers.

@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 
-using RP.ReverieWorld.DiceRoll.Modifiers;
-using RP.ReverieWorld.DiceRoll.Utils;
+using ReverieWorld.DiceRoll.Modifiers;
+using ReverieWorld.DiceRoll.Utils;
 
-namespace RP.ReverieWorld.DiceRoll;
+namespace ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Internal roller implementation.

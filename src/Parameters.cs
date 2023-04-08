@@ -1,6 +1,6 @@
-using RP.ReverieWorld.DiceRoll.Modifiers;
+using ReverieWorld.DiceRoll.Modifiers;
 
-namespace RP.ReverieWorld.DiceRoll;
+namespace ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Default implementation of the <see cref="IParameters"/> interface with preset by d6 dices.

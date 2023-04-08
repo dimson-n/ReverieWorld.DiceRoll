@@ -1,6 +1,6 @@
-using RP.ReverieWorld.DiceRoll.Modifiers;
+using ReverieWorld.DiceRoll.Modifiers;
 
-namespace RP.ReverieWorld.DiceRoll.Tests.Modifiers;
+namespace ReverieWorld.DiceRoll.Tests.Modifiers;
 
 public sealed partial class Weber
 {

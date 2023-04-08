@@ -1,4 +1,4 @@
-namespace RP.ReverieWorld.DiceRoll.Tests.Modifiers;
+namespace ReverieWorld.DiceRoll.Tests.Modifiers;
 
 public sealed partial class Prime
 {

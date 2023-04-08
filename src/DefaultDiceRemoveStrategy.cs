@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
 
-namespace RP.ReverieWorld.DiceRoll;
+namespace ReverieWorld.DiceRoll;
 
 /// <summary>
 /// Implements default strategy of <see cref="IDiceRemoveStrategy"/> interface for <see cref="AutoRoller"/>.
