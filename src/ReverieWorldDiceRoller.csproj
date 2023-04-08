@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,6 +10,7 @@
     <RepositoryUrl>https://github.com/dimson-n/ReverieWorldDiceRoller</RepositoryUrl>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackRelease>True</PackRelease>
+    <RootNamespace>ReverieWorld.DiceRoll</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
