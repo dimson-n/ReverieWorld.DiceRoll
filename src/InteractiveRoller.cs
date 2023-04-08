@@ -154,22 +154,13 @@ public sealed class InteractiveRoller
     {
         private readonly InteractiveRoller source;
 
-        /// <summary>
-        /// Gets a read-only list of dices of current state.
-        /// </summary>
-        /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</returns>
+        /// <inheritdoc cref="InteractiveRoller.Values"/>
         public IReadOnlyList<Dice> Values => source.Values;
 
-        /// <summary>
-        /// Gets current state of the <see cref="Roll"/>.
-        /// </summary>
-        /// <returns>Current state of the <see cref="Roll"/>.</returns>
+        /// <inheritdoc cref="InteractiveRoller.Current"/>
         public Roll Current => source.Current;
 
-        /// <summary>
-        /// Gets count of dices to remove at this stage.
-        /// </summary>
-        /// <returns>Count of dices that needs to be removed from the <see cref="Roll"/>.</returns>
+        /// <inheritdoc cref="InteractiveRoller.DicesToRemove"/>
         public int DicesToRemove => source.DicesToRemove;
 
         /// <summary>
@@ -178,42 +169,15 @@ public sealed class InteractiveRoller
         /// <returns><see langword="true"/> if there is no <see cref="Dice"/>s to remove; otherwise <see langword="false"/>.</returns>
         public bool StageConditionsMet => source.DicesToRemove == 0;
 
-        /// <summary>
-        /// Removes a <see cref="Dice"/> at the given <paramref name="index"/> from roll.
-        /// </summary>
-        /// <param name="index">Index of a <see cref="Dice"/> to remove.</param>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void RemoveDice(int index)
-        {
-            source.RemoveDice(index);
-        }
+        /// <inheritdoc cref="InteractiveRoller.RemoveDice"/>
+        public void RemoveDice(int index) => source.RemoveDice(index);
 
-        /// <summary>
-        /// Removes a set of <see cref="Dice"/>s at the given <paramref name="indices"/> from roll.
-        /// </summary>
-        /// <param name="indices">Set of <see cref="Dice"/> indices to remove.</param>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public void RemoveDices(IReadOnlySet<int> indices)
-        {
-            source.RemoveDices(indices);
-        }
+        /// <inheritdoc cref="InteractiveRoller.RemoveDices"/>
+        public void RemoveDices(IReadOnlySet<int> indices) => source.RemoveDices(indices);
 
-        /// <summary>
-        /// Completes the dice roll interaction.
-        /// </summary>
-        /// <returns><see cref="DiceRoll.Result"/> of the dice roll.</returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public Result Result()
-        {
-            return source.Result();
-        }
+        /// <inheritdoc cref="InteractiveRoller.Result"/>
+        public Result Result() => source.Result();
 
-        internal DiceRemoveStage(InteractiveRoller source)
-        {
-            this.source = source;
-        }
+        internal DiceRemoveStage(InteractiveRoller source) => this.source = source;
     }
 }
