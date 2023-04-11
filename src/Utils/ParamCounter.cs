@@ -1,26 +1,27 @@
 namespace ReverieWorld.DiceRoll.Utils;
 
-internal sealed class ParamCounter
+internal readonly struct ParamCounter
 {
-    private int count;
-    private readonly bool infinity;
+    private readonly int count;
+    private readonly bool infinite;
 
-    internal ParamCounter(int count, bool infinity)
+    internal ParamCounter(int count, bool infinite)
     {
         this.count = count;
-        this.infinity = infinity;
+        this.infinite = infinite;
     }
 
-    internal bool Exists => infinity || count != 0;
+    public readonly bool Exists => infinite || count != 0;
 
-    internal int MaxCount => infinity ? int.MaxValue : count;
+    public readonly int MaxCount => infinite ? int.MaxValue : count;
 
-    public static ParamCounter operator --(ParamCounter counter)
+    public static ParamCounter operator --(ParamCounter source)
     {
-        if (!counter.infinity)
+        if (!source.infinite)
         {
-            --counter.count;
+            return new(source.count - 1, source.infinite);
         }
-        return counter;
+
+        return source;
     }
 }
