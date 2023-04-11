@@ -14,4 +14,69 @@ public class InternalRollerTest
 
         Assert.Throws<ArgumentOutOfRangeException>("value", () => roller.Begin());
     }
+
+    [Fact]
+    public void AdditionalDices()
+    {
+        AutoRoller roller = new(new NonRandomMaxProvider(), new Parameters(additionalDicesCount: 2));
+
+        var result = roller.Roll();
+
+        Assert.Equal(3, result.Count);
+        Assert.Equal(2, result.Where(d => d.Removed).Count());
+
+        Assert.Equal(6, result.Total);
+    }
+
+    [Fact]
+    public void Bursts()
+    {
+        AutoRoller roller = new(new NonRandomMaxProvider(), new Parameters(dicesCount: 3, burstsCount: 3));
+
+        var result = roller.Roll();
+
+        Assert.Equal(6, result.Count);
+        Assert.Equal(3, result.Where(d => d.IsBurst).Count());
+
+        Assert.Equal(36, result.Total);
+    }
+
+    [Fact]
+    public void BurstsWithInability()
+    {
+        AutoRoller roller = new(new NonRandomZeroProvider(), new Parameters(burstsCount: 3));
+
+        var result = roller.Roll();
+
+        Assert.Single(result);
+        Assert.DoesNotContain(result, d => d.IsBurst);
+
+        Assert.Equal(1, result.Total);
+    }
+
+    [Fact]
+    public void BurstsWithLackOfDices()
+    {
+        AutoRoller roller = new(new PredefinedRandomProvider(5, 0), new Parameters(burstsCount: 3));
+
+        var result = roller.Roll();
+
+        Assert.Equal(2, result.Count);
+        Assert.Single(result.Where(d => d.IsBurst));
+
+        Assert.Equal(7, result.Total);
+    }
+
+    [Fact]
+    public void Bonus()
+    {
+        AutoRoller roller = new(new NonRandomMaxProvider(), new Parameters(bonus: 10));
+
+        var result = roller.Roll();
+
+        Assert.Single(result);
+
+        Assert.Equal(10, result.Bonus);
+        Assert.Equal(16, result.Total);
+    }
 }
