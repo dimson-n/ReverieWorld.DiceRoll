@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\ReverieWorldDiceRoller.csproj" />
+    <ProjectReference Include="..\src\ReverieWorld.DiceRoll.csproj" />
   </ItemGroup>
 
   <ItemGroup>
