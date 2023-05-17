@@ -3,7 +3,7 @@ using ReverieWorld.DiceRoll.Modifiers;
 namespace ReverieWorld.DiceRoll;
 
 /// <summary>
-/// Default implementation of the <see cref="IParameters"/> interface with preset by d6 dices.
+/// Default implementation of the <see cref="IParameters"/> interface with preset by d6.
 /// </summary>
 public class Parameters : GenericParameters
 {

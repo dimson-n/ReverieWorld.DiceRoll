@@ -5,15 +5,15 @@ namespace ReverieWorld.DiceRoll.Modifiers;
 /// </summary>
 public interface IRollModifier
 {
-    /// <summary>
+    /// <remarks>
     /// Called once at the roll beginning.
-    /// </summary>
+    /// </remarks>
     /// <param name="rollState">An object that contains current roll state and allows to modify it.</param>
     void AtRollBegin(IRollState rollState);
 
-    /// <summary>
+    /// <remarks>
     /// Called once at the roll end.
-    /// </summary>
+    /// </remarks>
     /// <param name="rollState">An object that contains current roll state and allows to modify it.</param>
     void AtRollEnd(IRollState rollState);
 }
