@@ -13,7 +13,7 @@ public sealed class Dice : IReadOnlyList<int>
     /// <summary>
     /// Gets actual value of the <see cref="Dice"/>.
     /// </summary>
-    /// <returns>Actual value of the <see cref="Dice"/>.</returns>
+    /// <value>Actual value of the <see cref="Dice"/>.</value>
     public int Value
     {
         get => values.Last();
@@ -23,31 +23,31 @@ public sealed class Dice : IReadOnlyList<int>
     /// <summary>
     /// Gets <see cref="Dice"/> generation offset (<see cref="Roll"/> round).
     /// </summary>
-    /// <returns><see cref="Dice"/> generation offset (<see cref="Roll"/> round).</returns>
+    /// <value><see cref="Dice"/> generation offset (<see cref="Roll"/> round).</value>
     public int Offset { get; }
 
     /// <summary>
     /// Gets the number of rolls of the <see cref="Dice"/>.
     /// </summary>
-    /// <returns>The number of rolls of the <see cref="Dice"/>.</returns>
+    /// <value>The number of rolls of the <see cref="Dice"/>.</value>
     public int RollsCount => values.Count;
 
     /// <summary>
     /// Gets a value indicating whether the <see cref="Dice"/> excluded from roll result.
     /// </summary>
-    /// <returns><see langword="true"/> if the <see cref="Dice"/> was excluded from roll result; otherwise, <see langword="false"/>.</returns>
+    /// <value><see langword="true"/> if the <see cref="Dice"/> was excluded from roll result; otherwise, <see langword="false"/>.</value>
     public bool Removed { get; internal set; } = false;
 
     /// <summary>
     /// Gets a value indicating whether the <see cref="Dice"/> made as burst.
     /// </summary>
-    /// <returns><see langword="true"/> if the <see cref="Dice"/> was made as burst; otherwise, <see langword="false"/>.</returns>
+    /// <value><see langword="true"/> if the <see cref="Dice"/> was made as burst; otherwise, <see langword="false"/>.</value>
     public bool IsBurst { get; }
 
     /// <summary>
     /// Gets a value indicating whether the <see cref="Dice"/> was modified by some <see cref="Modifiers.IRollModifier"/>.
     /// </summary>
-    /// <returns><see langword="true"/> if the <see cref="Dice"/> was modified by some <see cref="Modifiers.IRollModifier"/>; otherwise, <see langword="false"/>.</returns>
+    /// <value><see langword="true"/> if the <see cref="Dice"/> was modified by some <see cref="Modifiers.IRollModifier"/>; otherwise, <see langword="false"/>.</value>
     public bool Modified { get; internal set; }
 
     internal Dice(int value, int offset = 0, bool isBurst = false, bool fromModifier = false)
@@ -62,7 +62,7 @@ public sealed class Dice : IReadOnlyList<int>
     /// Gets the dice roll value at the specified index.
     /// </summary>
     /// <param name="index">The zero-based index of the dice roll to get.</param>
-    /// <returns>The dice roll value at the specified index.</returns>
+    /// <value>The dice roll value at the specified index.</value>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public int this[int index] => values[index];
 

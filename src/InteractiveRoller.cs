@@ -22,19 +22,19 @@ public sealed class InteractiveRoller
     /// <summary>
     /// Gets a read-only list of dices of current state.
     /// </summary>
-    /// <returns>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</returns>
+    /// <value>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</value>
     public IReadOnlyList<Dice> Values => state.Values;
 
     /// <summary>
     /// Gets current state of the <see cref="Roll"/>.
     /// </summary>
-    /// <returns>Current state of the <see cref="Roll"/>.</returns>
+    /// <value>Current state of the <see cref="Roll"/>.</value>
     public Roll Current => result ?? new Roll(state);
 
     /// <summary>
     /// Gets count of <see cref="Dice"/>s that need to be removed from roll.
     /// </summary>
-    /// <returns>Count of <see cref="Dice"/>s that need to be removed from roll.</returns>
+    /// <value>Count of <see cref="Dice"/>s that need to be removed from roll.</value>
     public int DicesToRemove => state.DicesToRemove;
 
     /// <summary>
@@ -166,7 +166,7 @@ public sealed class InteractiveRoller
         /// <summary>
         /// Indicates that proper count of <see cref="Dice"/>s already removed from the <see cref="Roll"/>.
         /// </summary>
-        /// <returns><see langword="true"/> if there is no <see cref="Dice"/>s to remove; otherwise <see langword="false"/>.</returns>
+        /// <value><see langword="true"/> if there is no <see cref="Dice"/>s to remove; otherwise <see langword="false"/>.</value>
         public bool StageConditionsMet => source.DicesToRemove == 0;
 
         /// <inheritdoc cref="InteractiveRoller.RemoveDice"/>

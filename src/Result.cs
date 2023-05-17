@@ -5,10 +5,8 @@ namespace ReverieWorld.DiceRoll;
 /// </summary>
 public sealed class Result : Roll
 {
-    /// <summary>
-    /// Gets a value indicating whether the <see cref="Roll"/> was fully performed.
-    /// </summary>
-    /// <returns>Always <see langword="true"/>.</returns>
+    /// <value>Always <see langword="true"/>.</value>
+    /// <inheritdoc/>
     public override bool Completed => true;
 
     internal Result(RollState state) :

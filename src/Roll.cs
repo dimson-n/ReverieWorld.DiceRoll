@@ -64,7 +64,7 @@ public class Roll : IReadOnlyList<Dice>
     /// <summary>
     /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
     /// </summary>
-    /// <returns><see langword="true"/> if <see cref="Roll"/> was fully performed; otherwise, <see langword="false"/>.</returns>
+    /// <value><see langword="true"/> if <see cref="Roll"/> was fully performed; otherwise, <see langword="false"/>.</value>
     public virtual bool Completed => false;
 
     internal Roll(RollState state)
@@ -79,14 +79,14 @@ public class Roll : IReadOnlyList<Dice>
     /// Gets the <see cref="Dice"/> at the specified index in the <see cref="Roll"/>.
     /// </summary>
     /// <param name="index">The zero-based index of the <see cref="Dice"/> to get.</param>
-    /// <returns>The <see cref="Dice"/> at the specified index in the <see cref="Roll"/>.</returns>
+    /// <value>The <see cref="Dice"/> at the specified index in the <see cref="Roll"/>.</value>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public Dice this[int index] => rolls[index];
 
     /// <summary>
     /// Gets the number of <see cref="Dice"/>s in the <see cref="Roll"/>.
     /// </summary>
-    /// <returns>The number of <see cref="Dice"/>s in the <see cref="Roll"/>.</returns>
+    /// <value>The number of <see cref="Dice"/>s in the <see cref="Roll"/>.</value>
     public int Count => rolls.Count;
 
     /// <summary>

@@ -8,13 +8,13 @@ public interface IRollState : IReadOnlyList<Dice>
     /// <summary>
     /// Gets a read-only list of dices of the current roll state.
     /// </summary>
-    /// <returns>A read-only list of dices of the current roll state.</returns>
+    /// <value>A read-only list of dices of the current roll state.</value>
     IReadOnlyList<Dice> Values { get; }
 
     /// <summary>
     /// Gets the parameters of the current roll.
     /// </summary>
-    /// <returns>The parameters of the current roll.</returns>
+    /// <value>The parameters of the current roll.</value>
     IParameters Parameters { get; }
 
     /// <summary>
