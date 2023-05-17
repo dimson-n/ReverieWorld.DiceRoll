@@ -29,6 +29,15 @@ public sealed class ParametersTest
     }
 
     [Fact]
+    public void Modifiers()
+    {
+        Parameters p = new(modifier: new NullModifier());
+
+        Assert.NotNull(p.Modifiers);
+        Assert.NotEmpty(p.Modifiers);
+    }
+
+    [Fact]
     public void Validation()
     {
         Assert.Throws<ArgumentNullException>("parameters", () => GenericParameters.Validate(null!));
