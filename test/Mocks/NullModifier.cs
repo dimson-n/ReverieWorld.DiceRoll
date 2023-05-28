@@ -2,7 +2,7 @@ using ReverieWorld.DiceRoll.Modifiers;
 
 namespace ReverieWorld.DiceRoll.Tests;
 
-internal class NullModifier : IRollModifier
+internal sealed class NullModifier : IRollModifier
 {
     public void AtRollBegin(IRollState rollState) { }
 

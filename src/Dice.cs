@@ -7,7 +7,7 @@ namespace ReverieWorld.DiceRoll;
 /// </summary>
 public sealed class Dice : IReadOnlyList<int>
 {
-    internal readonly List<int> values;
+    private readonly List<int> values;
     internal bool burstMade = false;
 
     /// <summary>

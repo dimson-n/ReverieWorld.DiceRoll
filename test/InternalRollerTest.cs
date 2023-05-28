@@ -3,7 +3,7 @@ namespace ReverieWorld.DiceRoll.Tests;
 /// <summary>
 /// Tests for the <see cref="RollState"/> internal class.
 /// </summary>
-public class InternalRollerTest
+public sealed class InternalRollerTest
 {
     [Theory]
     [InlineData(-1)]
