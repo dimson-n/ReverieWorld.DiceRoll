@@ -21,7 +21,8 @@ internal sealed class RollState : IRollState
     private readonly Dictionary<RollStage, Action<IRollState>> modifiersActions;
     private readonly List<Dice> rolls;
     private int offset = 0;
-    private RollMaker? currentRollMaker;
+
+    internal RollMaker? currentRollMaker;
 
     internal readonly IParameters parameters;
     internal readonly IRandomProvider randomProvider;
@@ -58,8 +59,6 @@ internal sealed class RollState : IRollState
 
     internal void FillInitial(RollMaker rollMaker)
     {
-        currentRollMaker = rollMaker;
-
         InvokeActionsFor(RollStage.BeforeStart);
 
         int initialRollsCount = parameters.DicesCount + parameters.AdditionalDicesCount;
@@ -70,8 +69,6 @@ internal sealed class RollState : IRollState
         }
 
         InvokeActionsFor(RollStage.AtDicesAdded);
-
-        currentRollMaker = null;
     }
 
     /// <exception cref="ArgumentNullException"/>
@@ -110,8 +107,6 @@ internal sealed class RollState : IRollState
     {
         ParamCounter availableRerolls = new(parameters.RerollsCount, parameters.HasInfinityRerolls);
         ParamCounter availableBursts  = new(parameters.BurstsCount,  parameters.HasInfinityBursts);
-
-        currentRollMaker = rollMaker;
 
         bool somethingChanged = false;
         do
@@ -163,8 +158,6 @@ internal sealed class RollState : IRollState
         } while (somethingChanged);
 
         InvokeActionsFor(RollStage.AfterEnd);
-
-        currentRollMaker = null;
     }
 
     private void AddDice(int value, bool asBurst = false, bool fromModifier = false)
