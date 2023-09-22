@@ -22,7 +22,7 @@ public sealed class ParametersTest
     [Fact]
     public void InfinityFields()
     {
-        Parameters p = new(rerollsCount: GenericParameters.Infinite, burstsCount: GenericParameters.Infinite);
+        Parameters p = new(rerollsCount: ParametersBase.Infinite, burstsCount: ParametersBase.Infinite);
 
         Assert.True(p.HasInfinityRerolls);
         Assert.True(p.HasInfinityBursts);
@@ -40,14 +40,14 @@ public sealed class ParametersTest
     [Fact]
     public void Validation()
     {
-        Assert.Throws<ArgumentNullException>("parameters", () => GenericParameters.Validate(null!));
+        Assert.Throws<ArgumentNullException>("parameters", () => ParametersBase.Validate(null!));
 
-        Assert.Throws<ArgumentOutOfRangeException>("FacesCount", () => GenericParameters.Validate(new GenericParameters(facesCount: 1)));
+        Assert.Throws<ArgumentOutOfRangeException>("FacesCount", () => ParametersBase.Validate(new ParametersBase(facesCount: 1)));
 
-        Assert.Throws<ArgumentOutOfRangeException>("DicesCount",           () => GenericParameters.Validate(new Parameters(dicesCount: 0)));
-        Assert.Throws<ArgumentOutOfRangeException>("AdditionalDicesCount", () => GenericParameters.Validate(new Parameters(additionalDicesCount: -1)));
+        Assert.Throws<ArgumentOutOfRangeException>("DicesCount",           () => ParametersBase.Validate(new Parameters(dicesCount: 0)));
+        Assert.Throws<ArgumentOutOfRangeException>("AdditionalDicesCount", () => ParametersBase.Validate(new Parameters(additionalDicesCount: -1)));
 
-        Assert.Throws<ArgumentException>("RerollsCount", () => GenericParameters.Validate(new NonInfinityParameters(rerollsCount: GenericParameters.Infinite)));
-        Assert.Throws<ArgumentException>("BurstsCount",  () => GenericParameters.Validate(new NonInfinityParameters(burstsCount: GenericParameters.Infinite)));
+        Assert.Throws<ArgumentException>("RerollsCount", () => ParametersBase.Validate(new NonInfinityParameters(rerollsCount: ParametersBase.Infinite)));
+        Assert.Throws<ArgumentException>("BurstsCount",  () => ParametersBase.Validate(new NonInfinityParameters(burstsCount: ParametersBase.Infinite)));
     }
 }

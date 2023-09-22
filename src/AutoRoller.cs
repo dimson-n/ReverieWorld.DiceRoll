@@ -27,7 +27,7 @@ public sealed class AutoRoller
         ArgumentNullException.ThrowIfNull(randomProvider);
 
         defaultParameters ??= Parameters.Default;
-        GenericParameters.Validate(defaultParameters);
+        ParametersBase.Validate(defaultParameters);
 
         this.randomProvider = randomProvider;
         this.defaultParameters = defaultParameters;
@@ -58,7 +58,7 @@ public sealed class AutoRoller
     public Result Roll(IParameters? parameters = null, IDiceRemoveStrategy? diceRemoveStrategy = null)
     {
         parameters ??= defaultParameters;
-        GenericParameters.Validate(parameters);
+        ParametersBase.Validate(parameters);
 
         RollState roll = new(parameters, randomProvider);
 

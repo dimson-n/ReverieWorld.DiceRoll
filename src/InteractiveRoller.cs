@@ -50,7 +50,7 @@ public sealed class InteractiveRoller
         ArgumentNullException.ThrowIfNull(randomProvider);
 
         parameters ??= Parameters.Default;
-        GenericParameters.Validate(parameters);
+        ParametersBase.Validate(parameters);
 
         this.state = new(parameters, randomProvider);
     }

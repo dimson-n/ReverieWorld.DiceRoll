@@ -3,9 +3,9 @@ using ReverieWorld.DiceRoll.Modifiers;
 namespace ReverieWorld.DiceRoll;
 
 /// <summary>
-/// Generic implementation of the <see cref="IParameters"/> interface.
+/// Base implementation of the <see cref="IParameters"/> interface.
 /// </summary>
-public class GenericParameters : IParameters
+public class ParametersBase : IParameters
 {
     /// <summary>
     /// Named value to indicate infinity count of rerolls or bursts.
@@ -48,7 +48,7 @@ public class GenericParameters : IParameters
     public virtual IReadOnlyCollection<IRollModifier>? Modifiers { get; init; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GenericParameters"/> class with designated parameters for a dice roller.
+    /// Initializes a new instance of the <see cref="ParametersBase"/> class with designated parameters for a dice roller.
     /// </summary>
     /// <param name="facesCount">Dice faces count.</param>
     /// <param name="dicesCount">Count of dices to roll.</param>
@@ -57,8 +57,8 @@ public class GenericParameters : IParameters
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
     /// <param name="bonus">Bonus or penalty value for a roll.</param>
     /// <param name="modifiers">Modifiers for a roll.</param>
-    public GenericParameters(int facesCount, int dicesCount = 1, int additionalDicesCount = 0, int rerollsCount = 0, int burstsCount = 0,
-                             int bonus = 0, IReadOnlyCollection<IRollModifier>? modifiers = null)
+    public ParametersBase(int facesCount, int dicesCount = 1, int additionalDicesCount = 0, int rerollsCount = 0, int burstsCount = 0,
+                          int bonus = 0, IReadOnlyCollection<IRollModifier>? modifiers = null)
     {
         FacesCount = facesCount;
         DicesCount = dicesCount;

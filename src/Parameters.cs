@@ -5,12 +5,12 @@ namespace ReverieWorld.DiceRoll;
 /// <summary>
 /// Default implementation of the <see cref="IParameters"/> interface with preset by d6.
 /// </summary>
-public class Parameters : GenericParameters
+public class Parameters : ParametersBase
 {
     internal static readonly Parameters Default = new();
 
     /// <summary>
-    /// Predefined value for <see cref="GenericParameters.FacesCount"/> property.
+    /// Predefined value for <see cref="ParametersBase.FacesCount"/> property.
     /// </summary>
     public const int DiceFacesCount = 6;
 

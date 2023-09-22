@@ -19,7 +19,7 @@ public sealed class AutoRollerTest
     [InlineData(9, 8, 72)]
     public void MaxBound(int faces, int dices, int expected)
     {
-        AutoRoller roller = new(new NonRandomMaxProvider(), new GenericParameters(facesCount: faces, dicesCount: dices));
+        AutoRoller roller = new(new NonRandomMaxProvider(), new ParametersBase(facesCount: faces, dicesCount: dices));
 
         var result = roller.Roll();
 
