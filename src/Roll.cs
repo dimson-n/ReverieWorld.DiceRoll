@@ -9,57 +9,21 @@ public class Roll : IReadOnlyList<Dice>
 {
     private readonly IReadOnlyList<Dice> rolls;
 
-    private readonly IParameters parameters;
+    /// <summary>
+    /// Gets parameters of the <see cref="Roll"/>.
+    /// </summary>
+    /// <value>Parameters of the <see cref="Roll"/>.</value>
+    public IParameters Parameters { get; }
 
     /// <summary>
-    /// Total summation of all dice values and <see cref="Bonus"/>.
+    /// Total summation of all dice values with bonus.
     /// </summary>
     public int Total { get; }
 
     /// <summary>
-    /// Bonus (positive) or penalty (negative) value that added to final summation of dice values.
-    /// </summary>
-    public int Bonus => parameters.Bonus;
-
-    /// <summary>
-    /// Dice faces count.
-    /// </summary>
-    public int DiceFacesCount => parameters.FacesCount;
-
-    /// <summary>
-    /// Initial count of dices to roll.
-    /// </summary>
-    public int BaseDicesCount => parameters.DicesCount;
-
-    /// <summary>
-    /// Count of dices for "add then remove" dice mechanic.
-    /// </summary>
-    public int AdditionalDicesCount => parameters.AdditionalDicesCount;
-
-    /// <summary>
-    /// Count of possible rerolls for dices with value 1.
-    /// </summary>
-    public int InitialRerollsCount => parameters.RerollsCount;
-
-    /// <summary>
-    /// Count of possible bursts for dices with max possible value.
-    /// </summary>
-    public int InitialBurstsCount => parameters.BurstsCount;
-
-    /// <summary>
-    /// Value that indicates that <see cref="InitialRerollsCount"/> ignored and rerolls must be performed for all dices with value 1.
-    /// </summary>
-    public bool HasInfinityRerolls => parameters.HasInfinityRerolls;
-
-    /// <summary>
-    /// Value that indicates that <see cref="InitialBurstsCount"/> ignored and bursts must be performed for all dices with max possible value.
-    /// </summary>
-    public bool HasInfinityBursts => parameters.HasInfinityBursts;
-
-    /// <summary>
     /// Value that indicates that any <see cref="Modifiers.IRollModifier"/> added by <see cref="IParameters"/>.
     /// </summary>
-    public bool HasModifiers => parameters.Modifiers is not null && parameters.Modifiers.Count != 0;
+    public bool HasModifiers => Parameters.Modifiers is not null && Parameters.Modifiers.Count != 0;
 
     /// <summary>
     /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
@@ -70,9 +34,9 @@ public class Roll : IReadOnlyList<Dice>
     internal Roll(RollState state)
     {
         rolls = state.Values;
-        parameters = state.parameters;
+        Parameters = state.parameters;
 
-        Total = rolls.Where(d => !d.Removed).Sum(d => d.Value) + Bonus;
+        Total = rolls.Where(d => !d.Removed).Sum(d => d.Value) + Parameters.Bonus;
     }
 
     /// <summary>

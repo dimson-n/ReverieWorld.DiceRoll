@@ -76,7 +76,6 @@ public sealed class InternalRollerTest
 
         Assert.Single(result);
 
-        Assert.Equal(10, result.Bonus);
         Assert.Equal(16, result.Total);
     }
 }
