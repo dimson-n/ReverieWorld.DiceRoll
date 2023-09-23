@@ -40,14 +40,14 @@ public sealed class ParametersTest
     [Fact]
     public void Validation()
     {
-        Assert.Throws<ArgumentNullException>("parameters", () => ParametersBase.Validate(null!));
+        Assert.Throws<ArgumentNullException>("parameters", () => ((ParametersBase)null!).Validate());
 
-        Assert.Throws<ArgumentOutOfRangeException>("FacesCount", () => ParametersBase.Validate(new ParametersBase(facesCount: 1)));
+        Assert.Throws<ArgumentOutOfRangeException>("FacesCount", () => new ParametersBase(facesCount: 1).Validate());
 
-        Assert.Throws<ArgumentOutOfRangeException>("DicesCount",           () => ParametersBase.Validate(new Parameters(dicesCount: 0)));
-        Assert.Throws<ArgumentOutOfRangeException>("AdditionalDicesCount", () => ParametersBase.Validate(new Parameters(additionalDicesCount: -1)));
+        Assert.Throws<ArgumentOutOfRangeException>("DicesCount",           () => new Parameters(dicesCount: 0).Validate());
+        Assert.Throws<ArgumentOutOfRangeException>("AdditionalDicesCount", () => new Parameters(additionalDicesCount: -1).Validate());
 
-        Assert.Throws<ArgumentException>("RerollsCount", () => ParametersBase.Validate(new NonInfinityParameters(rerollsCount: ParametersBase.Infinite)));
-        Assert.Throws<ArgumentException>("BurstsCount",  () => ParametersBase.Validate(new NonInfinityParameters(burstsCount: ParametersBase.Infinite)));
+        Assert.Throws<ArgumentException>("RerollsCount", () => new NonInfinityParameters(rerollsCount: ParametersBase.Infinite).Validate());
+        Assert.Throws<ArgumentException>("BurstsCount",  () => new NonInfinityParameters(burstsCount: ParametersBase.Infinite).Validate());
     }
 }
