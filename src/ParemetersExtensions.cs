@@ -41,4 +41,11 @@ public static class ParametersExtensions
             throw new ArgumentException("Negative bursts count available with infinity bursts only", nameof(parameters.BurstsCount));
         }
     }
+
+    /// <summary>
+    /// Value that indicates that any <see cref="Modifiers.IRollModifier"/> added by <see cref="IParameters"/>.
+    /// </summary>
+    /// <returns><see langword="true"/> if <paramref name="parameters"/> contains modifiers; otherwise, <see langword="false"/>.</returns>
+    public static bool HasModifiers(this IParameters parameters)
+        => parameters.Modifiers is not null && parameters.Modifiers.Count != 0;
 }

@@ -17,6 +17,8 @@ public sealed class ParametersTest
 
         Assert.False(p.HasInfinityRerolls);
         Assert.False(p.HasInfinityBursts);
+
+        Assert.False(p.HasModifiers());
     }
 
     [Fact]

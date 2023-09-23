@@ -21,11 +21,6 @@ public class Roll : IReadOnlyList<Dice>
     public int Total { get; }
 
     /// <summary>
-    /// Value that indicates that any <see cref="Modifiers.IRollModifier"/> added by <see cref="IParameters"/>.
-    /// </summary>
-    public bool HasModifiers => Parameters.Modifiers is not null && Parameters.Modifiers.Count != 0;
-
-    /// <summary>
     /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
     /// </summary>
     /// <value><see langword="true"/> if <see cref="Roll"/> was fully performed; otherwise, <see langword="false"/>.</value>
