@@ -7,7 +7,10 @@ namespace ReverieWorld.DiceRoll;
 /// </summary>
 public class Parameters : ParametersBase
 {
-    internal static readonly Parameters Default = new();
+    /// <summary>
+    /// Default parameters.
+    /// </summary>
+    public static readonly Parameters Default = new();
 
     /// <summary>
     /// Predefined value for <see cref="ParametersBase.FacesCount"/> property.
