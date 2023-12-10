@@ -16,7 +16,7 @@ public sealed class Dice : IReadOnlyList<int>
     /// <value>Actual value of the <see cref="Dice"/>.</value>
     public int Value
     {
-        get => values.Last();
+        get => values[^1];
         internal set => values.Add(value);
     }
 
