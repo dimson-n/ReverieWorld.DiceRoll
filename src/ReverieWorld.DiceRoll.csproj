@@ -9,7 +9,7 @@
 
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <RepositoryUrl>https://github.com/dimson-n/ReverieWorldDiceRoller</RepositoryUrl>
+    <RepositoryUrl>https://github.com/dimson-n/ReverieWorld.DiceRoll</RepositoryUrl>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackRelease>True</PackRelease>
     <RootNamespace>ReverieWorld.DiceRoll</RootNamespace>
