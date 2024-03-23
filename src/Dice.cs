@@ -52,7 +52,7 @@ public sealed class Dice : IReadOnlyList<int>
 
     internal Dice(int value, int offset = 0, bool isBurst = false, bool fromModifier = false)
     {
-        this.values   = new List<int>(1) { value };
+        this.values   = [value];
         this.Offset   = offset;
         this.IsBurst  = isBurst;
         this.Modified = fromModifier;
