@@ -13,6 +13,8 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackRelease>True</PackRelease>
     <RootNamespace>ReverieWorld.DiceRoll</RootNamespace>
+
+    <IsTrimmable>True</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
