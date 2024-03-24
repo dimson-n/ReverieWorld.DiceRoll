@@ -92,7 +92,7 @@ internal sealed class RollState : IRollState
                     foreach (var d in toReroll.Take(availableRerolls.MaxCount))
                     {
                         --availableRerolls;
-                        d.Value = rollMaker.Next();
+                        d.RawValue = rollMaker.Next();
                     }
 
                     somethingChanged = true;
@@ -135,7 +135,7 @@ internal sealed class RollState : IRollState
     {
         ThrowIfDiceValueOutOfRange(value);
 
-        rolls.Add(new Dice(value, offset, asBurst, fromModifier));
+        rolls.Add(new Dice(rawValue: value, offset: offset, isBurst: asBurst, fromModifier: fromModifier));
     }
 
     /// <exception cref="ArgumentOutOfRangeException"/>
@@ -184,7 +184,7 @@ internal sealed class RollState : IRollState
         ThrowIfDiceValueOutOfRange(newValue);
 
         var dice = rolls[index];
-        dice.Value = newValue;
+        dice.RawValue = newValue;
         dice.Modified = true;
     }
 
