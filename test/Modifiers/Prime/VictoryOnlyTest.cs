@@ -17,7 +17,6 @@ public sealed partial class Prime
             Assert.DoesNotContain(result, d => !d.Modified);
 
             Assert.Equal(3,  result.Count);
-            Assert.Equal(18, result.Total);
         }
 
         [Fact]
@@ -33,7 +32,6 @@ public sealed partial class Prime
             Assert.DoesNotContain(result, d => d.Modified);
 
             Assert.Equal(3, result.Count);
-            Assert.InRange(result.Total, 6, 18);
         }
     }
 }

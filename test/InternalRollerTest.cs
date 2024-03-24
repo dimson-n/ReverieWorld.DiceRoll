@@ -24,8 +24,6 @@ public sealed class InternalRollerTest
 
         Assert.Equal(6, result.Count);
         Assert.Equal(3, result.Where(d => d.IsBurst).Count());
-
-        Assert.Equal(36, result.Total);
     }
 
     [Fact]
@@ -37,8 +35,6 @@ public sealed class InternalRollerTest
 
         Assert.Single(result);
         Assert.DoesNotContain(result, d => d.IsBurst);
-
-        Assert.Equal(1, result.Total);
     }
 
     [Fact]
@@ -50,7 +46,5 @@ public sealed class InternalRollerTest
 
         Assert.Equal(2, result.Count);
         Assert.Single(result.Where(d => d.IsBurst));
-
-        Assert.Equal(7, result.Total);
     }
 }

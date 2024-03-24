@@ -16,11 +16,6 @@ public class Roll : IReadOnlyList<Dice>
     public IParameters Parameters { get; }
 
     /// <summary>
-    /// Total summation of all dice values with bonus.
-    /// </summary>
-    public int Total { get; }
-
-    /// <summary>
     /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
     /// </summary>
     /// <value><see langword="true"/> if <see cref="Roll"/> was fully performed; otherwise, <see langword="false"/>.</value>
@@ -30,8 +25,6 @@ public class Roll : IReadOnlyList<Dice>
     {
         rolls = state.Values;
         Parameters = state.parameters;
-
-        Total = rolls.Where(d => !d.Removed).Sum(d => d.Value);
     }
 
     /// <summary>
@@ -55,10 +48,4 @@ public class Roll : IReadOnlyList<Dice>
     public IEnumerator<Dice> GetEnumerator() => rolls.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)rolls).GetEnumerator();
-
-    /// <summary>
-    /// Returns a string that represents the <see cref="Roll"/> value.
-    /// </summary>
-    /// <returns>A string that represents the <see cref="Roll"/> value.</returns>
-    public override sealed string ToString() => Total.ToString();
 }
