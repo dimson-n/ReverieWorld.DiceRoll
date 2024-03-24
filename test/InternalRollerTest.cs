@@ -16,19 +16,6 @@ public sealed class InternalRollerTest
     }
 
     [Fact]
-    public void AdditionalDices()
-    {
-        AutoRoller roller = new(new NonRandomMaxProvider(), new Parameters(additionalDicesCount: 2));
-
-        var result = roller.Roll();
-
-        Assert.Equal(3, result.Count);
-        Assert.Equal(2, result.Where(d => d.Removed).Count());
-
-        Assert.Equal(6, result.Total);
-    }
-
-    [Fact]
     public void Bursts()
     {
         AutoRoller roller = new(new NonRandomMaxProvider(), new Parameters(dicesCount: 3, burstsCount: 3));

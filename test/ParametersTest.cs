@@ -9,7 +9,6 @@ public sealed class ParametersTest
 
         Assert.Equal(6, p.FacesCount);
         Assert.Equal(1, p.DicesCount);
-        Assert.Equal(0, p.AdditionalDicesCount);
         Assert.Equal(0, p.RerollsCount);
         Assert.Equal(0, p.BurstsCount);
         Assert.Equal(0, p.Bonus);
@@ -46,8 +45,7 @@ public sealed class ParametersTest
 
         Assert.Throws<ArgumentOutOfRangeException>("FacesCount", () => new ParametersBase(facesCount: 1).Validate());
 
-        Assert.Throws<ArgumentOutOfRangeException>("DicesCount",           () => new Parameters(dicesCount: 0).Validate());
-        Assert.Throws<ArgumentOutOfRangeException>("AdditionalDicesCount", () => new Parameters(additionalDicesCount: -1).Validate());
+        Assert.Throws<ArgumentOutOfRangeException>("DicesCount", () => new Parameters(dicesCount: 0).Validate());
 
         Assert.Throws<ArgumentException>("RerollsCount", () => new NonInfinityParameters(rerollsCount: ParametersBase.Infinite).Validate());
         Assert.Throws<ArgumentException>("BurstsCount",  () => new NonInfinityParameters(burstsCount: ParametersBase.Infinite).Validate());

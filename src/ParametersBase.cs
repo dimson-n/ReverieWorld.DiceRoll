@@ -19,9 +19,6 @@ public class ParametersBase : IParameters
     public virtual int DicesCount { get; init; }
 
     /// <inheritdoc/>
-    public virtual int AdditionalDicesCount { get; init; }
-
-    /// <inheritdoc/>
     public virtual int RerollsCount { get; init; }
 
     /// <inheritdoc/>
@@ -52,17 +49,15 @@ public class ParametersBase : IParameters
     /// </summary>
     /// <param name="facesCount">Dice faces count.</param>
     /// <param name="dicesCount">Count of dices to roll.</param>
-    /// <param name="additionalDicesCount">Count of dices for "add then remove" dice mechanic.</param>
     /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
     /// <param name="bonus">Bonus or penalty value for a roll.</param>
     /// <param name="modifiers">Modifiers for a roll.</param>
-    public ParametersBase(int facesCount, int dicesCount = 1, int additionalDicesCount = 0, int rerollsCount = 0, int burstsCount = 0,
+    public ParametersBase(int facesCount, int dicesCount = 1, int rerollsCount = 0, int burstsCount = 0,
                           int bonus = 0, IReadOnlyCollection<IRollModifier>? modifiers = null)
     {
         FacesCount = facesCount;
         DicesCount = dicesCount;
-        AdditionalDicesCount = additionalDicesCount;
         RerollsCount = rerollsCount;
         BurstsCount = burstsCount;
         Bonus = bonus;

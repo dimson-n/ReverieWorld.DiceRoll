@@ -27,13 +27,11 @@ internal sealed class RollState : IRollState
     internal readonly IParameters parameters;
     internal readonly IRandomProvider randomProvider;
 
-    internal int DicesToRemove => parameters.AdditionalDicesCount - rolls.Where(d => d.Removed).Count();
-
     internal RollState(IParameters parameters, IRandomProvider randomProvider)
     {
         this.parameters = parameters;
         this.randomProvider = randomProvider;
-        this.rolls = new List<Dice>(parameters.DicesCount + parameters.AdditionalDicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
+        this.rolls = new List<Dice>(parameters.DicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
         this.modifiersActions = new Dictionary<RollStage, Action<IRollState>>();
 
         if (parameters.Modifiers is not null)
@@ -61,40 +59,13 @@ internal sealed class RollState : IRollState
     {
         InvokeActionsFor(RollStage.BeforeStart);
 
-        int initialRollsCount = parameters.DicesCount + parameters.AdditionalDicesCount;
-
+        int initialRollsCount = parameters.DicesCount;
         for (int i = 0; i != initialRollsCount; ++i)
         {
             AddDice(rollMaker.Next());
         }
 
         InvokeActionsFor(RollStage.AtDicesAdded);
-    }
-
-    /// <exception cref="ArgumentNullException"/>
-    /// <exception cref="InvalidOperationException"/>
-    /// <exception cref="ArgumentOutOfRangeException"/>
-    public void RemoveDices(IReadOnlySet<int> indices)
-    {
-        ArgumentNullException.ThrowIfNull(indices);
-
-        if (DicesToRemove < indices.Count)
-        {
-            throw new InvalidOperationException("Too many indices to remove provided");
-        }
-
-        foreach (int index in indices)
-        {
-            if (index < 0 || rolls.Count <= index)
-            {
-                throw new ArgumentOutOfRangeException(nameof(indices), indices, "One of indices out of range");
-            }
-        }
-
-        foreach (int index in indices)
-        {
-            rolls[index].Removed = true;
-        }
     }
 
     internal void CompleteRerollsAndBursts()

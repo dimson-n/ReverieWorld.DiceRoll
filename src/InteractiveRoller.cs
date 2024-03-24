@@ -9,8 +9,8 @@ public sealed class InteractiveRoller
     enum Stage
     {
         Init,
-        RemovingDices,
         Ready,
+        Completed,
     }
 
     private Stage stage = Stage.Init;
@@ -30,12 +30,6 @@ public sealed class InteractiveRoller
     /// </summary>
     /// <value>Current state of the <see cref="Roll"/>.</value>
     public Roll Current => result ?? new Roll(state);
-
-    /// <summary>
-    /// Gets count of <see cref="Dice"/>s that need to be removed from roll.
-    /// </summary>
-    /// <value>Count of <see cref="Dice"/>s that need to be removed from roll.</value>
-    public int DicesToRemove => state.DicesToRemove;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InteractiveRoller"/> with specified <paramref name="randomProvider"/> and optional <paramref name="parameters"/>.
@@ -60,6 +54,7 @@ public sealed class InteractiveRoller
     /// </summary>
     /// <returns>Next stage wrapper.</returns>
     /// <exception cref="InvalidOperationException"></exception>
+#pragma warning disable CS0618
     public DiceRemoveStage Begin()
     {
         if (stage != Stage.Init)
@@ -69,55 +64,11 @@ public sealed class InteractiveRoller
 
         state.FillInitial();
 
-        stage = Stage.RemovingDices;
+        stage = Stage.Ready;
 
         return new DiceRemoveStage(this);
     }
-
-    /// <summary>
-    /// Removes a <see cref="Dice"/> at the given <paramref name="index"/> from roll.
-    /// </summary>
-    /// <param name="index">Index of a <see cref="Dice"/> to remove.</param>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public void RemoveDice(int index)
-    {
-        if (stage != Stage.RemovingDices)
-        {
-            throw new InvalidOperationException("Can't remove dices at current stage");
-        }
-
-        if (DicesToRemove <= 0)
-        {
-            throw new InvalidOperationException("No more dices to remove");
-        }
-
-        if (index < 0 || state.Count <= index)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index), index, "Index out of range");
-        }
-
-        state[index].Removed = true;
-    }
-
-    /// <summary>
-    /// Removes a set of <see cref="Dice"/>s at the given <paramref name="indices"/> from roll.
-    /// </summary>
-    /// <param name="indices">Set of <see cref="Dice"/> indices to remove.</param>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public void RemoveDices(IReadOnlySet<int> indices)
-    {
-        ArgumentNullException.ThrowIfNull(indices);
-
-        if (stage != Stage.RemovingDices)
-        {
-            throw new InvalidOperationException("Can't remove dices at current stage");
-        }
-
-        state.RemoveDices(indices);
-    }
+#pragma warning restore CS0618
 
     /// <summary>
     /// Completes the dice roll interaction.
@@ -126,30 +77,24 @@ public sealed class InteractiveRoller
     /// <exception cref="InvalidOperationException"></exception>
     public Result Result()
     {
-        if (stage == Stage.RemovingDices)
-        {
-            if (DicesToRemove != 0)
-            {
-                throw new InvalidOperationException("More dices need to be removed");
-            }
-
-            state.CompleteRerollsAndBursts();
-
-            result = new Result(state);
-            stage = Stage.Ready;
-        }
-
         if (stage != Stage.Ready)
         {
             throw new InvalidOperationException("Can't get result at current stage");
         }
 
-        return result!;
+        state.CompleteRerollsAndBursts();
+
+        result = new Result(state);
+
+        stage = Stage.Completed;
+
+        return result;
     }
 
     /// <summary>
     /// Represents a dice remove stage of interactive roll.
     /// </summary>
+    [Obsolete("Not longer in use, will be replaced with another stage")]
     public sealed class DiceRemoveStage
     {
         private readonly InteractiveRoller source;
@@ -160,20 +105,11 @@ public sealed class InteractiveRoller
         /// <inheritdoc cref="InteractiveRoller.Current"/>
         public Roll Current => source.Current;
 
-        /// <inheritdoc cref="InteractiveRoller.DicesToRemove"/>
-        public int DicesToRemove => source.DicesToRemove;
-
         /// <summary>
         /// Indicates that proper count of <see cref="Dice"/>s already removed from the <see cref="Roll"/>.
         /// </summary>
         /// <value><see langword="true"/> if there is no <see cref="Dice"/>s to remove; otherwise <see langword="false"/>.</value>
-        public bool StageConditionsMet => source.DicesToRemove == 0;
-
-        /// <inheritdoc cref="InteractiveRoller.RemoveDice"/>
-        public void RemoveDice(int index) => source.RemoveDice(index);
-
-        /// <inheritdoc cref="InteractiveRoller.RemoveDices"/>
-        public void RemoveDices(IReadOnlySet<int> indices) => source.RemoveDices(indices);
+        public bool StageConditionsMet => true;
 
         /// <inheritdoc cref="InteractiveRoller.Result"/>
         public Result Result() => source.Result();

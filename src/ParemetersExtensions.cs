@@ -26,11 +26,6 @@ public static class ParametersExtensions
             throw new ArgumentOutOfRangeException(nameof(parameters.DicesCount), parameters.DicesCount, "Can't roll lesser than 1 dice");
         }
 
-        if (parameters.AdditionalDicesCount < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(parameters.AdditionalDicesCount), parameters.AdditionalDicesCount, "Can't use negative count of additional dices");
-        }
-
         if (parameters.RerollsCount < 0 && !parameters.HasInfinityRerolls)
         {
             throw new ArgumentException("Negative rerolls count available with infinity rerolls only", nameof(parameters.RerollsCount));

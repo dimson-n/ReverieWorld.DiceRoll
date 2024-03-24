@@ -18,12 +18,6 @@ public interface IParameters
     int DicesCount { get; }
 
     /// <summary>
-    /// Count of additional dices that will be added to initial roll.
-    /// Than same count of dices will be removed (not necessary the same dices).
-    /// </summary>
-    int AdditionalDicesCount { get; }
-
-    /// <summary>
     /// Count of possible rerolls for dices with value 1.
     /// </summary>
     int RerollsCount { get; }
