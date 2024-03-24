@@ -31,7 +31,7 @@ public class Roll : IReadOnlyList<Dice>
         rolls = state.Values;
         Parameters = state.parameters;
 
-        Total = rolls.Where(d => !d.Removed).Sum(d => d.Value) + Parameters.Bonus;
+        Total = rolls.Where(d => !d.Removed).Sum(d => d.Value);
     }
 
     /// <summary>

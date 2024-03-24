@@ -53,16 +53,4 @@ public sealed class InternalRollerTest
 
         Assert.Equal(7, result.Total);
     }
-
-    [Fact]
-    public void Bonus()
-    {
-        AutoRoller roller = new(new NonRandomMaxProvider(), new Parameters(bonus: 10));
-
-        var result = roller.Roll();
-
-        Assert.Single(result);
-
-        Assert.Equal(16, result.Total);
-    }
 }

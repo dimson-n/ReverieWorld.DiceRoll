@@ -28,7 +28,7 @@ public interface IParameters
     int BurstsCount { get; }
 
     /// <summary>
-    /// Bonus (positive) or penalty (negative) value that will be added to final summation of dice values.
+    /// Bonus value that can be distributed between dices.
     /// </summary>
     int Bonus { get; }
 

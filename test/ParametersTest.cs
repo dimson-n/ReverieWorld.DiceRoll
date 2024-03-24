@@ -49,5 +49,7 @@ public sealed class ParametersTest
 
         Assert.Throws<ArgumentException>("RerollsCount", () => new NonInfinityParameters(rerollsCount: ParametersBase.Infinite).Validate());
         Assert.Throws<ArgumentException>("BurstsCount",  () => new NonInfinityParameters(burstsCount: ParametersBase.Infinite).Validate());
+
+        Assert.Throws<ArgumentOutOfRangeException>("Bonus", () => new Parameters(bonus: -1).Validate());
     }
 }
