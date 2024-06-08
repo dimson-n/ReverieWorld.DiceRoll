@@ -48,4 +48,44 @@ public static class ParametersExtensions
     /// <returns><see langword="true"/> if <paramref name="parameters"/> contains modifiers; otherwise, <see langword="false"/>.</returns>
     public static bool HasModifiers(this IParameters parameters)
         => parameters.Modifiers is not null && parameters.Modifiers.Count != 0;
+
+    /// <summary>
+    /// Validates <paramref name="successParameters"/> correctness.
+    /// </summary>
+    /// <param name="successParameters">A roll success parameters to validate.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="successParameters"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static void Validate(this ISuccessParameters successParameters)
+    {
+        ArgumentNullException.ThrowIfNull(successParameters);
+
+        if (successParameters.MinValue < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(successParameters.MinValue), successParameters.MinValue, "Dice success value can't be lesser than 1");
+        }
+
+        if (successParameters.Count < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(successParameters.Count), successParameters.Count, "Dice success count can't be lesser than 1");
+        }
+    }
+
+    /// <summary>
+    /// Validates applicability of <paramref name="successParameters"/> to given <paramref name="parameters"/>.
+    /// </summary>
+    /// <param name="parameters">A roll parameters to check.</param>
+    /// <param name="successParameters">A roll success parameters to check.</param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static void ValidateApplicability(this IParameters parameters, ISuccessParameters successParameters)
+    {
+        if (parameters.FacesCount < successParameters.MinValue)
+        {
+            throw new ArgumentOutOfRangeException(nameof(successParameters.MinValue), successParameters.MinValue, $"Dice roll can't be success for dice with {parameters.FacesCount} faces");
+        }
+
+        if (!parameters.HasInfinityBursts && parameters.DicesCount + parameters.BurstsCount < successParameters.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(successParameters.Count), successParameters.Count, $"Insufficient dices count for roll success possibility (max {parameters.DicesCount + parameters.BurstsCount})");
+        }
+    }
 }
