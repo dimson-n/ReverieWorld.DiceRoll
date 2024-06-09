@@ -22,16 +22,32 @@ public class Roll : IReadOnlyList<Dice>
     public ISuccessParameters? SuccessParameters { get; }
 
     /// <summary>
+    /// Gets not utilized bonus value.
+    /// </summary>
+    /// <value>Not utilized bonus value.</value>
+    public int RemainingBonus { get; }
+
+    /// <summary>
     /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
     /// </summary>
     /// <value><see langword="true"/> if <see cref="Roll"/> was fully performed; otherwise, <see langword="false"/>.</value>
     public virtual bool Completed => false;
+
+    /// <summary>
+    /// Gets count of succeed dices.
+    /// </summary>
+    /// <value>Count of succeed dices if <see cref="SuccessParameters"/> not <see langword="null"/>; otherwise, <see langword="null"/>.</value>
+    public int? SuccessCount
+        => SuccessParameters is not null
+        ? rolls.Count(d => d.Value >= SuccessParameters.MinValue)
+        : null;
 
     internal Roll(RollState state)
     {
         rolls = state.Values;
         Parameters = state.Parameters;
         SuccessParameters = state.SuccessParameters;
+        RemainingBonus = state.RemainingBonus;
     }
 
     /// <summary>
