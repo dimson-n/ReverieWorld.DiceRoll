@@ -36,23 +36,42 @@ public sealed class AutoRoller
     /// </summary>
     /// <remarks>If <paramref name="parameters"/> not provided a default will be used.</remarks>
     /// <param name="parameters">Parameters for the roll.</param>
+    /// <param name="successParameters">Success parameters for the roll.</param>
     /// <returns>The <see cref="Result"/> of the dice roll.</returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public Result Roll(IParameters? parameters = null)
+    public Result Roll(IParameters? parameters, ISuccessParameters successParameters)
     {
         parameters ??= defaultParameters;
         parameters.Validate();
 
-        RollState roll = new(parameters, randomProvider);
+        successParameters.Validate();
+        parameters.ValidateApplicability(successParameters);
+
+        RollState roll = new(randomProvider, parameters, successParameters);
 
         using (RollMaker rollMaker = new(roll))
         {
             roll.FillInitial(rollMaker);
 
-            roll.CompleteRerollsAndBursts(rollMaker);
+            bool loop = false;
+            do
+            {
+                roll.MakeRerollsAndBursts(rollMaker);
+                loop = roll.DistributeBonus();
+            } while (loop);
         }
 
         return new Result(roll);
     }
+
+    /// <summary>
+    /// Performs the dice roll with default parameters.
+    /// </summary>
+    /// <param name="successParameters">Success parameters for the roll.</param>
+    /// <returns>The <see cref="Result"/> of the dice roll.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    public Result Roll(ISuccessParameters successParameters)
+        => Roll(null, successParameters);
 }

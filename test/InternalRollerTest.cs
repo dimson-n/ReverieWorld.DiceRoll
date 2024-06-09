@@ -5,6 +5,8 @@ namespace ReverieWorld.DiceRoll.Tests;
 /// </summary>
 public sealed class InternalRollerTest
 {
+    static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 1 };
+
     [Theory]
     [InlineData(-1)]
     [InlineData(6)]
@@ -20,7 +22,7 @@ public sealed class InternalRollerTest
     {
         AutoRoller roller = new(new NonRandomMaxProvider(), new Parameters(dicesCount: 3, burstsCount: 3));
 
-        var result = roller.Roll();
+        var result = roller.Roll(_successParameters);
 
         Assert.Equal(6, result.Count);
         Assert.Equal(3, result.Where(d => d.IsBurst).Count());
@@ -31,7 +33,7 @@ public sealed class InternalRollerTest
     {
         AutoRoller roller = new(new NonRandomZeroProvider(), new Parameters(burstsCount: 3));
 
-        var result = roller.Roll();
+        var result = roller.Roll(_successParameters);
 
         Assert.Single(result);
         Assert.DoesNotContain(result, d => d.IsBurst);
@@ -42,7 +44,7 @@ public sealed class InternalRollerTest
     {
         AutoRoller roller = new(new PredefinedRandomProvider(5, 0), new Parameters(burstsCount: 3));
 
-        var result = roller.Roll();
+        var result = roller.Roll(_successParameters);
 
         Assert.Equal(2, result.Count);
         Assert.Single(result.Where(d => d.IsBurst));

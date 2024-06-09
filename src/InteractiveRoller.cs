@@ -15,7 +15,7 @@ public sealed class InteractiveRoller
 
     private Stage stage = Stage.Init;
 
-    private readonly RollState state;
+    private readonly RollState _state;
 
     private Result? result;
 
@@ -23,30 +23,37 @@ public sealed class InteractiveRoller
     /// Gets a read-only list of dices of current state.
     /// </summary>
     /// <value>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</value>
-    public IReadOnlyList<Dice> Values => state.Values;
+    public IReadOnlyList<Dice> Values => _state.Values;
 
     /// <summary>
     /// Gets current state of the <see cref="Roll"/>.
     /// </summary>
     /// <value>Current state of the <see cref="Roll"/>.</value>
-    public Roll Current => result ?? new Roll(state);
+    public Roll Current => result ?? new Roll(_state);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InteractiveRoller"/> with specified <paramref name="randomProvider"/> and optional <paramref name="parameters"/>.
     /// </summary>
     /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
     /// <param name="parameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
+    /// <param name="successParameters">Parameters for success roll.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public InteractiveRoller(IRandomProvider randomProvider, IParameters? parameters = null)
+    public InteractiveRoller(IRandomProvider randomProvider, IParameters? parameters = null, ISuccessParameters? successParameters = null)
     {
         ArgumentNullException.ThrowIfNull(randomProvider);
 
         parameters ??= Parameters.Default;
         parameters.Validate();
 
-        this.state = new(parameters, randomProvider);
+        if (successParameters is not null)
+        {
+            successParameters.Validate();
+            parameters.ValidateApplicability(successParameters);
+        }
+
+        _state = new(randomProvider, parameters, successParameters);
     }
 
     /// <summary>
@@ -62,7 +69,7 @@ public sealed class InteractiveRoller
             throw new InvalidOperationException("Begin can be called once after initialization only");
         }
 
-        state.FillInitial();
+        _state.FillInitial();
 
         stage = Stage.Ready;
 
@@ -82,9 +89,9 @@ public sealed class InteractiveRoller
             throw new InvalidOperationException("Can't get result at current stage");
         }
 
-        state.CompleteRerollsAndBursts();
+        _state.MakeRerollsAndBursts();
 
-        result = new Result(state);
+        result = new Result(_state);
 
         stage = Stage.Completed;
 

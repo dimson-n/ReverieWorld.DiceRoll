@@ -2,6 +2,8 @@ namespace ReverieWorld.DiceRoll.Tests;
 
 public sealed class AutoRollerTest
 {
+    static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 1 };
+
     [Theory(Skip = "WIP")]
     [InlineData(1)]
     [InlineData(123)]
@@ -9,7 +11,7 @@ public sealed class AutoRollerTest
     {
         AutoRoller roller = new(new NonRandomZeroProvider(), new Parameters(dicesCount: count));
 
-        var result = roller.Roll();
+        var result = roller.Roll(_successParameters);
     }
 
     [Theory(Skip = "WIP")]
@@ -19,6 +21,6 @@ public sealed class AutoRollerTest
     {
         AutoRoller roller = new(new NonRandomMaxProvider(), new ParametersBase(facesCount: faces, dicesCount: dices));
 
-        var result = roller.Roll();
+        var result = roller.Roll(_successParameters);
     }
 }

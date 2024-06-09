@@ -16,6 +16,12 @@ public class Roll : IReadOnlyList<Dice>
     public IParameters Parameters { get; }
 
     /// <summary>
+    /// Gets parameters for success roll.
+    /// </summary>
+    /// <value>Success parameters of the <see cref="Roll"/> if provided; otherwise <see langword="null"/>.</value>
+    public ISuccessParameters? SuccessParameters { get; }
+
+    /// <summary>
     /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
     /// </summary>
     /// <value><see langword="true"/> if <see cref="Roll"/> was fully performed; otherwise, <see langword="false"/>.</value>
@@ -24,7 +30,8 @@ public class Roll : IReadOnlyList<Dice>
     internal Roll(RollState state)
     {
         rolls = state.Values;
-        Parameters = state.parameters;
+        Parameters = state.Parameters;
+        SuccessParameters = state.SuccessParameters;
     }
 
     /// <summary>

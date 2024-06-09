@@ -22,17 +22,27 @@ internal sealed class RollState : IRollState
     private readonly List<Dice> rolls;
     private int offset = 0;
 
+    private ParamCounter _availableRerolls;
+    private ParamCounter _availableBursts;
+
     internal RollMaker? currentRollMaker;
 
-    internal readonly IParameters parameters;
-    internal readonly IRandomProvider randomProvider;
+    public readonly IRandomProvider RandomProvider;
+    public IParameters Parameters { get; }
+    public readonly ISuccessParameters? SuccessParameters;
+    public int RemainingBonus { get; private set; }
 
-    internal RollState(IParameters parameters, IRandomProvider randomProvider)
+    public RollState(IRandomProvider randomProvider, IParameters parameters, ISuccessParameters? successParameters)
     {
-        this.parameters = parameters;
-        this.randomProvider = randomProvider;
-        this.rolls = new List<Dice>(parameters.DicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
-        this.modifiersActions = new Dictionary<RollStage, Action<IRollState>>();
+        RandomProvider = randomProvider;
+        Parameters = parameters;
+        SuccessParameters = successParameters;
+        rolls = new List<Dice>(parameters.DicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
+        modifiersActions = [];
+
+        _availableRerolls = new(parameters.RerollsCount, parameters.HasInfinityRerolls);
+        _availableBursts  = new(parameters.BurstsCount,  parameters.HasInfinityBursts);
+        RemainingBonus = Parameters.Bonus;
 
         if (parameters.Modifiers is not null)
         {
@@ -49,17 +59,17 @@ internal sealed class RollState : IRollState
         }
     }
 
-    internal void FillInitial()
+    public void FillInitial()
     {
         using RollMaker rollMaker = new(this);
         FillInitial(rollMaker);
     }
 
-    internal void FillInitial(RollMaker rollMaker)
+    public void FillInitial(RollMaker rollMaker)
     {
         InvokeActionsFor(RollStage.BeforeStart);
 
-        int initialRollsCount = parameters.DicesCount;
+        int initialRollsCount = Parameters.DicesCount;
         for (int i = 0; i != initialRollsCount; ++i)
         {
             AddDice(rollMaker.Next());
@@ -68,30 +78,27 @@ internal sealed class RollState : IRollState
         InvokeActionsFor(RollStage.AtDicesAdded);
     }
 
-    internal void CompleteRerollsAndBursts()
+    public void MakeRerollsAndBursts()
     {
         using RollMaker rollMaker = new(this);
-        CompleteRerollsAndBursts(rollMaker);
+        MakeRerollsAndBursts(rollMaker);
     }
 
-    internal void CompleteRerollsAndBursts(RollMaker rollMaker)
+    public void MakeRerollsAndBursts(RollMaker rollMaker)
     {
-        ParamCounter availableRerolls = new(parameters.RerollsCount, parameters.HasInfinityRerolls);
-        ParamCounter availableBursts  = new(parameters.BurstsCount,  parameters.HasInfinityBursts);
-
         bool somethingChanged = false;
         do
         {
             somethingChanged = false;
 
-            if (availableRerolls.Exists)
+            if (_availableRerolls.Exists)
             {
                 var toReroll = rolls.Where(d => !d.Removed && d.Value == 1);
-                while (toReroll.Any() && availableRerolls.Exists)
+                while (toReroll.Any() && _availableRerolls.Exists)
                 {
-                    foreach (var d in toReroll.Take(availableRerolls.MaxCount))
+                    foreach (var d in toReroll.Take(_availableRerolls.MaxCount))
                     {
-                        --availableRerolls;
+                        --_availableRerolls;
                         d.RawValue = rollMaker.Next();
                     }
 
@@ -100,20 +107,20 @@ internal sealed class RollState : IRollState
                 }
             }
 
-            if (availableBursts.Exists)
+            if (_availableBursts.Exists)
             {
                 bool burstPerformed = false;
-                var toBurst = rolls.Where(d => !d.Removed && !d.burstMade && d.Value == parameters.FacesCount);
+                var toBurst = rolls.Where(d => !d.Removed && !d.burstMade && d.Value == Parameters.FacesCount);
                 List<Dice> newRolls = new(toBurst.Count());
 
-                while (toBurst.Any() && availableBursts.Exists)
+                while (toBurst.Any() && _availableBursts.Exists)
                 {
                     newRolls.Clear();
-                    foreach (var d in toBurst.Take(availableBursts.MaxCount))
+                    foreach (var d in toBurst.Take(_availableBursts.MaxCount))
                     {
                         newRolls.Add(new Dice(rollMaker.Next(), offset, isBurst: true));
                         d.burstMade = true;
-                        --availableBursts;
+                        --_availableBursts;
                     }
                     rolls.AddRange(newRolls);
 
@@ -131,6 +138,65 @@ internal sealed class RollState : IRollState
         InvokeActionsFor(RollStage.AfterEnd);
     }
 
+    public bool DistributeBonus()
+    {
+        if (RemainingBonus == 0)
+        {
+            return false;
+        }
+
+        if (SuccessParameters is null)
+        {
+            return false;
+        }
+
+        var ordered = rolls.Where(d => !d.Removed).OrderByDescending(d => d.Value);
+
+        var minSuccessValue = SuccessParameters.MinValue;
+        foreach (var dice in ordered.SkipWhile(dice => dice.Value > minSuccessValue))
+        {
+            var needToSuccess = minSuccessValue - dice.Value;
+            if (needToSuccess <= RemainingBonus)
+            {
+                dice.Bonus += needToSuccess;
+                RemainingBonus -= needToSuccess;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (RemainingBonus == 0)
+        {
+            return false;
+        }
+
+        bool newBurstAvailable = false;
+
+        var maxValue = Parameters.FacesCount;
+        foreach (var dice in ordered.SkipWhile(dice => dice.Value == maxValue))
+        {
+            var needToBurst = maxValue - dice.Value;
+            var canAdd = Math.Min(needToBurst, RemainingBonus);
+
+            dice.Bonus += canAdd;
+            RemainingBonus -= canAdd;
+
+            if (dice.Value == maxValue)
+            {
+                newBurstAvailable = true;
+            }
+
+            if (RemainingBonus == 0)
+            {
+                break;
+            }
+        }
+
+        return newBurstAvailable;
+    }
+
     private void AddDice(int value, bool asBurst = false, bool fromModifier = false)
     {
         ThrowIfDiceValueOutOfRange(value);
@@ -141,7 +207,7 @@ internal sealed class RollState : IRollState
     /// <exception cref="ArgumentOutOfRangeException"/>
     private void ThrowIfDiceValueOutOfRange(int value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
     {
-        int facesCount = parameters.FacesCount;
+        int facesCount = Parameters.FacesCount;
         if (value < 1 || facesCount < value)
         {
             throw new ArgumentOutOfRangeException(paramName, value, $"value out of range [{1}..{facesCount}]");
@@ -168,8 +234,6 @@ internal sealed class RollState : IRollState
     }
 
     public IReadOnlyList<Dice> Values => rolls.AsReadOnly();
-
-    IParameters IRollState.Parameters => parameters;
 
     void IRollState.AddDice(bool asBurst)
     {

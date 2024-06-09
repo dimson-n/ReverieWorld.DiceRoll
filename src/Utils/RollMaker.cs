@@ -14,8 +14,8 @@ internal sealed class RollMaker : IDisposable
         Debug.Assert(state.currentRollMaker == null, "doubled RollMaker creation");
 
         this.state = state;
-        facesCount = state.parameters.FacesCount;
-        random = state.randomProvider.Lock();
+        facesCount = state.Parameters.FacesCount;
+        random = state.RandomProvider.Lock();
 
         state.currentRollMaker = this;
     }

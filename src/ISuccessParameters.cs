@@ -6,12 +6,12 @@ namespace ReverieWorld.DiceRoll;
 public interface ISuccessParameters
 {
     /// <summary>
-    /// Minimal dice value to success.
+    /// Minimal dice value to be success.
     /// </summary>
     int MinValue { get; }
 
     /// <summary>
-    /// Minimal success dices count to roll success.
+    /// Minimal succeed dices to roll success.
     /// </summary>
     int Count { get; }
 }
