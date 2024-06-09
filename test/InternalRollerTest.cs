@@ -49,4 +49,16 @@ public sealed class InternalRollerTest
         Assert.Equal(2, result.Count);
         Assert.Single(result.Where(d => d.IsBurst));
     }
+
+    [Fact]
+    public void NoApplyBonusToBurst()
+    {
+        AutoRoller roller = new(new PredefinedRandomProvider(4, 4, 0, 3, 2, 2));
+
+        var result = roller.Roll(new Parameters(dicesCount: 4, rerollsCount: Parameters.Infinite, burstsCount: 2, bonus: 2),
+                                 new SuccessParameters { MinValue = 4, Count = 3 });
+
+        var dicesWithBonus = result.Count(dice => dice.Bonus != 0);
+        Assert.Equal(2, dicesWithBonus);
+    }
 }

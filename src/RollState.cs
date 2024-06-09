@@ -118,7 +118,7 @@ internal sealed class RollState : IRollState
                     newRolls.Clear();
                     foreach (var d in toBurst.Take(_availableBursts.MaxCount))
                     {
-                        newRolls.Add(new Dice(rollMaker.Next(), offset, isBurst: true));
+                        newRolls.Add(new Dice(rollMaker.Next(), offset: offset, isBurst: true));
                         d.burstMade = true;
                         --_availableBursts;
                     }
