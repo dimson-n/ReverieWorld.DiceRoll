@@ -61,4 +61,16 @@ public sealed class InternalRollerTest
         var dicesWithBonus = result.Count(dice => dice.Bonus != 0);
         Assert.Equal(2, dicesWithBonus);
     }
+
+    [Fact]
+    public void ApplyBurstAfterBonusToMaximum()
+    {
+        AutoRoller roller = new(new PredefinedRandomProvider(2, 1, 0, 3, 1));
+
+        var result = roller.Roll(new Parameters(dicesCount: 4, rerollsCount: Parameters.Infinite, burstsCount: 1, bonus: 2),
+                                 new SuccessParameters { MinValue = 6 });
+
+        var burstsCount = result.Count(dice => dice.IsBurst);
+        Assert.Equal(1, burstsCount);
+    }
 }

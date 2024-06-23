@@ -152,7 +152,11 @@ internal sealed class RollState : IRollState
 
         var ordered = rolls.Where(d => !d.Removed).OrderByDescending(d => d.Value);
 
+        bool newBurstAvailable = false;
+
+        var maxValue = Parameters.FacesCount;
         var minSuccessValue = SuccessParameters.MinValue;
+        bool successIsMax = maxValue == minSuccessValue;
         foreach (var dice in ordered.SkipWhile(dice => dice.Value > minSuccessValue))
         {
             var needToSuccess = minSuccessValue - dice.Value;
@@ -160,6 +164,7 @@ internal sealed class RollState : IRollState
             {
                 dice.Bonus += needToSuccess;
                 RemainingBonus -= needToSuccess;
+                newBurstAvailable = successIsMax;
             }
             else
             {
@@ -167,14 +172,11 @@ internal sealed class RollState : IRollState
             }
         }
 
-        if (RemainingBonus == 0)
+        if (RemainingBonus == 0 || successIsMax)
         {
-            return false;
+            return newBurstAvailable;
         }
 
-        bool newBurstAvailable = false;
-
-        var maxValue = Parameters.FacesCount;
         foreach (var dice in ordered.SkipWhile(dice => dice.Value == maxValue))
         {
             var needToBurst = maxValue - dice.Value;
