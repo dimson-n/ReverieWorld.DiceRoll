@@ -172,25 +172,21 @@ internal sealed class RollState : IRollState
             }
         }
 
-        if (RemainingBonus == 0 || successIsMax)
+        if (RemainingBonus == 0 || successIsMax || !_availableBursts.Exists)
         {
             return newBurstAvailable;
         }
 
-        foreach (var dice in ordered.SkipWhile(dice => dice.Value == maxValue))
+        foreach (var dice in ordered.SkipWhile(dice => dice.Value == maxValue).Take(_availableBursts.MaxCount))
         {
             var needToBurst = maxValue - dice.Value;
-            var canAdd = Math.Min(needToBurst, RemainingBonus);
-
-            dice.Bonus += canAdd;
-            RemainingBonus -= canAdd;
-
-            if (dice.Value == maxValue)
+            if (needToBurst <= RemainingBonus)
             {
+                dice.Bonus += needToBurst;
+                RemainingBonus -= needToBurst;
                 newBurstAvailable = true;
             }
-
-            if (RemainingBonus == 0)
+            else
             {
                 break;
             }
