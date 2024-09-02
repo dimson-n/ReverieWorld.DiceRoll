@@ -14,4 +14,9 @@ public interface ISuccessParameters
     /// Minimal succeed dices to roll success.
     /// </summary>
     int Count { get; }
+
+    /// <summary>
+    /// Maximum dices count to roll. All dices exceeded threshold will be success.
+    /// </summary>
+    public int AutoSuccessThreshold { get; }
 }

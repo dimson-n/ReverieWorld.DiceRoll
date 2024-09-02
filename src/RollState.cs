@@ -69,7 +69,7 @@ internal sealed class RollState : IRollState
     {
         InvokeActionsFor(RollStage.BeforeStart);
 
-        int initialRollsCount = Parameters.DicesCount;
+        int initialRollsCount = Math.Min(Parameters.DicesCount, SuccessParameters?.AutoSuccessThreshold ?? int.MaxValue);
         for (int i = 0; i != initialRollsCount; ++i)
         {
             AddDice(rollMaker.Next());

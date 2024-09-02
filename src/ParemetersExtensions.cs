@@ -68,6 +68,11 @@ public static class ParametersExtensions
         {
             throw new ArgumentOutOfRangeException(nameof(successParameters.Count), successParameters.Count, "Dice success count can't be lesser than 1");
         }
+
+        if (successParameters.AutoSuccessThreshold < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(successParameters.AutoSuccessThreshold), successParameters.AutoSuccessThreshold, "Auto success threshold can't be lesser than 1");
+        }
     }
 
     /// <summary>

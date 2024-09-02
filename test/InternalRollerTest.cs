@@ -73,4 +73,16 @@ public sealed class InternalRollerTest
         var burstsCount = result.Count(dice => dice.IsBurst);
         Assert.Equal(1, burstsCount);
     }
+
+    [Fact]
+    public void AutoSuccess()
+    {
+        AutoRoller roller = new(new NonRandomZeroProvider());
+
+        var result = roller.Roll(new Parameters(dicesCount: 11),
+                                 new SuccessParameters { MinValue = 4 });
+
+        Assert.Equal(1, result.SuccessCount);
+        Assert.Equal(1, result.AutoSuccessCount);
+    }
 }

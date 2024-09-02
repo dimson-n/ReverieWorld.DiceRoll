@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ReverieWorld.DiceRoll;
 
@@ -19,6 +20,7 @@ public class Roll : IReadOnlyList<Dice>
     /// Gets parameters for success roll.
     /// </summary>
     /// <value>Success parameters of the <see cref="Roll"/> if provided; otherwise <see langword="null"/>.</value>
+    [MemberNotNull(nameof(AutoSuccessCount), nameof(SuccessCount))]
     public ISuccessParameters? SuccessParameters { get; }
 
     /// <summary>
@@ -34,13 +36,16 @@ public class Roll : IReadOnlyList<Dice>
     public virtual bool Completed => false;
 
     /// <summary>
+    /// Gets auto success count.
+    /// </summary>
+    /// <value>Auto success count if <see cref="SuccessParameters"/> not <see langword="null"/>; otherwise, <see langword="null"/>.</value>
+    public int? AutoSuccessCount { get; }
+
+    /// <summary>
     /// Gets count of succeed dices.
     /// </summary>
     /// <value>Count of succeed dices if <see cref="SuccessParameters"/> not <see langword="null"/>; otherwise, <see langword="null"/>.</value>
-    public int? SuccessCount
-        => SuccessParameters is not null
-        ? rolls.Count(d => d.Value >= SuccessParameters.MinValue)
-        : null;
+    public int? SuccessCount { get; }
 
     internal Roll(RollState state)
     {
@@ -48,6 +53,12 @@ public class Roll : IReadOnlyList<Dice>
         Parameters = state.Parameters;
         SuccessParameters = state.SuccessParameters;
         RemainingBonus = state.RemainingBonus;
+
+        if (SuccessParameters is not null)
+        {
+            AutoSuccessCount = Parameters.DicesCount - Math.Min(Parameters.DicesCount, SuccessParameters.AutoSuccessThreshold);
+            SuccessCount = rolls.Count(d => d.Value >= SuccessParameters.MinValue) + AutoSuccessCount;
+        }
     }
 
     /// <summary>
