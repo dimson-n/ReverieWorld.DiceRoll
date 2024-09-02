@@ -23,11 +23,11 @@ public class Parameters : ParametersBase
     /// <param name="dicesCount">Count of dices to roll.</param>
     /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
-    /// <param name="bonus">Bonus value for a roll.</param>
+    /// <param name="efficiency">Efficiency value for a roll.</param>
     /// <param name="modifiers">Optional modifiers for a roll.</param>
     public Parameters(int dicesCount = 1, int rerollsCount = 0, int burstsCount = 0,
-                      int bonus = 0, IReadOnlyCollection<IRollModifier>? modifiers = null) :
-        base(DiceFacesCount, dicesCount, rerollsCount, burstsCount, bonus, modifiers)
+                      int efficiency = 0, IReadOnlyCollection<IRollModifier>? modifiers = null) :
+        base(DiceFacesCount, dicesCount, rerollsCount, burstsCount, efficiency, modifiers)
     {
     }
 
@@ -38,9 +38,9 @@ public class Parameters : ParametersBase
     /// <param name="dicesCount">Count of dices to roll.</param>
     /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
-    /// <param name="bonus">Bonus value for a roll.</param>
-    public Parameters(IRollModifier? modifier, int dicesCount = 1, int rerollsCount = 0, int burstsCount = 0, int bonus = 0) :
-        this(dicesCount, rerollsCount, burstsCount, bonus,
+    /// <param name="efficiency">Efficiency value for a roll.</param>
+    public Parameters(IRollModifier? modifier, int dicesCount = 1, int rerollsCount = 0, int burstsCount = 0, int efficiency = 0) :
+        this(dicesCount, rerollsCount, burstsCount, efficiency,
              modifier is null ? null : new[] { modifier })
     {
     }

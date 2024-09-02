@@ -28,9 +28,9 @@ public interface IParameters
     int BurstsCount { get; }
 
     /// <summary>
-    /// Bonus value that can be distributed between dices.
+    /// Efficiency value that can be distributed between dices.
     /// </summary>
-    int Bonus { get; }
+    int Efficiency { get; }
 
     /// <summary>
     /// <see langword="true"/> indicates that <see cref="RerollsCount"/> must be ignored

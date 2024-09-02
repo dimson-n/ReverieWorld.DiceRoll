@@ -36,9 +36,9 @@ public static class ParametersExtensions
             throw new ArgumentException("Negative bursts count available with infinity bursts only", nameof(parameters.BurstsCount));
         }
 
-        if (parameters.Bonus < 0)
+        if (parameters.Efficiency < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(parameters.Bonus), parameters.Bonus, "Bonus can't be negative");
+            throw new ArgumentOutOfRangeException(nameof(parameters.Efficiency), parameters.Efficiency, "Efficiency can't be negative");
         }
     }
 

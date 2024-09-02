@@ -42,7 +42,7 @@ internal sealed class RollState : IRollState
 
         _availableRerolls = new(parameters.RerollsCount, parameters.HasInfinityRerolls);
         _availableBursts  = new(parameters.BurstsCount,  parameters.HasInfinityBursts);
-        RemainingBonus = Parameters.Bonus;
+        RemainingBonus = Parameters.Efficiency;
 
         if (parameters.Modifiers is not null)
         {
@@ -162,7 +162,7 @@ internal sealed class RollState : IRollState
             var needToSuccess = minSuccessValue - dice.Value;
             if (needToSuccess <= RemainingBonus)
             {
-                dice.Bonus += needToSuccess;
+                dice.EfficiencyBonus += needToSuccess;
                 RemainingBonus -= needToSuccess;
                 newBurstAvailable = successIsMax;
             }
@@ -182,7 +182,7 @@ internal sealed class RollState : IRollState
             var needToBurst = maxValue - dice.Value;
             if (needToBurst <= RemainingBonus)
             {
-                dice.Bonus += needToBurst;
+                dice.EfficiencyBonus += needToBurst;
                 RemainingBonus -= needToBurst;
                 newBurstAvailable = true;
             }

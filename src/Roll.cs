@@ -24,10 +24,10 @@ public class Roll : IReadOnlyList<Dice>
     public ISuccessParameters? SuccessParameters { get; }
 
     /// <summary>
-    /// Gets not utilized bonus value.
+    /// Gets not utilized efficiency bonus value.
     /// </summary>
-    /// <value>Not utilized bonus value.</value>
-    public int RemainingBonus { get; }
+    /// <value>Not utilized efficiency bonus value.</value>
+    public int RemainingEfficiencyBonus { get; }
 
     /// <summary>
     /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
@@ -52,7 +52,7 @@ public class Roll : IReadOnlyList<Dice>
         rolls = state.Values;
         Parameters = state.Parameters;
         SuccessParameters = state.SuccessParameters;
-        RemainingBonus = state.RemainingBonus;
+        RemainingEfficiencyBonus = state.RemainingBonus;
 
         if (SuccessParameters is not null)
         {

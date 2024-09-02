@@ -55,10 +55,10 @@ public sealed class InternalRollerTest
     {
         AutoRoller roller = new(new PredefinedRandomProvider(4, 4, 0, 3, 2, 2));
 
-        var result = roller.Roll(new Parameters(dicesCount: 4, rerollsCount: Parameters.Infinite, burstsCount: 2, bonus: 2),
+        var result = roller.Roll(new Parameters(dicesCount: 4, rerollsCount: Parameters.Infinite, burstsCount: 2, efficiency: 2),
                                  new SuccessParameters { MinValue = 4, Count = 3 });
 
-        var dicesWithBonus = result.Count(dice => dice.Bonus != 0);
+        var dicesWithBonus = result.Count(dice => dice.EfficiencyBonus != 0);
         Assert.Equal(2, dicesWithBonus);
     }
 
@@ -67,7 +67,7 @@ public sealed class InternalRollerTest
     {
         AutoRoller roller = new(new PredefinedRandomProvider(2, 1, 0, 3, 1));
 
-        var result = roller.Roll(new Parameters(dicesCount: 4, rerollsCount: Parameters.Infinite, burstsCount: 1, bonus: 2),
+        var result = roller.Roll(new Parameters(dicesCount: 4, rerollsCount: Parameters.Infinite, burstsCount: 1, efficiency: 2),
                                  new SuccessParameters { MinValue = 6 });
 
         var burstsCount = result.Count(dice => dice.IsBurst);

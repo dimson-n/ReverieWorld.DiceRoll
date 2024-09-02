@@ -13,14 +13,14 @@ public sealed class Dice : IReadOnlyList<int>
     /// <summary>
     /// Gets actual value of the <see cref="Dice"/>.
     /// </summary>
-    /// <value>Actual value of the <see cref="Dice"/> (with bonus).</value>
+    /// <value>Actual value of the <see cref="Dice"/> (with efficiency bonus).</value>
     public int Value
-        => RawValue + Bonus;
+        => RawValue + EfficiencyBonus;
 
     /// <summary>
     /// Gets raw value of the <see cref="Dice"/>.
     /// </summary>
-    /// <value>Raw value of the <see cref="Dice"/> (without bonus).</value>
+    /// <value>Raw value of the <see cref="Dice"/> (without efficiency bonus).</value>
     public int RawValue
     {
         get => values[^1];
@@ -28,10 +28,10 @@ public sealed class Dice : IReadOnlyList<int>
     }
 
     /// <summary>
-    /// Gets bonus value.
+    /// Gets efficiency bonus value.
     /// </summary>
-    /// <value>The bonus.</value>
-    public int Bonus { get; internal set; }
+    /// <value>The efficiency bonus.</value>
+    public int EfficiencyBonus { get; internal set; }
 
     /// <summary>
     /// Gets <see cref="Dice"/> generation offset (<see cref="Roll"/> round).
@@ -63,12 +63,12 @@ public sealed class Dice : IReadOnlyList<int>
     /// <value><see langword="true"/> if the <see cref="Dice"/> was modified by some <see cref="Modifiers.IRollModifier"/>; otherwise, <see langword="false"/>.</value>
     public bool Modified { get; internal set; }
 
-    internal Dice(int rawValue, int bonus = 0, int offset = 0, bool isBurst = false, bool fromModifier = false)
+    internal Dice(int rawValue, int efficiency = 0, int offset = 0, bool isBurst = false, bool fromModifier = false)
     {
-        values   = [rawValue];
-        Bonus    = bonus;
-        Offset   = offset;
-        IsBurst  = isBurst;
+        values = [rawValue];
+        EfficiencyBonus = efficiency;
+        Offset = offset;
+        IsBurst = isBurst;
         Modified = fromModifier;
     }
 
@@ -95,5 +95,5 @@ public sealed class Dice : IReadOnlyList<int>
     /// </summary>
     /// <returns>A string that represents the <see cref="Dice"/>.</returns>
     public override string ToString()
-        => $"{(Removed ? '-' : string.Empty)}{(IsBurst ? '*' : string.Empty)}{Value}{(Bonus != 0 ? $" ({RawValue}+{Bonus})" : string.Empty)}{(Modified ? '\'' : string.Empty)}";
+        => $"{(Removed ? '-' : string.Empty)}{(IsBurst ? '*' : string.Empty)}{Value}{(EfficiencyBonus != 0 ? $" ({RawValue}+{EfficiencyBonus})" : string.Empty)}{(Modified ? '\'' : string.Empty)}";
 }

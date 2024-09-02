@@ -11,7 +11,7 @@ public sealed class ParametersTest
         Assert.Equal(1, p.DicesCount);
         Assert.Equal(0, p.RerollsCount);
         Assert.Equal(0, p.BurstsCount);
-        Assert.Equal(0, p.Bonus);
+        Assert.Equal(0, p.Efficiency);
         Assert.Null(p.Modifiers);
 
         Assert.False(p.HasInfinityRerolls);
@@ -50,6 +50,6 @@ public sealed class ParametersTest
         Assert.Throws<ArgumentException>("RerollsCount", () => new NonInfinityParameters(rerollsCount: ParametersBase.Infinite).Validate());
         Assert.Throws<ArgumentException>("BurstsCount",  () => new NonInfinityParameters(burstsCount: ParametersBase.Infinite).Validate());
 
-        Assert.Throws<ArgumentOutOfRangeException>("Bonus", () => new Parameters(bonus: -1).Validate());
+        Assert.Throws<ArgumentOutOfRangeException>("Efficiency", () => new Parameters(efficiency: -1).Validate());
     }
 }
