@@ -46,12 +46,6 @@ public sealed class Dice : IReadOnlyList<int>
     public int RollsCount => values.Count;
 
     /// <summary>
-    /// Gets a value indicating whether the <see cref="Dice"/> excluded from roll result.
-    /// </summary>
-    /// <value><see langword="true"/> if the <see cref="Dice"/> was excluded from roll result; otherwise, <see langword="false"/>.</value>
-    public bool Removed { get; internal set; } = false;
-
-    /// <summary>
     /// Gets a value indicating whether the <see cref="Dice"/> made as burst.
     /// </summary>
     /// <value><see langword="true"/> if the <see cref="Dice"/> was made as burst; otherwise, <see langword="false"/>.</value>
@@ -95,5 +89,5 @@ public sealed class Dice : IReadOnlyList<int>
     /// </summary>
     /// <returns>A string that represents the <see cref="Dice"/>.</returns>
     public override string ToString()
-        => $"{(Removed ? '-' : string.Empty)}{(IsBurst ? '*' : string.Empty)}{Value}{(EfficiencyBonus != 0 ? $" ({RawValue}+{EfficiencyBonus})" : string.Empty)}{(Modified ? '\'' : string.Empty)}";
+        => $"{(IsBurst ? '*' : string.Empty)}{Value}{(EfficiencyBonus != 0 ? $" ({RawValue}+{EfficiencyBonus})" : string.Empty)}{(Modified ? '\'' : string.Empty)}";
 }

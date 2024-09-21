@@ -93,7 +93,7 @@ internal sealed class RollState : IRollState
 
             if (_availableRerolls.Exists)
             {
-                var toReroll = rolls.Where(d => !d.Removed && d.Value == 1);
+                var toReroll = rolls.Where(d => d.Value == 1);
                 while (toReroll.Any() && _availableRerolls.Exists)
                 {
                     foreach (var d in toReroll.Take(_availableRerolls.MaxCount))
@@ -110,7 +110,7 @@ internal sealed class RollState : IRollState
             if (_availableBursts.Exists)
             {
                 bool burstPerformed = false;
-                var toBurst = rolls.Where(d => !d.Removed && !d.burstMade && d.Value == Parameters.FacesCount);
+                var toBurst = rolls.Where(d => !d.burstMade && d.Value == Parameters.FacesCount);
                 List<Dice> newRolls = new(toBurst.Count());
 
                 while (toBurst.Any() && _availableBursts.Exists)
@@ -150,7 +150,7 @@ internal sealed class RollState : IRollState
             return false;
         }
 
-        var ordered = rolls.Where(d => !d.Removed).OrderByDescending(d => d.Value);
+        var ordered = rolls.OrderByDescending(d => d.Value);
 
         bool newBurstAvailable = false;
 
