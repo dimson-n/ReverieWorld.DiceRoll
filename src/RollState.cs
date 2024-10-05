@@ -157,7 +157,7 @@ internal sealed class RollState : IRollState
         var maxValue = Parameters.FacesCount;
         var minSuccessValue = SuccessParameters.MinValue;
         bool successIsMax = maxValue == minSuccessValue;
-        foreach (var dice in ordered.SkipWhile(dice => dice.Value > minSuccessValue))
+        foreach (var dice in ordered.SkipWhile(dice => dice.Value >= minSuccessValue))
         {
             var needToSuccess = minSuccessValue - dice.Value;
             if (needToSuccess <= RemainingBonus)
