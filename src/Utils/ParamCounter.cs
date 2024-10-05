@@ -1,5 +1,8 @@
+using System.Diagnostics;
+
 namespace ReverieWorld.DiceRoll.Utils;
 
+[DebuggerDisplay("{infinite ? \"∞\" : count.ToString()}")]
 internal readonly struct ParamCounter
 {
     private readonly int count;
