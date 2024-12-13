@@ -35,7 +35,7 @@ public sealed partial class Weber
         [Fact]
         public void OneRandom()
         {
-            AutoRoller roller = new(new DefaultRandomProvider(),
+            AutoRoller roller = new(new SingleThreadedRandomProvider(),
                                     new Parameters(modifier: new DiceRoll.Modifiers.Weber.SorcererTrick(),
                                                    dicesCount: 3));
 

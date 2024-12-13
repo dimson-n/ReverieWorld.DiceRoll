@@ -1,13 +1,13 @@
 namespace ReverieWorld.DiceRoll;
 
 /// <summary>
-/// Default thread-safe implementation of PRNG for dice rollers.
+/// Non thread-safe implementation of PRNG for dice rollers.
 /// </summary>
-/// <remarks>Recommended to implement it in you own way.</remarks>
-/// <seealso cref="SingleThreadedRandomProvider"/>
-public sealed class DefaultRandomProvider : IRandomProvider, IRandom
+/// <remarks>Faster than default but not thread-safe.</remarks>
+/// <seealso cref="DefaultRandomProvider"/>
+public sealed class SingleThreadedRandomProvider : IRandomProvider, IRandom
 {
-    private readonly Random rnd = Random.Shared;
+    private readonly Random rnd = new();
 
     /// <summary>
     /// Gets a thread-safe instance of PRNG for dice rollers.
