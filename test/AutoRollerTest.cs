@@ -2,25 +2,35 @@ namespace ReverieWorld.DiceRoll.Tests;
 
 public sealed class AutoRollerTest
 {
-    static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 1 };
+    [Fact]
+    public void MaxFail()
+    {
+        AutoRoller roller = new(new NonRandomZeroProvider());
 
-    [Theory(Skip = "WIP")]
+        var result = roller.Roll(new SuccessParameters { MinValue = Parameters.DiceFacesCount });
+
+        Assert.Equal(0, result.SuccessCount);
+    }
+
+    [Fact]
+    public void MaxSuccess()
+    {
+        AutoRoller roller = new(new NonRandomMaxProvider());
+
+        var result = roller.Roll(new SuccessParameters { MinValue = Parameters.DiceFacesCount });
+
+        Assert.Equal(1, result.SuccessCount);
+    }
+
+    [Theory]
     [InlineData(1)]
     [InlineData(123)]
-    public void MinBound(int count)
+    public void MinSuccess(int count)
     {
         AutoRoller roller = new(new NonRandomZeroProvider(), new Parameters(dicesCount: count));
 
-        var result = roller.Roll(_successParameters);
-    }
+        var result = roller.Roll(new SuccessParameters { MinValue = 1 });
 
-    [Theory(Skip = "WIP")]
-    [InlineData(3, 1, 3)]
-    [InlineData(9, 8, 72)]
-    public void MaxBound(int faces, int dices, int expected)
-    {
-        AutoRoller roller = new(new NonRandomMaxProvider(), new ParametersBase(facesCount: faces, dicesCount: dices));
-
-        var result = roller.Roll(_successParameters);
+        Assert.Equal(count, result.SuccessCount);
     }
 }
