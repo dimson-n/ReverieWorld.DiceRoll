@@ -1,7 +1,7 @@
 namespace ReverieWorld.DiceRoll;
 
 /// <summary>
-/// Provides an abstraction for aggregation of requirements for success roll.
+/// Provides an abstraction for aggregation of parameters for success roll.
 /// </summary>
 public interface ISuccessParameters
 {
@@ -16,7 +16,7 @@ public interface ISuccessParameters
     int Count { get; }
 
     /// <summary>
-    /// Maximum dices count to roll. All dices exceeded threshold will be success.
+    /// Maximum dices count to roll. All dices exceeded threshold automatically will be success.
     /// </summary>
-    public int AutoSuccessThreshold { get; }
+    int AutoSuccessThreshold { get; }
 }
