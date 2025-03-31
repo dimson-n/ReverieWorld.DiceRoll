@@ -54,12 +54,11 @@ public sealed class AutoRoller
         {
             roll.FillInitial(rollMaker);
 
-            bool loop = false;
-            do
+            for (bool loop = true; loop;)
             {
                 roll.MakeRerollsAndBursts(rollMaker);
                 loop = roll.DistributeBonus();
-            } while (loop);
+            }
         }
 
         return new Result(roll);
