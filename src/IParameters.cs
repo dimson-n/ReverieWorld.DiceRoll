@@ -33,6 +33,12 @@ public interface IParameters
     int Efficiency { get; }
 
     /// <summary>
+    /// Count of guaranteed successes in a roll.
+    /// </summary>
+    /// <remarks>Applies to a roll if <see cref="ISuccessParameters"/> provided only.</remarks>
+    int AutoSuccesses { get; }
+
+    /// <summary>
     /// <see langword="true"/> indicates that <see cref="RerollsCount"/> must be ignored
     /// and rerolls must be performed for all dices with value 1; otherwise <see langword="false"/>.
     /// </summary>

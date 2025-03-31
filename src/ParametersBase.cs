@@ -27,6 +27,9 @@ public class ParametersBase : IParameters
     /// <inheritdoc/>
     public virtual int Efficiency { get; init; }
 
+    /// <inheritdoc/>
+    public virtual int AutoSuccesses { get; init; }
+
     /// <summary>
     /// Gets value for indication that <see cref="RerollsCount"/> must be ignored and rerolls must be performed for all dices with value 1.
     /// </summary>
@@ -52,15 +55,17 @@ public class ParametersBase : IParameters
     /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
     /// <param name="efficiency">Efficiency value for a roll.</param>
+    /// <param name="autoSuccesses">Count of guaranteed successes in a roll.</param>
     /// <param name="modifiers">Modifiers for a roll.</param>
     public ParametersBase(int facesCount, int dicesCount = 1, int rerollsCount = 0, int burstsCount = 0,
-                          int efficiency = 0, IReadOnlyCollection<IRollModifier>? modifiers = null)
+                          int efficiency = 0, int autoSuccesses = 0, IReadOnlyCollection<IRollModifier>? modifiers = null)
     {
         FacesCount = facesCount;
         DicesCount = dicesCount;
         RerollsCount = rerollsCount;
         BurstsCount = burstsCount;
         Efficiency = efficiency;
+        AutoSuccesses = autoSuccesses;
         Modifiers = modifiers;
     }
 }

@@ -20,14 +20,10 @@ public class Parameters : ParametersBase
     /// <summary>
     /// Initializes a new instance of the <see cref="Parameters"/> class with designated parameters for a dice roller.
     /// </summary>
-    /// <param name="dicesCount">Count of dices to roll.</param>
-    /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
-    /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
-    /// <param name="efficiency">Efficiency value for a roll.</param>
-    /// <param name="modifiers">Optional modifiers for a roll.</param>
+    /// <inheritdoc cref="ParametersBase.ParametersBase"/>
     public Parameters(int dicesCount = 1, int rerollsCount = 0, int burstsCount = 0,
-                      int efficiency = 0, IReadOnlyCollection<IRollModifier>? modifiers = null) :
-        base(DiceFacesCount, dicesCount, rerollsCount, burstsCount, efficiency, modifiers)
+                      int efficiency = 0, int autoSuccesses = 0, IReadOnlyCollection<IRollModifier>? modifiers = null) :
+        base(DiceFacesCount, dicesCount, rerollsCount, burstsCount, efficiency, autoSuccesses, modifiers)
     {
     }
 
@@ -39,8 +35,9 @@ public class Parameters : ParametersBase
     /// <param name="rerollsCount">Count of possible rerolls for dices with value 1.</param>
     /// <param name="burstsCount">Count of possible bursts for dices with max possible value.</param>
     /// <param name="efficiency">Efficiency value for a roll.</param>
-    public Parameters(IRollModifier? modifier, int dicesCount = 1, int rerollsCount = 0, int burstsCount = 0, int efficiency = 0) :
-        this(dicesCount, rerollsCount, burstsCount, efficiency,
+    /// <param name="autoSuccesses">Count of guaranteed successes in a roll.</param>
+    public Parameters(IRollModifier? modifier, int dicesCount = 1, int rerollsCount = 0, int burstsCount = 0, int efficiency = 0, int autoSuccesses = 0) :
+        this(dicesCount, rerollsCount, burstsCount, efficiency, autoSuccesses,
              modifier is null ? null : new[] { modifier })
     {
     }

@@ -40,6 +40,11 @@ public static class ParametersExtensions
         {
             throw new ArgumentOutOfRangeException(nameof(parameters.Efficiency), parameters.Efficiency, "Efficiency can't be negative");
         }
+
+        if (parameters.AutoSuccesses < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(parameters.AutoSuccesses), parameters.AutoSuccesses, "Auto successes count can't be negative");
+        }
     }
 
     /// <summary>

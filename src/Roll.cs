@@ -56,7 +56,7 @@ public class Roll : IReadOnlyList<Dice>
 
         if (SuccessParameters is not null)
         {
-            AutoSuccessCount = Parameters.DicesCount - Math.Min(Parameters.DicesCount, SuccessParameters.AutoSuccessThreshold);
+            AutoSuccessCount = Parameters.AutoSuccesses + Parameters.DicesCount - Math.Min(Parameters.DicesCount, SuccessParameters.AutoSuccessThreshold);
             SuccessCount = rolls.Count(d => d.Value >= SuccessParameters.MinValue) + AutoSuccessCount;
         }
     }
