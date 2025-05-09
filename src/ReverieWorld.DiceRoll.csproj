@@ -25,6 +25,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+
+    <InternalsVisibleTo Include="ReverieWorld.DiceRoll.Tests" />
   </ItemGroup>
 
 </Project>
