@@ -195,6 +195,39 @@ internal sealed class RollState : IRollState
         return newBurstAvailable;
     }
 
+    /// <exception cref="ArgumentOutOfRangeException" />
+    public int AddEfficiency(int diceIndex, int value)
+    {
+        return AddEfficiencyInternal(rolls[diceIndex], value);
+    }
+
+    /// <exception cref="ArgumentOutOfRangeException" />
+    public int AddEfficiency(Dice dice, int value)
+    {
+        if (!rolls.Contains(dice))
+        {
+            throw new ArgumentOutOfRangeException(nameof(dice), dice, "Invalid dice (not from this roll)");
+        }
+
+        return AddEfficiencyInternal(dice, value);
+    }
+
+    /// <exception cref="ArgumentOutOfRangeException" />
+    private int AddEfficiencyInternal(Dice dice, int value)
+    {
+        if (value < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), value, "Can not distribute negative efficiency bonus");
+        }
+
+        var result = Math.Min(Math.Min(RemainingBonus, value), Parameters.FacesCount - dice.Value);
+
+        dice.EfficiencyBonus += result;
+        RemainingBonus -= result;
+
+        return result;
+    }
+
     private void AddDice(int value, bool asBurst = false, bool fromModifier = false)
     {
         ThrowIfDiceValueOutOfRange(value);
