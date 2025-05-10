@@ -204,10 +204,7 @@ internal sealed class RollState : IRollState
     /// <exception cref="ArgumentOutOfRangeException" />
     public int AddEfficiency(Dice dice, int value)
     {
-        if (!rolls.Contains(dice))
-        {
-            throw new ArgumentOutOfRangeException(nameof(dice), dice, "Invalid dice (not from this roll)");
-        }
+        ThrowIfNotContainsDice(dice);
 
         return AddEfficiencyInternal(dice, value);
     }
@@ -235,6 +232,16 @@ internal sealed class RollState : IRollState
         rolls.Add(new Dice(rawValue: value, offset: offset, isBurst: asBurst, fromModifier: fromModifier));
     }
 
+    private void ChangeValue(Dice dice, int newValue)
+    {
+        ThrowIfDiceValueOutOfRange(newValue);
+
+        dice.RawValue = newValue;
+        dice.Modified = true;
+
+        dice.EfficiencyBonus = Math.Min(dice.EfficiencyBonus, Parameters.FacesCount - newValue);
+    }
+
     /// <exception cref="ArgumentOutOfRangeException"/>
     private void ThrowIfDiceValueOutOfRange(int value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
     {
@@ -242,6 +249,15 @@ internal sealed class RollState : IRollState
         if (value < 1 || facesCount < value)
         {
             throw new ArgumentOutOfRangeException(paramName, value, $"value out of range [{1}..{facesCount}]");
+        }
+    }
+
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    private void ThrowIfNotContainsDice(Dice dice, [CallerArgumentExpression(nameof(dice))] string? paramName = null)
+    {
+        if (!rolls.Contains(dice))
+        {
+            throw new ArgumentOutOfRangeException(paramName, dice, "Invalid dice (not from this roll)");
         }
     }
 
@@ -275,14 +291,13 @@ internal sealed class RollState : IRollState
     void IRollState.AddDice(int value, bool asBurst) => AddDice(value, asBurst, true);
 
     void IRollState.ChangeValue(int index, int newValue)
+        => ChangeValue(rolls[index], newValue);
+
+    void IRollState.ChangeValue(Dice dice, int newValue)
     {
-        ThrowIfDiceValueOutOfRange(newValue);
+        ThrowIfNotContainsDice(dice);
 
-        var dice = rolls[index];
-        dice.RawValue = newValue;
-        dice.Modified = true;
-
-        dice.EfficiencyBonus = Math.Min(dice.EfficiencyBonus, Parameters.FacesCount - newValue);
+        ChangeValue(dice, newValue);
     }
 
     public Dice this[int index] => rolls[index];

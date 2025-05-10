@@ -26,6 +26,14 @@ public interface IRollState : IReadOnlyList<Dice>
     void ChangeValue(int index, int newValue);
 
     /// <summary>
+    /// Appends a <paramref name="newValue"/> to designated <see cref="Dice"/> list of rolls.
+    /// </summary>
+    /// <param name="dice"><see cref="Dice"/> value to change.</param>
+    /// <param name="newValue">The new value to apply to the <see cref="Dice"/>.</param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    void ChangeValue(Dice dice, int newValue);
+
+    /// <summary>
     /// Add new random <see cref="Dice"/> to current roll.
     /// </summary>
     /// <param name="asBurst">Treat new <see cref="Dice"/> as burst.</param>
