@@ -64,9 +64,9 @@ public static class ParametersExtensions
     {
         ArgumentNullException.ThrowIfNull(successParameters);
 
-        if (successParameters.MinValue < 1)
+        if (successParameters.MinValue < 2)
         {
-            throw new ArgumentOutOfRangeException(nameof(successParameters.MinValue), successParameters.MinValue, "Dice success value can't be lesser than 1");
+            throw new ArgumentOutOfRangeException(nameof(successParameters.MinValue), successParameters.MinValue, "Dice success value can't be lesser than 2");
         }
 
         if (successParameters.Count < 1)

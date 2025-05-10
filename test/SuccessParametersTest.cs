@@ -7,9 +7,9 @@ public sealed class SuccessParametersTest
     {
         Assert.Throws<ArgumentNullException>("successParameters", () => ((ISuccessParameters)null!).Validate());
 
-        Assert.Throws<ArgumentOutOfRangeException>("MinValue",             () => new SuccessParameters { MinValue = 0 }.Validate());
-        Assert.Throws<ArgumentOutOfRangeException>("Count",                () => new SuccessParameters { MinValue = 1, Count = 0 }.Validate());
-        Assert.Throws<ArgumentOutOfRangeException>("AutoSuccessThreshold", () => new SuccessParameters { MinValue = 1, AutoSuccessThreshold = 0 }.Validate());
+        Assert.Throws<ArgumentOutOfRangeException>("MinValue",             () => new SuccessParameters { MinValue = 1 }.Validate());
+        Assert.Throws<ArgumentOutOfRangeException>("Count",                () => new SuccessParameters { MinValue = 2, Count = 0 }.Validate());
+        Assert.Throws<ArgumentOutOfRangeException>("AutoSuccessThreshold", () => new SuccessParameters { MinValue = 2, AutoSuccessThreshold = 0 }.Validate());
     }
 
     [Fact]
@@ -17,7 +17,7 @@ public sealed class SuccessParametersTest
     {
         var parameters = new Parameters();
 
-        Assert.Throws<ArgumentOutOfRangeException>("MinValue", () => parameters.ValidateApplicability(new SuccessParameters { MinValue = 7 }));
-        Assert.Throws<ArgumentOutOfRangeException>("Count",    () => parameters.ValidateApplicability(new SuccessParameters { MinValue = 1, Count = 2 }));
+        Assert.Throws<ArgumentOutOfRangeException>("MinValue", () => parameters.ValidateApplicability(new SuccessParameters { MinValue = Parameters.DiceFacesCount + 1 }));
+        Assert.Throws<ArgumentOutOfRangeException>("Count",    () => parameters.ValidateApplicability(new SuccessParameters { MinValue = 2, Count = 2 }));
     }
 }

@@ -7,7 +7,7 @@ namespace ReverieWorld.DiceRoll.Tests;
 /// </summary>
 public sealed class InternalRollerTest
 {
-    static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 1 };
+    static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 2 };
 
     [Theory]
     [InlineData(-1)]

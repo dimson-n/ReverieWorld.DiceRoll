@@ -6,7 +6,7 @@ public sealed partial class Weber
 {
     public sealed class SorcererTrickTest
     {
-        static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 1 };
+        static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 2 };
 
         [Fact]
         public void OneWithModification()

@@ -27,9 +27,9 @@ public sealed class AutoRollerTest
     [InlineData(123)]
     public void MinSuccess(int count)
     {
-        AutoRoller roller = new(new NonRandomZeroProvider(), new Parameters(dicesCount: count));
+        AutoRoller roller = new(new PredefinedRandomProvider(2), new Parameters(dicesCount: count));
 
-        var result = roller.Roll(new SuccessParameters { MinValue = 1 });
+        var result = roller.Roll(new SuccessParameters { MinValue = 2 });
 
         Assert.Equal(count, result.SuccessCount);
     }

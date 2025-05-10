@@ -4,7 +4,7 @@ public sealed partial class Prime
 {
     public sealed class VictoryOnlyTest
     {
-        static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 1 };
+        static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 2 };
 
         [Fact]
         public void All()
