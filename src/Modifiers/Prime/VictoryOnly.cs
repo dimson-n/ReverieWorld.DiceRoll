@@ -19,9 +19,9 @@ public static partial class Prime
         public override void AtDicesAdded(IRollState rollState)
         {
             var newValue = rollState.Parameters.FacesCount;
-            foreach (var index in GetOnesIndices(rollState))
+            foreach (var dice in GetOnesDices(rollState))
             {
-                rollState.ChangeValue(index, newValue);
+                rollState.ChangeValue(dice, newValue);
                 ++ApplicationsCount;
             }
         }

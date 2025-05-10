@@ -10,11 +10,9 @@ public abstract class OnesDiceFlipper : IAtDicesAddedModifier
     /// </summary>
     /// <param name="rollState">Current roll state.</param>
     /// <returns>Collection of dice indices with value 1.</returns>
-    protected static IEnumerable<int> GetOnesIndices(IRollState rollState)
+    protected static IEnumerable<Dice> GetOnesDices(IRollState rollState)
     {
-        return rollState.Select((dice, idx) => (dice.Value, idx))
-                        .Where(d => d.Value == 1)
-                        .Select(d => d.idx);
+        return rollState.Where(d => d.Value == 1);
     }
 
     /// <inheritdoc/>
