@@ -5,10 +5,8 @@ namespace ReverieWorld.DiceRoll.Tests;
 /// <summary>
 /// Tests for the <see cref="RollState"/> internal class.
 /// </summary>
-public sealed class InternalRollerTest
+public sealed class InternalRollerTest : DefaultSuccessParametersUser
 {
-    static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 2 };
-
     [Theory]
     [InlineData(-1)]
     [InlineData(6)]

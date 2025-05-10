@@ -2,10 +2,8 @@ namespace ReverieWorld.DiceRoll.Tests.Modifiers;
 
 public sealed partial class Prime
 {
-    public sealed class VictoryOnlyTest
+    public sealed class VictoryOnlyTest : DefaultSuccessParametersUser
     {
-        static private readonly ISuccessParameters _successParameters = new SuccessParameters { MinValue = 2 };
-
         [Fact]
         public void All()
         {
