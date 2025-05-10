@@ -281,6 +281,8 @@ internal sealed class RollState : IRollState
         var dice = rolls[index];
         dice.RawValue = newValue;
         dice.Modified = true;
+
+        dice.EfficiencyBonus = Math.Min(dice.EfficiencyBonus, Parameters.FacesCount - newValue);
     }
 
     public Dice this[int index] => rolls[index];

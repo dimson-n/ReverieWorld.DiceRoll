@@ -1,3 +1,5 @@
+using ReverieWorld.DiceRoll.Modifiers;
+
 namespace ReverieWorld.DiceRoll.Tests;
 
 /// <summary>
@@ -84,5 +86,19 @@ public sealed class InternalRollerTest
 
         Assert.Equal(1, result.SuccessCount);
         Assert.Equal(1, result.AutoSuccessCount);
+    }
+
+    [Fact]
+    public void EfficiencyOverflow()
+    {
+        var rollState = new RollState(new NonRandomZeroProvider(), new Parameters(efficiency: 1), null);
+
+        rollState.FillInitial();
+        rollState.AddEfficiency(0, 1);
+
+        ((IRollState)rollState).ChangeValue(0, 6);
+
+        Assert.Equal(0, rollState.RemainingBonus);
+        Assert.Equal(6, rollState[0].Value);
     }
 }
