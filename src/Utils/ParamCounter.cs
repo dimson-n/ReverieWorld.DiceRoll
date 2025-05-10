@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace ReverieWorld.DiceRoll.Utils;
 
-[DebuggerDisplay("{infinite ? \"∞\" : count.ToString()}")]
+[DebuggerDisplay("{infinite ? \"∞\" : count.ToString(),nq}")]
 internal readonly struct ParamCounter
 {
     private readonly int count;
