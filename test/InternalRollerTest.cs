@@ -47,7 +47,7 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
         var result = roller.Roll(_successParameters);
 
         Assert.Equal(2, result.Count);
-        Assert.Single(result.Where(d => d.IsBurst));
+        Assert.Single(result, d => d.IsBurst);
     }
 
     [Fact]
