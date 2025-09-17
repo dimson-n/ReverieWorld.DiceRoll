@@ -10,8 +10,9 @@ The dice roller implementation for the Reverie World RP system that provides mai
 using ReverieWorld.DiceRoll;
 
 AutoRoller diceRoller = new(new DefaultRandomProvider());
-Parameters parameters = new(dicesCount: 3, burstsCount: 1, bonus: 2);
-Result result = diceRoller.Roll(parameters);
+Parameters parameters = new(dicesCount: 3, burstsCount: 1, efficiency: 2);
+SuccessParameters successParameters = new() { MinValue = 4 };
+Result result = diceRoller.Roll(parameters, successParameters);
 
-Console.WriteLine($"Roll result: {result.Total}");
+Console.WriteLine("Roll result: {0}", result.SuccessCount >= successParameters.Count ? "success!" : "failed...");
 ```
