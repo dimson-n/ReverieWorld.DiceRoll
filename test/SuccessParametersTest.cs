@@ -17,7 +17,7 @@ public sealed class SuccessParametersTest
     {
         var parameters = new Parameters();
 
-        Assert.Throws<ArgumentOutOfRangeException>("MinValue", () => parameters.ValidateApplicability(new SuccessParameters { MinValue = Parameters.DiceFacesCount + 1 }));
+        Assert.Throws<ArgumentOutOfRangeException>("MinValue", () => parameters.ValidateApplicability(new SuccessParameters { MinValue = Parameters.DefaultFacesCount + 1 }));
         Assert.Throws<ArgumentOutOfRangeException>("Count",    () => parameters.ValidateApplicability(new SuccessParameters { MinValue = 2, Count = 2 }));
     }
 }

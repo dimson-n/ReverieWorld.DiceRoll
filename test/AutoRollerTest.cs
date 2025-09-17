@@ -7,7 +7,7 @@ public sealed class AutoRollerTest
     {
         AutoRoller roller = new(new NonRandomZeroProvider());
 
-        var result = roller.Roll(new SuccessParameters { MinValue = Parameters.DiceFacesCount });
+        var result = roller.Roll(new SuccessParameters { MinValue = Parameters.DefaultFacesCount });
 
         Assert.Equal(0, result.SuccessCount);
     }
@@ -17,7 +17,7 @@ public sealed class AutoRollerTest
     {
         AutoRoller roller = new(new NonRandomMaxProvider());
 
-        var result = roller.Roll(new SuccessParameters { MinValue = Parameters.DiceFacesCount });
+        var result = roller.Roll(new SuccessParameters { MinValue = Parameters.DefaultFacesCount });
 
         Assert.Equal(1, result.SuccessCount);
     }
