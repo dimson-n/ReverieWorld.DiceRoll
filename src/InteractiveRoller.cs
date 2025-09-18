@@ -42,7 +42,7 @@ public sealed class InteractiveRoller
         get
         {
             var maxValue = _state.Parameters.FacesCount;
-            return _state.RemainingBonus > 0 && _state.Any(d => d.Value != maxValue);
+            return _state.RemainingEfficiency > 0 && _state.Any(d => d.Value != maxValue);
         }
     }
 

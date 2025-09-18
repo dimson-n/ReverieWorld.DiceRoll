@@ -30,7 +30,7 @@ internal sealed class RollState : IRollState
     public readonly IRandomProvider RandomProvider;
     public IParameters Parameters { get; }
     public readonly ISuccessParameters? SuccessParameters;
-    public int RemainingBonus { get; private set; }
+    public int RemainingEfficiency { get; private set; }
 
     public RollState(IRandomProvider randomProvider, IParameters parameters, ISuccessParameters? successParameters)
     {
@@ -42,7 +42,7 @@ internal sealed class RollState : IRollState
 
         _availableRerolls = new(parameters.RerollsCount, parameters.HasInfinityRerolls);
         _availableBursts  = new(parameters.BurstsCount,  parameters.HasInfinityBursts);
-        RemainingBonus = Parameters.Efficiency;
+        RemainingEfficiency = Parameters.Efficiency;
 
         if (parameters.Modifiers is not null)
         {
@@ -138,9 +138,9 @@ internal sealed class RollState : IRollState
         InvokeActionsFor(RollStage.AfterEnd);
     }
 
-    public bool DistributeBonus()
+    public bool DistributeEfficiency()
     {
-        if (RemainingBonus == 0)
+        if (RemainingEfficiency == 0)
         {
             return false;
         }
@@ -160,10 +160,10 @@ internal sealed class RollState : IRollState
         foreach (var dice in ordered.SkipWhile(dice => dice.Value >= minSuccessValue))
         {
             var needToSuccess = minSuccessValue - dice.Value;
-            if (needToSuccess <= RemainingBonus)
+            if (needToSuccess <= RemainingEfficiency)
             {
                 dice.EfficiencyBonus += needToSuccess;
-                RemainingBonus -= needToSuccess;
+                RemainingEfficiency -= needToSuccess;
                 newBurstAvailable = successIsMax;
             }
             else
@@ -172,7 +172,7 @@ internal sealed class RollState : IRollState
             }
         }
 
-        if (RemainingBonus == 0 || successIsMax || !_availableBursts.Exists)
+        if (RemainingEfficiency == 0 || successIsMax || !_availableBursts.Exists)
         {
             return newBurstAvailable;
         }
@@ -180,10 +180,10 @@ internal sealed class RollState : IRollState
         foreach (var dice in ordered.SkipWhile(dice => dice.Value == maxValue).Take(_availableBursts.MaxCount))
         {
             var needToBurst = maxValue - dice.Value;
-            if (needToBurst <= RemainingBonus)
+            if (needToBurst <= RemainingEfficiency)
             {
                 dice.EfficiencyBonus += needToBurst;
-                RemainingBonus -= needToBurst;
+                RemainingEfficiency -= needToBurst;
                 newBurstAvailable = true;
             }
             else
@@ -217,10 +217,10 @@ internal sealed class RollState : IRollState
             throw new ArgumentOutOfRangeException(nameof(value), value, "Can not distribute negative efficiency bonus");
         }
 
-        var result = Math.Min(Math.Min(RemainingBonus, value), Parameters.FacesCount - dice.Value);
+        var result = Math.Min(Math.Min(RemainingEfficiency, value), Parameters.FacesCount - dice.Value);
 
         dice.EfficiencyBonus += result;
-        RemainingBonus -= result;
+        RemainingEfficiency -= result;
 
         return result;
     }

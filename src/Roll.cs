@@ -52,7 +52,7 @@ public class Roll : IReadOnlyList<Dice>
         rolls = state.Values;
         Parameters = state.Parameters;
         SuccessParameters = state.SuccessParameters;
-        RemainingEfficiencyBonus = state.RemainingBonus;
+        RemainingEfficiencyBonus = state.RemainingEfficiency;
 
         if (SuccessParameters is not null)
         {

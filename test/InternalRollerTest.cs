@@ -51,7 +51,7 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
     }
 
     [Fact]
-    public void NoApplyBonusToBurst()
+    public void NoApplyEfficiencyToBurst()
     {
         AutoRoller roller = new(new PredefinedRandomProvider(4, 4, 0, 3, 2, 2));
 
@@ -63,7 +63,7 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
     }
 
     [Fact]
-    public void ApplyBurstAfterBonusToMaximum()
+    public void ApplyBurstAfterEfficiencyToMaximum()
     {
         AutoRoller roller = new(new PredefinedRandomProvider(2, 1, 0, 3, 1));
 
@@ -96,7 +96,7 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
 
         ((IRollState)rollState).ChangeValue(0, 6);
 
-        Assert.Equal(0, rollState.RemainingBonus);
+        Assert.Equal(0, rollState.RemainingEfficiency);
         Assert.Equal(6, rollState[0].Value);
     }
 }

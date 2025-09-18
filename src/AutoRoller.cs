@@ -57,7 +57,7 @@ public sealed class AutoRoller
             for (bool loop = true; loop;)
             {
                 roll.MakeRerollsAndBursts(rollMaker);
-                loop = roll.DistributeBonus();
+                loop = roll.DistributeEfficiency();
             }
         }
 
