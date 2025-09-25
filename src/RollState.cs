@@ -9,7 +9,7 @@ namespace ReverieWorld.DiceRoll;
 /// <summary>
 /// Internal roller implementation.
 /// </summary>
-internal sealed class RollState : IRollState
+internal sealed class RollState : IRollState, IEfficiencyDistributor
 {
     private enum RollStage
     {
@@ -28,15 +28,25 @@ internal sealed class RollState : IRollState
     internal RollMaker? currentRollMaker;
 
     public readonly IRandomProvider RandomProvider;
+    public readonly IEfficiencyDistributionStrategy _efficiencyDistributionStrategy;
+
     public IParameters Parameters { get; }
-    public readonly ISuccessParameters? SuccessParameters;
+    public ISuccessParameters? SuccessParameters { get; }
+
     public int RemainingEfficiency { get; private set; }
 
-    public RollState(IRandomProvider randomProvider, IParameters parameters, ISuccessParameters? successParameters)
+    private bool newBurstAvailable = false;
+
+    ISuccessParameters IEfficiencyDistributor.SuccessParameters
+        => SuccessParameters!;
+
+    public RollState(IRandomProvider randomProvider, IEfficiencyDistributionStrategy efficiencyDistributionStrategy, IParameters parameters, ISuccessParameters? successParameters)
     {
         RandomProvider = randomProvider;
         Parameters = parameters;
         SuccessParameters = successParameters;
+        _efficiencyDistributionStrategy = efficiencyDistributionStrategy;
+
         rolls = new List<Dice>(parameters.DicesCount + (parameters.HasInfinityBursts ? parameters.DicesCount : parameters.BurstsCount));
         modifiersActions = [];
 
@@ -140,68 +150,25 @@ internal sealed class RollState : IRollState
 
     public bool DistributeEfficiency()
     {
-        if (RemainingEfficiency == 0)
+        if (RemainingEfficiency == 0 || SuccessParameters is null)
         {
             return false;
         }
 
-        if (SuccessParameters is null)
-        {
-            return false;
-        }
+        newBurstAvailable = false;
 
-        var ordered = rolls.OrderByDescending(d => d.Value);
-
-        bool newBurstAvailable = false;
-
-        var maxValue = Parameters.FacesCount;
-        var minSuccessValue = SuccessParameters.MinValue;
-        bool successIsMax = maxValue == minSuccessValue;
-        foreach (var dice in ordered.SkipWhile(dice => dice.Value >= minSuccessValue))
-        {
-            var needToSuccess = minSuccessValue - dice.Value;
-            if (needToSuccess <= RemainingEfficiency)
-            {
-                dice.EfficiencyBonus += needToSuccess;
-                RemainingEfficiency -= needToSuccess;
-                newBurstAvailable = successIsMax;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        if (RemainingEfficiency == 0 || successIsMax || !_availableBursts.Exists)
-        {
-            return newBurstAvailable;
-        }
-
-        foreach (var dice in ordered.SkipWhile(dice => dice.Value == maxValue).Take(_availableBursts.MaxCount))
-        {
-            var needToBurst = maxValue - dice.Value;
-            if (needToBurst <= RemainingEfficiency)
-            {
-                dice.EfficiencyBonus += needToBurst;
-                RemainingEfficiency -= needToBurst;
-                newBurstAvailable = true;
-            }
-            else
-            {
-                break;
-            }
-        }
+        _efficiencyDistributionStrategy.Distribute(this, RemainingEfficiency, _availableBursts.MaxCount);
 
         return newBurstAvailable;
     }
 
-    /// <exception cref="ArgumentOutOfRangeException" />
+    /// <inheritdoc/>
     public int AddEfficiency(int diceIndex, int value)
     {
         return AddEfficiencyInternal(rolls[diceIndex], value);
     }
 
-    /// <exception cref="ArgumentOutOfRangeException" />
+    /// <inheritdoc/>
     public int AddEfficiency(Dice dice, int value)
     {
         ThrowIfNotContainsDice(dice);
@@ -221,6 +188,11 @@ internal sealed class RollState : IRollState
 
         dice.EfficiencyBonus += result;
         RemainingEfficiency -= result;
+
+        if (result > 0 && dice.Value == Parameters.FacesCount)
+        {
+            newBurstAvailable = true;
+        }
 
         return result;
     }

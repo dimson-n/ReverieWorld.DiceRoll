@@ -9,6 +9,7 @@ namespace ReverieWorld.DiceRoll;
 public sealed class AutoRoller
 {
     private readonly IRandomProvider randomProvider;
+    private readonly IEfficiencyDistributionStrategy _efficiencyDistributionStrategy;
     private readonly IParameters defaultParameters;
 
     /// <summary>
@@ -16,11 +17,12 @@ public sealed class AutoRoller
     /// and optional <paramref name="defaultParameters"/>.
     /// </summary>
     /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
+    /// <param name="efficiencyDistributionStrategy">An implementation of efficiency distribution strategy.</param>
     /// <param name="defaultParameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public AutoRoller(IRandomProvider randomProvider, IParameters? defaultParameters = null)
+    public AutoRoller(IRandomProvider randomProvider, IEfficiencyDistributionStrategy? efficiencyDistributionStrategy = null, IParameters? defaultParameters = null)
     {
         ArgumentNullException.ThrowIfNull(randomProvider);
 
@@ -28,6 +30,7 @@ public sealed class AutoRoller
         defaultParameters.Validate();
 
         this.randomProvider = randomProvider;
+        _efficiencyDistributionStrategy = efficiencyDistributionStrategy ?? new DefaultEfficiencyDistributionStrategy();
         this.defaultParameters = defaultParameters;
     }
 
@@ -48,7 +51,7 @@ public sealed class AutoRoller
         successParameters.Validate();
         parameters.ValidateApplicability(successParameters);
 
-        RollState roll = new(randomProvider, parameters, successParameters);
+        RollState roll = new(randomProvider, _efficiencyDistributionStrategy, parameters, successParameters);
 
         using (RollMaker rollMaker = new(roll))
         {

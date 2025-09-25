@@ -50,12 +50,13 @@ public sealed class InteractiveRoller
     /// Initializes a new instance of the <see cref="InteractiveRoller"/> with specified <paramref name="randomProvider"/> and optional <paramref name="parameters"/>.
     /// </summary>
     /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
+    /// <param name="efficiencyDistributionStrategy">An implementation of efficiency distribution strategy.</param>
     /// <param name="parameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
     /// <param name="successParameters">Parameters for success roll.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public InteractiveRoller(IRandomProvider randomProvider, IParameters? parameters = null, ISuccessParameters? successParameters = null)
+    public InteractiveRoller(IRandomProvider randomProvider, IEfficiencyDistributionStrategy? efficiencyDistributionStrategy = null, IParameters? parameters = null, ISuccessParameters? successParameters = null)
     {
         ArgumentNullException.ThrowIfNull(randomProvider);
 
@@ -68,7 +69,23 @@ public sealed class InteractiveRoller
             parameters.ValidateApplicability(successParameters);
         }
 
-        _state = new(randomProvider, parameters, successParameters);
+        efficiencyDistributionStrategy ??= new DefaultEfficiencyDistributionStrategy();
+
+        _state = new(randomProvider, efficiencyDistributionStrategy, parameters, successParameters);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InteractiveRoller"/> with default efficiency distribution strategy.
+    /// </summary>
+    /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
+    /// <param name="parameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
+    /// <param name="successParameters">Parameters for success roll.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    public InteractiveRoller(IRandomProvider randomProvider, IParameters? parameters, ISuccessParameters? successParameters = null) :
+        this(randomProvider, null, parameters, successParameters)
+    {
     }
 
     /// <summary>

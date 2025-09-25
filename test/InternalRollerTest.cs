@@ -20,9 +20,9 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
     [Fact]
     public void Bursts()
     {
-        AutoRoller roller = new(new NonRandomMaxProvider(), new Parameters(dicesCount: 3, burstsCount: 3));
+        AutoRoller roller = new(new NonRandomMaxProvider());
 
-        var result = roller.Roll(_successParameters);
+        var result = roller.Roll(new Parameters(dicesCount: 3, burstsCount: 3), _successParameters);
 
         Assert.Equal(6, result.Count);
         Assert.Equal(3, result.Where(d => d.IsBurst).Count());
@@ -31,9 +31,9 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
     [Fact]
     public void BurstsWithInability()
     {
-        AutoRoller roller = new(new NonRandomZeroProvider(), new Parameters(burstsCount: 3));
+        AutoRoller roller = new(new NonRandomZeroProvider());
 
-        var result = roller.Roll(_successParameters);
+        var result = roller.Roll(new Parameters(burstsCount: 3), _successParameters);
 
         Assert.Single(result);
         Assert.DoesNotContain(result, d => d.IsBurst);
@@ -42,9 +42,9 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
     [Fact]
     public void BurstsWithLackOfDices()
     {
-        AutoRoller roller = new(new PredefinedRandomProvider(5, 0), new Parameters(burstsCount: 3));
+        AutoRoller roller = new(new PredefinedRandomProvider(5, 0));
 
-        var result = roller.Roll(_successParameters);
+        var result = roller.Roll(new Parameters(burstsCount: 3), _successParameters);
 
         Assert.Equal(2, result.Count);
         Assert.Single(result, d => d.IsBurst);
@@ -89,7 +89,10 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
     [Fact]
     public void EfficiencyOverflow()
     {
-        var rollState = new RollState(new NonRandomZeroProvider(), new Parameters(efficiency: 1), null);
+        var rollState = new RollState(randomProvider: new NonRandomZeroProvider(),
+                                      efficiencyDistributionStrategy: new DefaultEfficiencyDistributionStrategy(),
+                                      parameters: new Parameters(efficiency: 1),
+                                      null);
 
         rollState.FillInitial();
         rollState.AddEfficiency(0, 1);

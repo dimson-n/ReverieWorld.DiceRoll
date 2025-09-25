@@ -8,10 +8,9 @@ public sealed partial class Prime
         public void All()
         {
             var modifier = new DiceRoll.Modifiers.Prime.VictoryOnly();
-            AutoRoller roller = new(new NonRandomZeroProvider(),
-                                    new Parameters(modifier, dicesCount: 3));
+            AutoRoller roller = new(new NonRandomZeroProvider());
 
-            var result = roller.Roll(_successParameters);
+            var result = roller.Roll(new Parameters(modifier, dicesCount: 3), _successParameters);
 
             Assert.Equal(3, modifier.ApplicationsCount);
             Assert.DoesNotContain(result, d => !d.Modified);
@@ -23,10 +22,9 @@ public sealed partial class Prime
         public void Nothing()
         {
             var modifier = new DiceRoll.Modifiers.Prime.VictoryOnly();
-            AutoRoller roller = new(new RandomNotOneProvider(),
-                                    new Parameters(modifier, dicesCount: 3));
+            AutoRoller roller = new(new RandomNotOneProvider());
 
-            var result = roller.Roll(_successParameters);
+            var result = roller.Roll(new Parameters(modifier, dicesCount: 3), _successParameters);
 
             Assert.Equal(0, modifier.ApplicationsCount);
             Assert.DoesNotContain(result, d => d.Modified);
