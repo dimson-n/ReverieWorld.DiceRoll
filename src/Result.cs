@@ -13,12 +13,4 @@ public sealed class Result : Roll
         base(state)
     {
     }
-
-    /// <summary>
-    /// Convenience operator for converting to an <see cref="int"/>.
-    /// </summary>
-    /// <param name="result">The roll result to convert.</param>
-    /// <returns>Essentially <see cref="Roll.Total"/>.</returns>
-    public static explicit operator int(Result result)
-        => result.Total;
 }

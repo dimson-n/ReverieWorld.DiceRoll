@@ -9,13 +9,13 @@ public sealed class InteractiveRoller
     enum Stage
     {
         Init,
-        RemovingDices,
-        Ready,
+        EfficiencyDistribution,
+        Completed,
     }
 
     private Stage stage = Stage.Init;
 
-    private readonly RollState state;
+    private readonly RollState _state;
 
     private Result? result;
 
@@ -23,36 +23,69 @@ public sealed class InteractiveRoller
     /// Gets a read-only list of dices of current state.
     /// </summary>
     /// <value>A <see cref="IReadOnlyList{T}"/> of <see cref="Dice"/>s.</value>
-    public IReadOnlyList<Dice> Values => state.Values;
+    public IReadOnlyList<Dice> Values
+        => _state.Values;
 
     /// <summary>
-    /// Gets current state of the <see cref="Roll"/>.
+    /// Gets current <see cref="Roll"/> state.
     /// </summary>
-    /// <value>Current state of the <see cref="Roll"/>.</value>
-    public Roll Current => result ?? new Roll(state);
+    /// <value>Current <see cref="Roll"/> state.</value>
+    public Roll Current
+        => result ?? new Roll(_state);
 
     /// <summary>
-    /// Gets count of <see cref="Dice"/>s that need to be removed from roll.
+    /// Indicates that efficiency can be distributed to some <see cref="Dice"/>.
     /// </summary>
-    /// <value>Count of <see cref="Dice"/>s that need to be removed from roll.</value>
-    public int DicesToRemove => state.DicesToRemove;
+    /// <value><see langword="true"/> if efficiency can be added to some <see cref="Dice"/>; otherwise <see langword="false"/>.</value>
+    public bool CanDistributeEfficiency
+    {
+        get
+        {
+            var maxValue = _state.Parameters.FacesCount;
+            return _state.RemainingEfficiency > 0 && _state.Any(d => d.Value != maxValue);
+        }
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InteractiveRoller"/> with specified <paramref name="randomProvider"/> and optional <paramref name="parameters"/>.
     /// </summary>
     /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
+    /// <param name="efficiencyDistributionStrategy">An implementation of efficiency distribution strategy.</param>
     /// <param name="parameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
+    /// <param name="successParameters">Parameters for success roll.</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public InteractiveRoller(IRandomProvider randomProvider, IParameters? parameters = null)
+    public InteractiveRoller(IRandomProvider randomProvider, IEfficiencyDistributionStrategy? efficiencyDistributionStrategy = null, IParameters? parameters = null, ISuccessParameters? successParameters = null)
     {
         ArgumentNullException.ThrowIfNull(randomProvider);
 
         parameters ??= Parameters.Default;
         parameters.Validate();
 
-        this.state = new(parameters, randomProvider);
+        if (successParameters is not null)
+        {
+            successParameters.Validate();
+            parameters.ValidateApplicability(successParameters);
+        }
+
+        efficiencyDistributionStrategy ??= new DefaultEfficiencyDistributionStrategy();
+
+        _state = new(randomProvider, efficiencyDistributionStrategy, parameters, successParameters);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InteractiveRoller"/> with default efficiency distribution strategy.
+    /// </summary>
+    /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
+    /// <param name="parameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
+    /// <param name="successParameters">Parameters for success roll.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    public InteractiveRoller(IRandomProvider randomProvider, IParameters? parameters, ISuccessParameters? successParameters = null) :
+        this(randomProvider, null, parameters, successParameters)
+    {
     }
 
     /// <summary>
@@ -60,63 +93,54 @@ public sealed class InteractiveRoller
     /// </summary>
     /// <returns>Next stage wrapper.</returns>
     /// <exception cref="InvalidOperationException"></exception>
-    public DiceRemoveStage Begin()
+    public EfficiencyDistributionStage Begin()
     {
         if (stage != Stage.Init)
         {
             throw new InvalidOperationException("Begin can be called once after initialization only");
         }
 
-        state.FillInitial();
+        _state.FillInitial();
 
-        stage = Stage.RemovingDices;
+        stage = Stage.EfficiencyDistribution;
 
-        return new DiceRemoveStage(this);
+        return new EfficiencyDistributionStage(this);
     }
 
     /// <summary>
-    /// Removes a <see cref="Dice"/> at the given <paramref name="index"/> from roll.
+    /// Adds efficiency to dice with designated index.
     /// </summary>
-    /// <param name="index">Index of a <see cref="Dice"/> to remove.</param>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public void RemoveDice(int index)
+    /// <param name="diceIndex">Dice index to add efficiency.</param>
+    /// <param name="value">Efficiency to add.</param>
+    /// <returns>Added efficiency.</returns>
+    /// <exception cref="ArgumentOutOfRangeException" />
+    /// <exception cref="InvalidOperationException" />
+    public int AddEfficiency(int diceIndex, int value = 1)
     {
-        if (stage != Stage.RemovingDices)
+        if (stage != Stage.EfficiencyDistribution)
         {
-            throw new InvalidOperationException("Can't remove dices at current stage");
+            throw new InvalidOperationException("Can not add efficiency at current stage");
         }
 
-        if (DicesToRemove <= 0)
-        {
-            throw new InvalidOperationException("No more dices to remove");
-        }
-
-        if (index < 0 || state.Count <= index)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index), index, "Index out of range");
-        }
-
-        state[index].Removed = true;
+        return _state.AddEfficiency(diceIndex, value);
     }
 
     /// <summary>
-    /// Removes a set of <see cref="Dice"/>s at the given <paramref name="indices"/> from roll.
+    /// Adds efficiency to designated dice.
     /// </summary>
-    /// <param name="indices">Set of <see cref="Dice"/> indices to remove.</param>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="InvalidOperationException"></exception>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public void RemoveDices(IReadOnlySet<int> indices)
+    /// <param name="dice">Dice to add efficiency.</param>
+    /// <param name="value">Efficiency to add.</param>
+    /// <returns>Added efficiency.</returns>
+    /// <exception cref="ArgumentOutOfRangeException" />
+    /// <exception cref="InvalidOperationException" />
+    public int AddEfficiency(Dice dice, int value = 1)
     {
-        ArgumentNullException.ThrowIfNull(indices);
-
-        if (stage != Stage.RemovingDices)
+        if (stage != Stage.EfficiencyDistribution)
         {
-            throw new InvalidOperationException("Can't remove dices at current stage");
+            throw new InvalidOperationException("Can not add efficiency at current stage");
         }
 
-        state.RemoveDices(indices);
+        return _state.AddEfficiency(dice, value);
     }
 
     /// <summary>
@@ -126,58 +150,55 @@ public sealed class InteractiveRoller
     /// <exception cref="InvalidOperationException"></exception>
     public Result Result()
     {
-        if (stage == Stage.RemovingDices)
+        if (stage != Stage.EfficiencyDistribution)
         {
-            if (DicesToRemove != 0)
-            {
-                throw new InvalidOperationException("More dices need to be removed");
-            }
-
-            state.CompleteRerollsAndBursts();
-
-            result = new Result(state);
-            stage = Stage.Ready;
+            throw new InvalidOperationException("Can not get result at current stage");
         }
 
-        if (stage != Stage.Ready)
-        {
-            throw new InvalidOperationException("Can't get result at current stage");
-        }
+        _state.MakeRerollsAndBursts();
 
-        return result!;
+        result = new Result(_state);
+
+        stage = Stage.Completed;
+
+        return result;
     }
 
     /// <summary>
-    /// Represents a dice remove stage of interactive roll.
+    /// Represents an efficiency distribution stage of interactive roll.
     /// </summary>
-    public sealed class DiceRemoveStage
+    public sealed class EfficiencyDistributionStage
     {
-        private readonly InteractiveRoller source;
+        private readonly InteractiveRoller _source;
 
         /// <inheritdoc cref="InteractiveRoller.Values"/>
-        public IReadOnlyList<Dice> Values => source.Values;
+        public IReadOnlyList<Dice> Values
+            => _source.Values;
 
         /// <inheritdoc cref="InteractiveRoller.Current"/>
-        public Roll Current => source.Current;
+        public Roll Current
+            => _source.Current;
 
-        /// <inheritdoc cref="InteractiveRoller.DicesToRemove"/>
-        public int DicesToRemove => source.DicesToRemove;
+        /// <inheritdoc cref="InteractiveRoller.AddEfficiency(int, int)"/>
+        public int AddEfficiency(int diceIndex, int value = 1)
+            => _source.AddEfficiency(diceIndex, value);
+
+        /// <inheritdoc cref="InteractiveRoller.AddEfficiency(Dice, int)"/>
+        public int AddEfficiency(Dice dice, int value = 1)
+            => _source.AddEfficiency(dice, value);
 
         /// <summary>
-        /// Indicates that proper count of <see cref="Dice"/>s already removed from the <see cref="Roll"/>.
+        /// Indicates that all possible efficiency distributed between <see cref="Dice"/>s.
         /// </summary>
-        /// <value><see langword="true"/> if there is no <see cref="Dice"/>s to remove; otherwise <see langword="false"/>.</value>
-        public bool StageConditionsMet => source.DicesToRemove == 0;
-
-        /// <inheritdoc cref="InteractiveRoller.RemoveDice"/>
-        public void RemoveDice(int index) => source.RemoveDice(index);
-
-        /// <inheritdoc cref="InteractiveRoller.RemoveDices"/>
-        public void RemoveDices(IReadOnlySet<int> indices) => source.RemoveDices(indices);
+        /// <value><see langword="true"/> if no efficiency can be added to any <see cref="Dice"/>; otherwise <see langword="false"/>.</value>
+        public bool ConditionsMet
+            => !_source.CanDistributeEfficiency;
 
         /// <inheritdoc cref="InteractiveRoller.Result"/>
-        public Result Result() => source.Result();
+        public Result Result()
+            => _source.Result();
 
-        internal DiceRemoveStage(InteractiveRoller source) => this.source = source;
+        internal EfficiencyDistributionStage(InteractiveRoller source)
+            => _source = source;
     }
 }

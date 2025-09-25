@@ -9,20 +9,20 @@ namespace ReverieWorld.DiceRoll;
 public sealed class AutoRoller
 {
     private readonly IRandomProvider randomProvider;
+    private readonly IEfficiencyDistributionStrategy _efficiencyDistributionStrategy;
     private readonly IParameters defaultParameters;
-    private readonly IDiceRemoveStrategy diceRemoveStrategy;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AutoRoller"/> with specified <paramref name="randomProvider"/>,
-    /// optional <paramref name="defaultParameters"/> and optional <paramref name="diceRemoveStrategy"/>.
+    /// Initializes a new instance of the <see cref="AutoRoller"/> with specified <paramref name="randomProvider"/>
+    /// and optional <paramref name="defaultParameters"/>.
     /// </summary>
     /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
+    /// <param name="efficiencyDistributionStrategy">An implementation of efficiency distribution strategy.</param>
     /// <param name="defaultParameters">Custom implementation of <see cref="IParameters"/> interface or <see cref="Parameters"/> (default).</param>
-    /// <param name="diceRemoveStrategy">Custom implementation of <see cref="IDiceRemoveStrategy"/> interface or <see cref="DefaultDiceRemoveStrategy"/> (default).</param>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public AutoRoller(IRandomProvider randomProvider, IParameters? defaultParameters = null, IDiceRemoveStrategy? diceRemoveStrategy = null)
+    public AutoRoller(IRandomProvider randomProvider, IEfficiencyDistributionStrategy? efficiencyDistributionStrategy = null, IParameters? defaultParameters = null)
     {
         ArgumentNullException.ThrowIfNull(randomProvider);
 
@@ -30,59 +30,50 @@ public sealed class AutoRoller
         defaultParameters.Validate();
 
         this.randomProvider = randomProvider;
+        _efficiencyDistributionStrategy = efficiencyDistributionStrategy ?? new DefaultEfficiencyDistributionStrategy();
         this.defaultParameters = defaultParameters;
-        this.diceRemoveStrategy = diceRemoveStrategy ?? new DefaultDiceRemoveStrategy();
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AutoRoller"/> with specified <paramref name="randomProvider"/>
-    /// and optional <paramref name="diceRemoveStrategy"/>.
+    /// Performs the dice roll with optional <paramref name="parameters"/>.
     /// </summary>
-    /// <param name="randomProvider">Implementation of <see cref="IRandomProvider"/> interface.</param>
-    /// <param name="diceRemoveStrategy">Custom implementation of <see cref="IDiceRemoveStrategy"/> interface or <see cref="DefaultDiceRemoveStrategy"/> (default).</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="randomProvider"/> is <see langword="null"/>.</exception>
-    public AutoRoller(IRandomProvider randomProvider, IDiceRemoveStrategy? diceRemoveStrategy) :
-        this(randomProvider, null, diceRemoveStrategy)
-    {
-    }
-
-    /// <summary>
-    /// Performs the dice roll with optional <paramref name="parameters"/> and optional <paramref name="diceRemoveStrategy"/>.
-    /// </summary>
-    /// <remarks>If <paramref name="parameters"/> or <paramref name="diceRemoveStrategy"/> not provided default will be used.</remarks>
+    /// <remarks>If <paramref name="parameters"/> not provided a default will be used.</remarks>
     /// <param name="parameters">Parameters for the roll.</param>
-    /// <param name="diceRemoveStrategy">Dice selection strategy for an "add then remove" dice mechanic.</param>
+    /// <param name="successParameters">Success parameters for the roll.</param>
     /// <returns>The <see cref="Result"/> of the dice roll.</returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <exception cref="ArgumentException"></exception>
-    public Result Roll(IParameters? parameters = null, IDiceRemoveStrategy? diceRemoveStrategy = null)
+    public Result Roll(IParameters? parameters, ISuccessParameters successParameters)
     {
         parameters ??= defaultParameters;
         parameters.Validate();
 
-        RollState roll = new(parameters, randomProvider);
+        successParameters.Validate();
+        parameters.ValidateApplicability(successParameters);
+
+        RollState roll = new(randomProvider, _efficiencyDistributionStrategy, parameters, successParameters);
 
         using (RollMaker rollMaker = new(roll))
         {
             roll.FillInitial(rollMaker);
 
-            if (parameters.AdditionalDicesCount != 0)
+            for (bool loop = true; loop;)
             {
-                diceRemoveStrategy ??= this.diceRemoveStrategy;
-                roll.RemoveDices(diceRemoveStrategy.Select(roll.Values, parameters.AdditionalDicesCount, parameters));
+                roll.MakeRerollsAndBursts(rollMaker);
+                loop = roll.DistributeEfficiency();
             }
-
-            roll.CompleteRerollsAndBursts(rollMaker);
         }
 
         return new Result(roll);
     }
 
     /// <summary>
-    /// Performs the dice roll with default parameters and optional <paramref name="diceRemoveStrategy"/>.
+    /// Performs the dice roll with default parameters.
     /// </summary>
-    /// <remarks>If <paramref name="diceRemoveStrategy"/> not provided the default will be used.</remarks>
-    /// <param name="diceRemoveStrategy">Dice selection strategy for an "add then remove" dice mechanic.</param>
+    /// <param name="successParameters">Success parameters for the roll.</param>
     /// <returns>The <see cref="Result"/> of the dice roll.</returns>
-    public Result Roll(IDiceRemoveStrategy? diceRemoveStrategy) => Roll(null, diceRemoveStrategy);
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <exception cref="ArgumentException"></exception>
+    public Result Roll(ISuccessParameters successParameters)
+        => Roll(null, successParameters);
 }

@@ -48,9 +48,9 @@ public static partial class Weber
             }
 
             var newValue = rollState.Parameters.FacesCount;
-            foreach (var index in GetOnesIndices(rollState).Take(currentCount))
+            foreach (var dice in GetOnesDices(rollState).Take(currentCount))
             {
-                rollState.ChangeValue(index, newValue);
+                rollState.ChangeValue(dice, newValue);
                 rollState.AddDice();
                 --currentCount;
             }

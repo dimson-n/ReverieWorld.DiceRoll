@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ReverieWorld.DiceRoll;
 
@@ -16,9 +17,17 @@ public class Roll : IReadOnlyList<Dice>
     public IParameters Parameters { get; }
 
     /// <summary>
-    /// Total summation of all dice values with bonus.
+    /// Gets parameters for success roll.
     /// </summary>
-    public int Total { get; }
+    /// <value>Success parameters of the <see cref="Roll"/> if provided; otherwise <see langword="null"/>.</value>
+    [MemberNotNull(nameof(AutoSuccessCount), nameof(SuccessCount))]
+    public ISuccessParameters? SuccessParameters { get; }
+
+    /// <summary>
+    /// Gets not utilized efficiency bonus value.
+    /// </summary>
+    /// <value>Not utilized efficiency bonus value.</value>
+    public int RemainingEfficiencyBonus { get; }
 
     /// <summary>
     /// Gets a value indicating whether <see cref="Roll"/> was fully performed.
@@ -26,12 +35,30 @@ public class Roll : IReadOnlyList<Dice>
     /// <value><see langword="true"/> if <see cref="Roll"/> was fully performed; otherwise, <see langword="false"/>.</value>
     public virtual bool Completed => false;
 
+    /// <summary>
+    /// Gets auto success count.
+    /// </summary>
+    /// <value>Auto success count if <see cref="SuccessParameters"/> not <see langword="null"/>; otherwise, <see langword="null"/>.</value>
+    public int? AutoSuccessCount { get; }
+
+    /// <summary>
+    /// Gets count of succeed dices.
+    /// </summary>
+    /// <value>Count of succeed dices if <see cref="SuccessParameters"/> not <see langword="null"/>; otherwise, <see langword="null"/>.</value>
+    public int? SuccessCount { get; }
+
     internal Roll(RollState state)
     {
         rolls = state.Values;
-        Parameters = state.parameters;
+        Parameters = state.Parameters;
+        SuccessParameters = state.SuccessParameters;
+        RemainingEfficiencyBonus = state.RemainingEfficiency;
 
-        Total = rolls.Where(d => !d.Removed).Sum(d => d.Value) + Parameters.Bonus;
+        if (SuccessParameters is not null)
+        {
+            AutoSuccessCount = Parameters.AutoSuccesses + Parameters.DicesCount - Math.Min(Parameters.DicesCount, SuccessParameters.AutoSuccessThreshold);
+            SuccessCount = rolls.Count(d => d.Value >= SuccessParameters.MinValue) + AutoSuccessCount;
+        }
     }
 
     /// <summary>
@@ -55,10 +82,4 @@ public class Roll : IReadOnlyList<Dice>
     public IEnumerator<Dice> GetEnumerator() => rolls.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)rolls).GetEnumerator();
-
-    /// <summary>
-    /// Returns a string that represents the <see cref="Roll"/> value.
-    /// </summary>
-    /// <returns>A string that represents the <see cref="Roll"/> value.</returns>
-    public override sealed string ToString() => Total.ToString();
 }

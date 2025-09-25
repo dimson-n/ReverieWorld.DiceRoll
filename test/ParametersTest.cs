@@ -9,10 +9,10 @@ public sealed class ParametersTest
 
         Assert.Equal(6, p.FacesCount);
         Assert.Equal(1, p.DicesCount);
-        Assert.Equal(0, p.AdditionalDicesCount);
         Assert.Equal(0, p.RerollsCount);
         Assert.Equal(0, p.BurstsCount);
-        Assert.Equal(0, p.Bonus);
+        Assert.Equal(0, p.Efficiency);
+        Assert.Equal(0, p.AutoSuccesses);
         Assert.Null(p.Modifiers);
 
         Assert.False(p.HasInfinityRerolls);
@@ -24,7 +24,7 @@ public sealed class ParametersTest
     [Fact]
     public void InfinityFields()
     {
-        Parameters p = new(rerollsCount: ParametersBase.Infinite, burstsCount: ParametersBase.Infinite);
+        Parameters p = new(rerollsCount: Parameters.Infinite, burstsCount: Parameters.Infinite);
 
         Assert.True(p.HasInfinityRerolls);
         Assert.True(p.HasInfinityBursts);
@@ -42,14 +42,17 @@ public sealed class ParametersTest
     [Fact]
     public void Validation()
     {
-        Assert.Throws<ArgumentNullException>("parameters", () => ((ParametersBase)null!).Validate());
+        Assert.Throws<ArgumentNullException>("parameters", () => ((IParameters)null!).Validate());
 
-        Assert.Throws<ArgumentOutOfRangeException>("FacesCount", () => new ParametersBase(facesCount: 1).Validate());
+        Assert.Throws<ArgumentOutOfRangeException>("FacesCount", () => new Parameters(facesCount: 1).Validate());
 
-        Assert.Throws<ArgumentOutOfRangeException>("DicesCount",           () => new Parameters(dicesCount: 0).Validate());
-        Assert.Throws<ArgumentOutOfRangeException>("AdditionalDicesCount", () => new Parameters(additionalDicesCount: -1).Validate());
+        Assert.Throws<ArgumentOutOfRangeException>("DicesCount", () => new Parameters(dicesCount: 0).Validate());
 
-        Assert.Throws<ArgumentException>("RerollsCount", () => new NonInfinityParameters(rerollsCount: ParametersBase.Infinite).Validate());
-        Assert.Throws<ArgumentException>("BurstsCount",  () => new NonInfinityParameters(burstsCount: ParametersBase.Infinite).Validate());
+        Assert.Throws<ArgumentException>("RerollsCount", () => new NonInfinityParameters { RerollsCount = Parameters.Infinite }.Validate());
+        Assert.Throws<ArgumentException>("BurstsCount",  () => new NonInfinityParameters { BurstsCount  = Parameters.Infinite }.Validate());
+
+        Assert.Throws<ArgumentOutOfRangeException>("Efficiency", () => new Parameters(efficiency: -1).Validate());
+
+        Assert.Throws<ArgumentOutOfRangeException>("AutoSuccesses", () => new Parameters(autoSuccesses: -1).Validate());
     }
 }

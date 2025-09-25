@@ -18,12 +18,6 @@ public interface IParameters
     int DicesCount { get; }
 
     /// <summary>
-    /// Count of additional dices that will be added to initial roll.
-    /// Than same count of dices will be removed (not necessary the same dices).
-    /// </summary>
-    int AdditionalDicesCount { get; }
-
-    /// <summary>
     /// Count of possible rerolls for dices with value 1.
     /// </summary>
     int RerollsCount { get; }
@@ -34,9 +28,15 @@ public interface IParameters
     int BurstsCount { get; }
 
     /// <summary>
-    /// Bonus (positive) or penalty (negative) value that will be added to final summation of dice values.
+    /// Efficiency value that can be distributed between dices.
     /// </summary>
-    int Bonus { get; }
+    int Efficiency { get; }
+
+    /// <summary>
+    /// Count of guaranteed successes in a roll.
+    /// </summary>
+    /// <remarks>Applies to a roll if <see cref="ISuccessParameters"/> provided only.</remarks>
+    int AutoSuccesses { get; }
 
     /// <summary>
     /// <see langword="true"/> indicates that <see cref="RerollsCount"/> must be ignored

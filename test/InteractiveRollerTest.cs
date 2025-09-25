@@ -13,55 +13,101 @@ public sealed class InteractiveRollerTest
     {
         InteractiveRoller roller = new(new NonRandomMaxProvider());
 
-        Assert.Throws<InvalidOperationException>(() => roller.RemoveDice(0));
-        Assert.Throws<InvalidOperationException>(() => roller.RemoveDices(new HashSet<int>()));
+        Assert.False(roller.CanDistributeEfficiency);
 
-        Assert.Throws<InvalidOperationException>(() => roller.Result());
+        Assert.Empty(roller.Values);
 
-        roller.Begin();
+        Assert.Throws<InvalidOperationException>(() => roller.AddEfficiency(0));
+        Assert.Throws<InvalidOperationException>(() => roller.AddEfficiency(new Dice(0)));
+
+        Assert.Throws<InvalidOperationException>(roller.Result);
+
+        Assert.False(roller.Current.Completed);
     }
 
     [Fact]
-    public void DicesRemove()
+    public void EfficiencyDistribution()
     {
-        InteractiveRoller roller = new(new NonRandomMaxProvider(), new Parameters(additionalDicesCount: 3));
+        InteractiveRoller roller = new(new NonRandomZeroProvider(), new Parameters(dicesCount: 4, efficiency: 10));
 
         roller.Begin();
 
-        Assert.Throws<InvalidOperationException>(() => roller.Begin());
+        Assert.NotEmpty(roller.Values);
 
-        Assert.Throws<ArgumentNullException>("indices", () => roller.RemoveDices(null!));
+        Assert.Throws<InvalidOperationException>(roller.Begin);
 
-        Assert.Throws<ArgumentOutOfRangeException>("index",   () => roller.RemoveDice(100500));
-        Assert.Throws<ArgumentOutOfRangeException>("indices", () => roller.RemoveDices(new HashSet<int>() { 123 }));
+        Assert.Throws<ArgumentOutOfRangeException>(() => roller.AddEfficiency(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => roller.AddEfficiency(4));
+        Assert.Throws<ArgumentOutOfRangeException>("dice", () => roller.AddEfficiency(new Dice(0)));
 
-        Assert.Equal(3, roller.DicesToRemove);
+        Assert.True(roller.CanDistributeEfficiency);
 
-        roller.RemoveDice(0);
+        Assert.Equal(1, roller.AddEfficiency(0));
+        Assert.Equal(2, roller.AddEfficiency(1, 2));
 
-        Assert.Equal(2, roller.DicesToRemove);
+        var dices = roller.Values;
 
-        roller.RemoveDices(new HashSet<int>() { 1, 3 });
+        Assert.Equal(3, roller.AddEfficiency(dices[2], 3));
+        Assert.Equal(4, roller.AddEfficiency(dices[3], 7));
 
-        Assert.Equal(0, roller.DicesToRemove);
+        Assert.False(roller.CanDistributeEfficiency);
 
-        Assert.Throws<InvalidOperationException>(() => roller.RemoveDice(2));
-        Assert.Throws<InvalidOperationException>(() => roller.RemoveDices(new HashSet<int>() { 4 }));
+        Assert.Equal(0, roller.AddEfficiency(0, 5));
 
-        roller.Result();
+        Assert.Equal(2, dices[0].Value);
+        Assert.Equal(3, dices[1].Value);
+        Assert.Equal(4, dices[2].Value);
+        Assert.Equal(5, dices[3].Value);
+
+        Assert.False(roller.Current.Completed);
     }
 
     [Fact]
     public void Result()
     {
-        InteractiveRoller roller = new(new NonRandomMaxProvider());
+        InteractiveRoller roller = new(new NonRandomZeroProvider());
 
         roller.Begin();
         roller.Result();
 
-        Assert.Throws<InvalidOperationException>(() => roller.Begin());
+        Assert.False(roller.CanDistributeEfficiency);
 
-        Assert.Throws<InvalidOperationException>(() => roller.RemoveDice(0));
-        Assert.Throws<InvalidOperationException>(() => roller.RemoveDices(new HashSet<int>()));
+        Assert.Throws<InvalidOperationException>(roller.Begin);
+        Assert.Throws<InvalidOperationException>(roller.Result);
+
+        Assert.Throws<InvalidOperationException>(() => roller.AddEfficiency(0));
+        Assert.Throws<InvalidOperationException>(() => roller.AddEfficiency(new Dice(0)));
+
+        Assert.True(roller.Current.Completed);
+    }
+
+    [Fact]
+    public void CanDistributeEfficiency()
+    {
+        InteractiveRoller roller = new(new NonRandomZeroProvider(), new Parameters(efficiency: 1));
+
+        roller.Begin();
+
+        Assert.True(roller.CanDistributeEfficiency);
+    }
+
+    [Fact]
+    public void CanNotDistributeEfficiency()
+    {
+        InteractiveRoller roller = new(new NonRandomZeroProvider());
+
+        roller.Begin();
+
+        Assert.False(roller.CanDistributeEfficiency);
+    }
+
+    [Fact]
+    public void CanNotDistributeEfficiencyMax()
+    {
+        InteractiveRoller roller = new(new NonRandomMaxProvider(), new Parameters(efficiency: 1));
+
+        roller.Begin();
+
+        Assert.False(roller.CanDistributeEfficiency);
     }
 }
