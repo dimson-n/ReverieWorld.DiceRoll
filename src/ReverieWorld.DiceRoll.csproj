@@ -1,25 +1,34 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net10.0;net8.0</TargetFrameworks>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-
-    <IncludeSymbols>True</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <RepositoryUrl>https://github.com/dimson-n/ReverieWorld.DiceRoll</RepositoryUrl>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <PackRelease>True</PackRelease>
     <RootNamespace>ReverieWorld.DiceRoll</RootNamespace>
 
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <Nullable>enable</Nullable>
     <IsAotCompatible>True</IsAotCompatible>
+
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <Authors>dimson_n</Authors>
+    <Company />
+    <Description>Dice roller for the Border of dreams role-playing game system</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/dimson-n/ReverieWorld.DiceRoll</RepositoryUrl>
+    <PackageTags>d6,dice,roll,rpg</PackageTags>
 
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+
+    <IncludeSymbols>True</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
 
@@ -34,6 +43,10 @@
 
   <ItemGroup>
     <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
