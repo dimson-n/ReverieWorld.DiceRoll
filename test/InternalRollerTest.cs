@@ -12,9 +12,12 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
     [InlineData(6)]
     public void DiceValueOverflowUnderflow(int diceValue)
     {
-        InteractiveRoller roller = new(new PredefinedRandomProvider(diceValue));
+        RollState rollState = new(randomProvider: new PredefinedRandomProvider(diceValue),
+                                  efficiencyDistributionStrategy: new DefaultEfficiencyDistributionStrategy(),
+                                  parameters: Parameters.Default,
+                                  null);
 
-        Assert.Throws<ArgumentOutOfRangeException>("value", roller.Begin);
+        Assert.Throws<ArgumentOutOfRangeException>("value", rollState.FillInitial);
     }
 
     [Fact]
