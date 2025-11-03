@@ -14,7 +14,7 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
     {
         InteractiveRoller roller = new(new PredefinedRandomProvider(diceValue));
 
-        Assert.Throws<ArgumentOutOfRangeException>("value", () => roller.Begin());
+        Assert.Throws<ArgumentOutOfRangeException>("value", roller.Begin);
     }
 
     [Fact]
@@ -25,7 +25,7 @@ public sealed class InternalRollerTest : DefaultSuccessParametersUser
         var result = roller.Roll(new Parameters(dicesCount: 3, burstsCount: 3), _successParameters);
 
         Assert.Equal(6, result.Count);
-        Assert.Equal(3, result.Where(d => d.IsBurst).Count());
+        Assert.Equal(3, result.Count(d => d.IsBurst));
     }
 
     [Fact]
